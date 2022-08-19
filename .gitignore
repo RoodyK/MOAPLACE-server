@@ -1,0 +1,15 @@
+/.metadata/
+.gradle
+.DS_Store
+/bin
+/build
+/Servers
+*.jar
+*.war
+target/
+.idea
+src/main/resources/oracle.properties
+# */src/main/webapp/resources/images/
+# images/
+*/src/main/webapp/WEB-INF/classes/
+*/src/main/webapp/WEB-INF/lib/
