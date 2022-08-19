@@ -13,3 +13,4 @@ src/main/resources/oracle.properties
 # images/
 */src/main/webapp/WEB-INF/classes/
 */src/main/webapp/WEB-INF/lib/
+.classpath
