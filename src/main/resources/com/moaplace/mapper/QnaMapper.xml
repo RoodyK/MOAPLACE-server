@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.QnaMapper">
+
+	<insert id="insert" parameterType="com.moaplace.vo.QnaVO">
+		insert into qna values(QNA_SEQ.nextval,#{member_num},#{sort_num},#{qna_title},#{qna_content},sysdate,'대기중')
+  	</insert>
+
+</mapper>
