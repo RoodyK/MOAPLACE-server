@@ -10,7 +10,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@ContextConfiguration({
+	"file:src/main/webapp/WEB-INF/spring/root-context.xml",
+	"file:src/main/webapp/WEB-INF/spring/mail-context.xml"
+})
 @Log4j
 public class DataSoruceTest {
 
@@ -20,7 +23,9 @@ public class DataSoruceTest {
 	@Test
 	public void test() {		
 		if(dataSource != null) {
-			log.info("널 아님");
+			log.info(dataSource.getDriverClassName());
+			log.info(dataSource.getUrl());
+			log.info(dataSource.getUsername());
 		}
 	}
 }
