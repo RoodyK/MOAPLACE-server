@@ -11,16 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MemberVO {
 	
-	private int memberNum;
-	private String memberId;
-	private String memberEmail;
-	private String memberName;
-	private String memberGender;
-	private String memberBirth;
-	private String memberPhone;
-	private String memberAddress;
+	private int member_num;
+	private String member_id;
+	private String member_pwd;
+	private String member_email;
+	private String member_name;
+	private String member_gender;
+	private String member_birth;
+	private String member_phone;
+	private String member_address;
 	private Date regdate;
-	private String memberPoint;
+	private int member_point;
 	private String authority;
-	private String enabled;
+	private int enabled;
 }

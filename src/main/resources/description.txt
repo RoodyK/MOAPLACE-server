@@ -1,0 +1,14 @@
+oracle.properties파일 작성
+
+driverClassName=사용하는 DB드라이버 클래스 명
+url=사용하는 DB url
+username=db아이디
+password=db비밀번호
+
+
+mailAuth.properties파일 작성
+
+mail.host=smtp.naver.com or smtp.google.com
+mail.port=포트번호 (네이버는 465)
+mail.username=메일을 보내는 아이디
+mail.password=메일을 보내는 비밀번호
