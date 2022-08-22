@@ -13,10 +13,10 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
-		<property name="driverClassName" value="${driverClassName}"/>
-		<property name="url" value="${url}"/>
-		<property name="username" value="${username}"/>
-		<property name="password" value="${password}"/>
+		<property name="driverClassName" value="${oracle.driverClassName}"/>
+		<property name="url" value="${oracle.url}"/>
+		<property name="username" value="${oracle.username}"/>
+		<property name="password" value="${oracle.password}"/>
 	</bean>
 	
 	<bean id="salSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -35,6 +35,7 @@
 	</aop:config>
 	
 	<context:component-scan base-package="com.moaplace.service" />
+	<context:component-scan base-package="com.moaplace.util" />
 	<mybatis-spring:scan base-package="com.moaplace.mapper"/>
 	
 	
