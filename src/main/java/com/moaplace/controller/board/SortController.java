@@ -12,16 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.moaplace.service.SortService;
 import com.moaplace.vo.SortVO;
 
+import lombok.extern.log4j.Log4j;
+
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/sort")
-public class SortListController {	
+@RequestMapping("/board/sort")
+@Log4j
+public class SortController {	
 	@Autowired private SortService sortService;
 	
 	@GetMapping(value="/list",
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<SortVO> list(){
-		return sortService.select();
+	
+		try {
+			return sortService.select();
+			
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			return null;
+		}
 	}
-
 }

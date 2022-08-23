@@ -6,7 +6,58 @@
 <mapper namespace="com.moaplace.mapper.QnaMapper">
 
 	<insert id="insert" parameterType="com.moaplace.vo.QnaVO">
-		insert into qna values(QNA_SEQ.nextval,#{member_num},#{sort_num},#{qna_title},#{qna_content},sysdate,'대기중')
+		insert into qna 
+		values(QNA_SEQ.nextval,#{member_num},#{sort_num},#{qna_title},#{qna_content},sysdate,'대기중')
   	</insert>
+
+	<sql id="search">
+		<if test='field != null and field != "" and field != "all"'>
+			where a.${field} like '%'||#{keyword, jdbcType=VARCHAR}||'%'
+		</if>
+		<if test='field == "all"'>
+			where a.qna_title like '%'||#{keyword, jdbcType=VARCHAR}||'%' or a.qna_content like '%'||#{keyword, jdbcType=VARCHAR}||'%'	
+		</if>
+	</sql>
+		
+	<select id="list" parameterType="hashmap" resultType="com.moaplace.dto.QnaListDTO">		
+		select * from
+		(
+		    select b.*, rownum rnum from (
+		        select a.* from (
+		            select * from qna
+		            join sort
+					on sort.sort_num = qna.sort_num
+		            where member_num=#{member_num}
+		            order by qna_num desc
+		        ) a
+			<include refid="search"/>
+		    ) b
+		)
+		<![CDATA[	where rnum>=#{startRow} and rnum<=#{endRow}	]]>
+	</select>
+
+	<select id="listCnt" parameterType="hashmap" resultType="int">
+		select NVL(count(*),0) cnt from (
+		    select * from qna 
+		    where member_num=#{member_num}
+		) a
+	    <include refid="search"/>
+	</select>
+	
+	<select id="detail" parameterType="int" resultType="com.moaplace.vo.QnaVO">
+		select * from qna
+		join sort 
+		on sort.sort_num = qna.sort_num
+		where qna.qna_num=#{qna_num}
+	</select>
+	
+	<update id="update" parameterType="com.moaplace.vo.QnaVO">
+		update qna set sort_num=#{sort_num}, qna_title=#{qna_title}, qna_content=#{qna_content}
+		where qna_num=#{qna_num}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from qna where qna_num=#{qna_num}
+	</delete>
 
 </mapper>
