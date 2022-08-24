@@ -7,6 +7,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.moaplace.dto.MemberJoinRequestDTO;
+import com.moaplace.dto.MemberLoginRequestDTO;
+import com.moaplace.dto.MemberLoginResponseDTO;
+import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.MemberMapper;
 import com.moaplace.vo.MemberVO;
 
@@ -26,14 +29,14 @@ public class MemberService {
 	}
 	
 	public boolean checkId(String reqId) {
-		String id = mapper.checkId(reqId);
+		String id = mapper.checkId(reqId); // 아이디 중복 검사
 		
 		if(id != null) return true;
 		return false;
 	}
 	
 	public int join(MemberJoinRequestDTO dto) {
-		
+		// 비밀번호 암호화
 		String password = passwordEncoder.encode(dto.getMember_pwd());
 		log.info(password);
 		
@@ -44,5 +47,29 @@ public class MemberService {
 		if(n > 0) return n;
 		return -1;
 	}
-
+	
+	public MemberLoginResponseDTO login(MemberLoginRequestDTO dto) {
+		// 비밀번호 꺼내오기
+		String memberPwd = mapper.findByPassword(dto.getMember_id());
+		
+		if(memberPwd == null) { // 아이디와 일치하는 비밀번호가 없으면
+			throw new WrongIdPasswordException();
+		}
+		
+		boolean isPassword = 
+				passwordEncoder.matches(dto.getMember_pwd(), memberPwd);
+		if(!isPassword) { // 입력한 비밀번호와 암호화된 비밀번호가 일치하지 않으면
+			throw new WrongIdPasswordException();
+		}
+		
+		dto.setMember_pwd(memberPwd);
+		
+		MemberLoginResponseDTO member = mapper.login(dto);
+		
+		if(member == null) {
+			throw new WrongIdPasswordException();
+		}
+		return member;
+	}
+	
 }
