@@ -36,9 +36,9 @@
 	
 <!-- 	<interceptors>
 		<interceptor>
-			<mapping path="/**"/>
+			<mapping path="/users/login/member/**"/>
 			<beans:bean class="com.moaplace.authentication.BearerTokenAuthenticationFilter" />
 		</interceptor>
-	</interceptors> -->
+	</interceptors>  -->
 	
 </beans:beans>

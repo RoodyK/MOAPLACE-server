@@ -1,6 +1,9 @@
 package com.moaplace.controller.member;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.moaplace.dto.MemberInfoResponseDTO;
 import com.moaplace.dto.MemberJoinRequestDTO;
 import com.moaplace.dto.MemberLoginRequestDTO;
 import com.moaplace.dto.MemberLoginResponseDTO;
@@ -37,7 +41,7 @@ public class MembersController {
 	@Autowired
 	private MailSendService mailService;
 	@Autowired
-	private JWTService JWTservice;
+	private JWTService tokenService;
 
 	/*
 	 * 회원가입 관련 컨트롤러
@@ -69,7 +73,8 @@ public class MembersController {
 	}
 	
 	// 회원가입
-	@PostMapping("/join/result")
+	@PostMapping(value = "/join/result",
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> joinMember(
 			@RequestBody MemberJoinRequestDTO dto, @RequestHeader HttpHeaders headers) {
 		
@@ -84,23 +89,38 @@ public class MembersController {
 	/*
 	 * 회원 로그인
 	 */
-	// ResponseEntity<MemberLoginResponseDTO>
-	@PostMapping("/login/result")
-	public ResponseEntity<String> login(
+	
+	// 로그인
+	@PostMapping(value = "/login/result", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> login(
 			@RequestBody MemberLoginRequestDTO dto) {
 		log.info("controller dto : " + dto);
-		HttpHeaders header = new HttpHeaders();
+		Map<String, Object> responseToken = new HashMap<>();
 		
 		try {
 			MemberLoginResponseDTO member = memberService.login(dto);
+			String token = tokenService.createToken(member.getMember_id(), member.getAuthority());
+			responseToken.put("token", token);
 			
-			String token = JWTservice.createToken(member.getMember_id(), member.getAuthority());
-			header.add("Authorization", token);
-			
+			return new ResponseEntity<>(responseToken, HttpStatus.OK);
 		}catch(WrongIdPasswordException e) {
-			return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+			responseToken.put("fail", "fail");
+			return new ResponseEntity<>(responseToken, HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	// 회원정보
+	@GetMapping(value = "/login/member/info", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<MemberInfoResponseDTO> getMemberInfo(
+			HttpServletRequest request) {
 		
-		return new ResponseEntity<>("success", header, HttpStatus.OK);
+		String token = request.getHeader("Authorization");
+		String id = tokenService.getUserId(token);
+		
+		MemberInfoResponseDTO info = memberService.getMemberInfo(id);
+		
+		return ResponseEntity.ok().body(info);
 	}
 }
