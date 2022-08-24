@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.MyBookingDTO;
+import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.dto.MyRentalDTO;
 import com.moaplace.service.BookingService;
 import com.moaplace.service.RentalService;
@@ -23,7 +24,7 @@ import lombok.extern.log4j.Log4j;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/users/mypage")
 @Log4j
 public class MypageController {
 
@@ -33,7 +34,7 @@ public class MypageController {
 	private RentalService rentalService;
 	
 	/* 로그인한 회원의 최근 예매내역 1건 + 최근 대관내역 1건 조회 */
-	@RequestMapping(value = "/mypage/{member_num}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{member_num}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> mypage(@PathVariable("member_num") int member_num) {
 		
 		try {
@@ -109,6 +110,25 @@ public class MypageController {
 			map.put("startPage", pageUtil.getStartPageNum()); // 페이지시작번호
 			map.put("endPage", pageUtil.getEndPageNum()); // 페이지끝번호
 			map.put("pageCnt", pageUtil.getTotalPageCount()); // 전체 페이지수
+			
+			return map;
+			
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			return null;
+		}
+	}
+	
+	@RequestMapping(value = "/ticket/detail/{booking_num}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> ticketDetail(@PathVariable("booking_num") int booking_num) {
+		
+		try {
+			log.info(booking_num);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			MyBookingDetailDTO dto = bookingService.detail(booking_num);
+			map.put("dto", dto);
 			
 			return map;
 			

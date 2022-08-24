@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.moaplace.dto.MyBookingDTO;
+import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.mapper.BookingMapper;
 
 @Service
@@ -41,6 +42,11 @@ public class BookingService {
 	// 기간설정  + 페이징 조회된 내역 개수
 	public int listCount(HashMap<String, Object> map) {
 		return mapper.listCount(map);
+	}
+	
+	// booking_num으로 예매상세내역 조회
+	public MyBookingDetailDTO detail(int booking_num) {
+		return mapper.detail(booking_num);
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.moaplace.dto.MyBookingDTO;
+import com.moaplace.dto.MyBookingDetailDTO;
 
 @Mapper
 public interface BookingMapper {
@@ -21,4 +22,8 @@ public interface BookingMapper {
 	
 	// 기간설정  + 페이징 조회된 내역 개수
 	int listCount(HashMap<String, Object> map);
+	
+	// booking_num으로 예매상세내역 조회
+	MyBookingDetailDTO detail(int booking_num);
+	
 }

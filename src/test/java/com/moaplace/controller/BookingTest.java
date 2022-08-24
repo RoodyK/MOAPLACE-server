@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.moaplace.dto.MyBookingDTO;
+import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.service.BookingService;
 
 import lombok.extern.log4j.Log4j;
@@ -114,5 +115,11 @@ public class BookingTest {
 		int n = service.listCount(map);
 		
 		log.info("listCount : " + n);
+	}
+	
+	@Test
+	public void detail() {
+		MyBookingDetailDTO dto = service.detail(1);
+		log.info("detail : " + dto);
 	}
 }
