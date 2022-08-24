@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.moaplace.dto.RentalCalendarDTO;
 import com.moaplace.dto.RentalInsertDTO;
 import com.moaplace.service.RentalService;
 import com.moaplace.util.FileUtil;
@@ -37,6 +38,33 @@ public class RentalController {
 	private FileUtil fileutil;
 	
 	@GetMapping
+	(value = "/calendar/{year}/{month}/{endOfDay}",
+	produces= {MediaType.APPLICATION_JSON_VALUE})
+	public HashMap<String, Object> calendar(
+			@PathVariable String year,
+			@PathVariable String month,
+			@PathVariable String endOfDay)
+	{
+		
+		String startDate = year + "-" + month + "-" + 1;
+		String endDate = year + "-" + month + "-" + endOfDay;
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put( "startDate" , startDate );
+		map.put( "endDate" , endDate );
+		
+		
+		List<RentalCalendarDTO> list = service.getSchedules(map);
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put("year" , year);
+		data.put("month" , month);
+		data.put("schedule" , list);
+		
+		return data;
+	}
+	
+	@GetMapping
 	(value = "/update/{num}/{state}")
 	public String updateState(
 			@PathVariable Integer num,//대관신청번호
@@ -45,11 +73,11 @@ public class RentalController {
 		log.info("num:" + num);
 		log.info("state:" + state);
 		
-		HashMap<String, Object> data = new HashMap<String, Object>();
-		data.put("rental_num", num);
-		data.put("rental_state", state);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("rental_num", num);
+		map.put("rental_state", state);
 		
-		int n = service.updateState(data);
+		int n = service.updateState(map);
 		
 		if( n < 0 ) return "fail";
 		

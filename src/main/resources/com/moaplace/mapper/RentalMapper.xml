@@ -15,7 +15,7 @@
 		sysdate,'신청완료')
 	</insert>
 	
-	<select id="list" resultType="com.moaplace.dto.RentalListDTO" parameterType="hashmap">
+	<select id="list" resultType="com.moaplace.dto.RentalListDTO">
 		select * from
 		(
 			select r.*, rownum rnum
@@ -53,4 +53,11 @@
 		where rental_num = #{rental_num}
 	</update>
 	
+	
+	<select id="getSchedules" resultType="com.moaplace.dto.RentalCalendarDTO">
+		SELECT rental_num, hall_num, rental_date, rental_time,rental_title
+		FROM rental
+		WHERE rental_date between #{startDate} and #{endDate}
+		ORDER BY rental_date asc, rental_time asc
+	</select>
 </mapper>

@@ -6,7 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.moaplace.dto.RentalInsertDTO;
+import com.moaplace.dto.RentalCalendarDTO;
+import com.moaplace.dto.RentalListDTO;
 import com.moaplace.mapper.RentalMapper;
 import com.moaplace.vo.RentalVO;
 
@@ -27,7 +28,11 @@ public class RentalService {
 		return mapper.list(map);
 	}
 	
-	public int updateState (HashMap<String, Object> data) {
-		return mapper.updateState(data);
+	public int updateState (HashMap<String, Object> map) {
+		return mapper.updateState(map);
+	}
+	
+	public List<RentalCalendarDTO> getSchedules(HashMap<String, String> map){
+		return mapper.getSchedules(map);
 	}
 }
