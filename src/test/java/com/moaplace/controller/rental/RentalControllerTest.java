@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
@@ -22,7 +23,7 @@ import lombok.extern.log4j.Log4j;
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml", "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
 @Log4j
 @WebAppConfiguration
-public class InsertControllerTest {
+public class RentalControllerTest {
 	@Autowired
 	private RentalService service;
 	
@@ -38,4 +39,14 @@ public class InsertControllerTest {
 		assertEquals(1,n);
 	}
 	
+	
+	@Test
+	public void updateStateTest() {
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put("rental_num", 5);
+		data.put("rental_state", "사용완료");
+		
+		int n = service.updateState(data);
+		assertEquals(1, n);
+	}
 }

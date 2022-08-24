@@ -1,21 +1,19 @@
 package com.moaplace.controller.rental;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moaplace.dto.RentalInsertDTO;
 import com.moaplace.service.RentalService;
 import com.moaplace.util.FileUtil;
+import com.moaplace.util.PageUtil;
 import com.moaplace.vo.RentalVO;
 
 import lombok.extern.log4j.Log4j;
@@ -31,11 +30,70 @@ import lombok.extern.log4j.Log4j;
 @RestController
 @RequestMapping("/rental")
 @Log4j
-public class InsertController {
+public class RentalController {
 	@Autowired
 	private RentalService service;
 	@Autowired
 	private FileUtil fileutil;
+	
+	@GetMapping
+	(value = "/update/{num}/{state}")
+	public String updateState(
+			@PathVariable Integer num,//대관신청번호
+			@PathVariable String state)//진행상태
+	{
+		log.info("num:" + num);
+		log.info("state:" + state);
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put("rental_num", num);
+		data.put("rental_state", state);
+		
+		int n = service.updateState(data);
+		
+		if( n < 0 ) return "fail";
+		
+		return "success";
+	}
+	
+	
+	@GetMapping
+	(value= {"/list","/list/{pagenum}","/list/{sort}/{keyword}","/list/{pagenum}/{sort}/{keyword}"},
+	produces= {MediaType.APPLICATION_JSON_VALUE})
+	public HashMap<String, Object> list(
+			@PathVariable(required=false) Integer pagenum,
+			@PathVariable(required=false) String sort,
+			@PathVariable(required=false) String keyword)
+	{
+		log.info("pagenum : " + pagenum);
+		log.info("sort : " + sort);
+		log.info("keyword : " + keyword);
+		
+		if(pagenum == null) {
+			pagenum = 1;
+		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("pagenum" , pagenum);
+		map.put("sort" , sort);
+		map.put("keyword" , keyword);
+		int totalRowCount = service.getCount(map);
+		
+		PageUtil pageutil = new PageUtil(pagenum, 5, 5, totalRowCount);
+		int startRow = pageutil.getStartRow();
+		int endRow = pageutil.getEndRow();
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		List<RentalVO> list = service.list(map);
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put("list", list);
+		data.put("pageUtil", pageutil);
+		data.put("sort", sort);
+		data.put("keyword", keyword);
+		
+		return data;
+	}
+	
 	
 	@PostMapping
 	(value = "/insert",
@@ -63,8 +121,7 @@ public class InsertController {
 				vo.setRental_email(dto.getRental_email());
 				vo.setRental_title(dto.getRental_title());
 				vo.setRental_genre(dto.getRental_genre());
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-				vo.setRental_date(formatter.parse(dto.getRental_date()));
+				vo.setRental_date(dto.getRental_date());
 				vo.setRental_time(dto.getRental_time());
 				vo.setRental_originfilename(String.valueOf(fileinfo.get("orgfilename")));
 				vo.setRental_savefilename(String.valueOf(fileinfo.get("savefilename")));

@@ -1,6 +1,10 @@
 package com.moaplace.dto;
 
 
+import java.sql.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -12,7 +16,7 @@ public class RentalInsertDTO {
     private String rental_email;
     private String rental_title;
     private String rental_genre;
-    private String rental_date;
+    private Date rental_date;
     private String rental_time;
     private String rental_ownsname;
     private String rental_ownsphone;
