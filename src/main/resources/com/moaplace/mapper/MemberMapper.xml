@@ -4,6 +4,7 @@
      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.moaplace.mapper.MemberMapper">
+
 	<select id="findById" resultType="string">
 		SELECT member_id FROM member
 		WHERE member_name = #{member_name} AND member_email = #{member_email} AND enabled = 1
@@ -11,11 +12,11 @@
 	
 	<select id="findByPassword" resultType="string">
 		SELECT member_pwd FROM member
-		WHERE member_id = #{member_id} AND member_email = #{member_email} AND enabled = 1 
+		WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 	
-	<select id="login" resultType="string">
-		SELECT member_id FROM member
+	<select id="login" resultType="com.moaplace.dto.MemberLoginResponseDTO">
+		SELECT member_id, authority FROM member
 		WHERE member_id = #{member_id} AND member_pwd = #{member_pwd} AND enabled = 1
 	</select>
 	
@@ -23,14 +24,13 @@
 		SELECT member_id FROM member
 		WHERE member_id = #{member_id} AND enabled = 1
 	</select>
-	
+
 	<insert id="join">
 		INSERT INTO 
 		member(member_num, member_id, member_pwd, member_email, member_name,
 			member_gender, member_birth, member_phone, member_address, member_point)
 		VALUES(member_seq.nextval, #{member_id}, #{member_pwd}, #{member_email}, #{member_name},
 			#{member_gender}, #{member_birth}, #{member_phone}, #{member_address}, 2000)
-		
 	</insert>
 	
 	<select id="selectAll" resultType="com.moaplace.vo.MemberVO">
@@ -40,4 +40,5 @@
 	<select id="findOne" resultType="com.moaplace.vo.MemberVO">
 		SELECT * FROM member WHERE member_id = #{member_id} AND enabled = 1
 	</select>
+	
 </mapper>
