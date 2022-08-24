@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.moaplace.dto.RentalCalendarDTO;
 import com.moaplace.service.RentalService;
 import com.moaplace.vo.RentalVO;
 
@@ -48,5 +50,17 @@ public class RentalControllerTest {
 		
 		int n = service.updateState(data);
 		assertEquals(1, n);
+	}
+	
+	@Test
+	public void calendarTest() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put( "startDate" , "2022-08-01" );
+		map.put( "endDate" , "2022-08-31" );
+		
+		List<RentalCalendarDTO> list = service.getSchedules(map);
+		
+		log.info(list);
+		assertNotNull(list);
 	}
 }
