@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.BookingMapper">
+	
+	<!-- member_num으로 회원의 예매내역 존재여부 확인 -->
+	<select id="bookingExist" resultType="int" parameterType="int">
+		select NVL(count(*),0) cnt from booking
+		where member_num = #{member_num}
+	</select>
+	
+	<!-- member_num으로 회원의 가장 최근 예매내역 1건 조회 -->
+	<select id="recentBooking" resultType="com.moaplace.dto.MyBookingDTO" parameterType="int">
+		select * from (
+		    select b.booking_num,b.regdate,sh.show_thumbnail,sh.show_name,h.hall_name,
+		    sc.schedule_date,sc.schedule_time,b.booking_seat,b.booking_price,p.payment_status,sh.show_num
+		    from booking b
+		    join payment p on (b.booking_num = p.booking_num)
+		    join schedule sc on (b.schedule_num = sc.schedule_num)
+		    join show sh on (sc.show_num = sh.show_num)
+		    join hall h on (sh.hall_num = h.hall_num)
+		    where b.member_num = #{member_num}
+		    order by b.booking_num desc
+		) where rownum = 1
+	</select>
+	
+</mapper>

@@ -4,5 +4,11 @@
      "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
 <mapper namespace="com.moaplace.mapper.MemberMapper">
-
+	
+	<!-- 멤버번호로 로그인한 회원의 정보를 불러온다 -->
+	<select id="findLoginUser" resultType="com.moaplace.vo.MemberVO" parameterType="int">
+		select * from member 
+		where member_num = #{memberNum}
+	</select>
+	
 </mapper>
