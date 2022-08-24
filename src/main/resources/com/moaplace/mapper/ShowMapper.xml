@@ -18,4 +18,59 @@
 	#{intermission},#{running_time},#{show_thumbnail},null)
 </insert>
 
+<select id="showList" resultType="com.moaplace.dto.admin.show.ShowListDTO">
+
+	SELECT * FROM (
+
+		SELECT ROWNUM rn, A.* 
+		
+		FROM(
+		
+			SELECT s.show_num num, h.hall_name hall, s.show_name title, 
+			
+				TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
+				
+			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num 
+			
+			ORDER BY show_num DESC) A) 
+			
+	WHERE rn BETWEEN 1 AND 5
+</select>
+
+<select id="showDetail" parameterType="int" resultType="com.moaplace.dto.admin.show.MapperDetailDTO">
+	<![CDATA[
+		SELECT a.* , i.show_detail_img detailImgs 
+		
+			FROM (
+			
+			SELECT 
+				s.show_num num, 
+				s.show_name title, 
+				h.hall_name hall, 
+				g.genre_category genre,
+				s.show_check status, 
+				s.running_time runningTime, 
+				s.intermission intermission, 
+				(h.hall_cols * hall_rows) seats,
+				s.show_age age, 
+				TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, 
+				TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, 
+				TO_CHAR(s.stop_start, 'YYYY-MM-DD') blockStartDate, 
+				TO_CHAR(s.stop_end, 'YYYY-MM-DD') blockEndDate, 
+				s.show_thumbnail thumbnail
+			
+			FROM show s 
+			INNER JOIN hall h 
+			ON h.hall_num = s.hall_num 
+			
+			INNER JOIN genre g 
+			ON s.genre_num = g.genre_num) a 
+			
+		RIGHT JOIN show_img i
+		ON a.num = i.show_num 
+		
+		WHERE show_num = #{num}
+	]]>
+</select>
+
 </mapper>

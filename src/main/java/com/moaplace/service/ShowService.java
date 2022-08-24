@@ -4,12 +4,16 @@ package com.moaplace.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.moaplace.dto.admin.show.MapperDetailDTO;
+import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
+import com.moaplace.dto.admin.show.ShowListDTO;
 import com.moaplace.mapper.GradeMapper;
 import com.moaplace.mapper.ShowMapper;
 import com.moaplace.mapper.Show_imgMapper;
@@ -95,4 +99,45 @@ public class ShowService {
 		
 	}
 	
+	
+	public List<ShowListDTO> showList(){
+		
+		List<ShowListDTO> list=showmapper.showList();
+		
+		log.info(list);
+		
+		return list;
+	}
+	
+	public ShowDetailViewDTO showDetail(int num) {
+		
+		List<MapperDetailDTO> list = showmapper.showDetail(num);
+		ShowDetailViewDTO dto = new ShowDetailViewDTO();
+		
+		dto.setNum(list.get(0).getNum());
+		dto.setTitle(list.get(0).getTitle());
+		dto.setHall(list.get(0).getHall());
+		dto.setGenre(list.get(0).getGenre());
+		dto.setStatus(list.get(0).getStatus());
+		dto.setRunningTime(list.get(0).getRunningTime());
+		dto.setIntermission(list.get(0).getIntermission());
+		dto.setSeats(list.get(0).getSeats());
+		dto.setAge(list.get(0).getAge());
+		dto.setStartDate(list.get(0).getStartDate());
+		dto.setEndDate(list.get(0).getEndDate());
+		dto.setBlockStartDate(list.get(0).getBlockStartDate());
+		dto.setBlockEndDate(list.get(0).getBlockEndDate());
+		dto.setThumbnail(new String(list.get(0).getThumbnail()));
+		
+		ArrayList<String> arrList = new ArrayList<>();
+		
+		for(int i=0; i < list.size(); i++) {
+			MapperDetailDTO reqDto =list.get(i);
+			arrList.add(new String(reqDto.getDetailImgs()));
+		}
+		
+		dto.setDetailImgs(arrList);
+		
+		return dto;
+	}
 }
