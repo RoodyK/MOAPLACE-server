@@ -1,5 +1,7 @@
 package com.moaplace.controller;
 
+import java.sql.SQLException;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +23,13 @@ public class DataSoruceTest {
 	private BasicDataSource dataSource;
 	
 	@Test
-	public void test() {		
-		if(dataSource != null) {
-			log.info(dataSource.getDriverClassName());
-			log.info(dataSource.getUrl());
-			log.info(dataSource.getUsername());
+	public void test() {
+		try {
+			log.info(dataSource.getConnection());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 	}
 }
