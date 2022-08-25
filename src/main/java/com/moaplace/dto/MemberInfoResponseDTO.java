@@ -2,6 +2,8 @@ package com.moaplace.dto;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -15,6 +17,7 @@ public class MemberInfoResponseDTO {
 	private String membeR_birth;
 	private String member_phone;
 	private String member_address;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date regDate;
 	private int member_point;
 }

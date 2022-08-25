@@ -48,6 +48,7 @@ public class JWTServiceTest {
 		log.info(Auth.ROLE_MEMBER.name().equals("ROLE_MEMBER"));
 	}
 	
+	// 토큰 생성 테스트
 	@Test
 	public void createTokenTest() {
 		String jwtToken = service.createToken("abcd", "ROLE_MEMBER");
@@ -67,5 +68,15 @@ public class JWTServiceTest {
 		
 		log.info("============================================");
 		log.info("토큰 유효성 확인 true 사용가능 , false 만료 :  " + service.validateToken(jwtToken));
+	}
+	
+	@Test
+	public void tokenRolesTest() {
+		String jwtToken = service.createToken("abc", "ROLE_MEMBER");
+		log.info("토큰 생성 : " + jwtToken);
+		log.info("============================================");
+		
+		String roles = (String) service.getClaims(jwtToken).get("roles");
+		log.info("roles : " + roles);
 	}
 }
