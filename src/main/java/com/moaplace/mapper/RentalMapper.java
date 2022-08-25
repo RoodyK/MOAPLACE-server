@@ -1,5 +1,6 @@
 package com.moaplace.mapper;
 
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +12,10 @@ import com.moaplace.dto.MyRentalDetailDTO;
 @Mapper
 public interface RentalMapper {
 	
+  int insert(RentalVO vo);
+  
+	RentalVO select();
+  
 	// member_num으로 회원의 대관내역 존재여부 확인
 	int rentalExist(int member_num);
 	
@@ -25,4 +30,5 @@ public interface RentalMapper {
 	
 	// rental_num으로 대관상세내역 조회
 	MyRentalDetailDTO detail(int rental_num);
+
 }

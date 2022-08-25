@@ -1,6 +1,6 @@
 package com.moaplace.vo;
 
-import java.sql.Date;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberVO {
+
 	private int member_num;
 	private String member_id;
 	private String member_pwd;

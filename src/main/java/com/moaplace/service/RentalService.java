@@ -43,5 +43,13 @@ public class RentalService {
 	public MyRentalDetailDTO detail(int rental_num) {
 		return mapper.detail(rental_num);
 	};
+  
+	public int insert(RentalVO vo) {
+		return mapper.insert(vo);
+	}
 	
+	public RentalVO select() {
+		return mapper.select();
+	}
+
 }

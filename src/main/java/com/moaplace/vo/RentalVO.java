@@ -1,15 +1,18 @@
 package com.moaplace.vo;
 
-import java.sql.Date;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
+
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
+
 public class RentalVO {
+
 	private int rental_num;
 	private int member_num;
 	private int hall_num;

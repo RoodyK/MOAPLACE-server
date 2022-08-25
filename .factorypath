@@ -1,3 +1,4 @@
+
 <factorypath>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-context/5.2.12.RELEASE/spring-context-5.2.12.RELEASE.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/org/springframework/spring-aop/5.2.12.RELEASE/spring-aop-5.2.12.RELEASE.jar" enabled="true" runInBatchMode="false"/>
@@ -80,5 +81,7 @@
     <factorypathentry kind="EXTJAR" id="C:\Tools\apache-tomcat9\apache-tomcat-9.0.62\lib\websocket-api.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="JUNIT_HOME/junit.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="ECLIPSE_HOME/plugins/org.hamcrest.core_1.3.0.v20180420-1519.jar" enabled="true" runInBatchMode="false"/>
+
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
 </factorypath>
+
