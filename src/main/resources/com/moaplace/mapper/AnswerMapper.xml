@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.AnswerMapper">
+
+	<!-- 사용자 답변 조회 -->
+	<select id="select" resultType="com.moaplace.dto.QnaAnswerDTO">
+    	select answer_title, answer_content from answer where qna_num = #{qna_num}
+  	</select>
+  	
+  	<!-- 관리자 답변 조회 -->
+  	<select id="selectAdmin" resultType="com.moaplace.vo.AnswerVO">
+    	select * from answer where qna_num = #{qna_num}
+  	</select>
+  	
+  	<!-- 답변 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from answer where qna_num=#{qna_num}
+	</delete>
+	
+	<!-- 답변 수정 -->
+	<update id="update" parameterType="com.moaplace.vo.AnswerVO">
+		update answer set answer_title=#{answer_title}, answer_content=#{answer_content}
+		where answer_num=#{answer_num}
+  	</update>
+  	
+	<!-- 답변 등록 -->
+	<insert id="insert" parameterType="com.moaplace.vo.AnswerVO">
+		insert into answer
+		values(ANSWER_SEQ.nextval,#{qna_num},#{answer_title},#{answer_content},sysdate)
+  	</insert>
+  	
+</mapper>
