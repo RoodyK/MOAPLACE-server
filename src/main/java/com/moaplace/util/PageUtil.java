@@ -24,10 +24,10 @@ public class PageUtil {
 	 * @param totalRowCount  전체 행의 갯수
 	 */
 	public PageUtil(int pageNum, int rowBlockCount, int pageBlockCount, int totalRowCount) {
-		this.pageNum = pageNum;
-		this.rowBlockCount = rowBlockCount;
-		this.pageBlockCount = pageBlockCount;
-		this.totalRowCount = totalRowCount;
+		this.pageNum = pageNum; //페이지번호
+		this.rowBlockCount = rowBlockCount; //페이지 내 글의 개수
+		this.pageBlockCount = pageBlockCount; //페이지 개수
+		this.totalRowCount = totalRowCount; //전체글 갯수
 		startRow = (pageNum - 1) * rowBlockCount + 1;
 		endRow = startRow + rowBlockCount - 1;
 		totalPageCount = (int) Math.ceil(totalRowCount / (double) rowBlockCount);
