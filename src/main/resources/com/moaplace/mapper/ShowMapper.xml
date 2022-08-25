@@ -15,7 +15,7 @@
 	
 	#{show_start},#{show_end},#{show_check},null,null,#{show_age},
 	
-	#{intermission},#{running_time},#{show_thumbnail},null)
+	#{intermission},#{running_time},#{show_thumbnail})
 </insert>
 
 <select id="showList" parameterType="hashmap" resultType="com.moaplace.dto.admin.show.ShowListDTO">
@@ -30,7 +30,22 @@
 			
 			TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
 				
-			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num 
+			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
+			
+			<trim prefix="WHERE" prefixOverrides="AND">
+				<if test="showCheck != all">
+					show_check = #{showCheck}
+				</if>
+				<if test="search = title">
+					AND show_name = #{search}
+				</if>
+				<if test="search = hall">
+					AND ${field} = #{search}
+				</if>
+				<if test="search = showNum">
+					AND ${field} = #{search}
+				</if>
+			</trim>
 			
 			ORDER BY show_num DESC) A) 
 			
