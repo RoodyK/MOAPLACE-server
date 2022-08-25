@@ -24,10 +24,7 @@ public interface RentalMapper {
 	RentalVO detail(int rental_num);
 	RentalVO select();
   
-  
-  
-  
-  
+ 
 	// member_num으로 회원의 대관내역 존재여부 확인
 	int rentalExist(int member_num);
 	
