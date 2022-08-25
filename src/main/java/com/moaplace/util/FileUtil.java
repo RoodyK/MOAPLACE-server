@@ -3,14 +3,11 @@ package com.moaplace.util;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.UUID;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,10 +23,10 @@ import lombok.extern.log4j.Log4j;
 @Component
 @Log4j
 public class FileUtil {
-	@Autowired
-	private ServletContext sc;
-	@Autowired
-	private HttpServletRequest request;
+	
+	@Value("${oracle.download}")
+	private String realPath; 
+	
 	/**
 	 * @apiNote 단일파일을 업로드 폴더에 저장합니다.
 	 * 폴더명은 해당 게시판명을 영어로 써야합니다. ex) 대관신청 - rental
@@ -41,7 +38,7 @@ public class FileUtil {
 			MultipartFile file, String folder)
 	{
 		HashMap<String, Object> fileinfo= new HashMap<String, Object>();
-		String path = sc.getRealPath("/src/main/webapp/resources/upload");
+		String path = realPath;
 		log.info("저장경로: "+ path);
 		String orgfilename = file.getOriginalFilename();
 		String savefilename = UUID.randomUUID() + "_" + orgfilename;
