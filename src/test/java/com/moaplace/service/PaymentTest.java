@@ -1,4 +1,6 @@
-package com.moaplace.controller;
+package com.moaplace.service;
+
+import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
@@ -7,20 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.service.MemberService;
-import com.moaplace.vo.MemberVO;
+import com.moaplace.service.PaymentService;
 
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
-public class MemberTest {
+public class PaymentTest {
 	
 	@Autowired
 	private BasicDataSource dataSource;
 	@Autowired
-	private MemberService service;
+	private PaymentService service;
 	
 	@Test
 	public void test() {		
@@ -30,8 +31,8 @@ public class MemberTest {
 	}
 	
 	@Test
-	public void findLoginUser() {
-		MemberVO vo = service.findLoginUser(1);
-		log.info("조회결과 : " + vo);
+	public void ticketCancle() {
+		int n = service.ticketCancle(1);
+		assertEquals(n, 1);
 	}
 }

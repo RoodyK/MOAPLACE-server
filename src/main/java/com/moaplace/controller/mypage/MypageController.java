@@ -9,7 +9,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +20,7 @@ import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.dto.MyRentalDTO;
 import com.moaplace.service.BookingService;
+import com.moaplace.service.PaymentService;
 import com.moaplace.service.RentalService;
 import com.moaplace.util.PageUtil;
 
@@ -32,6 +36,8 @@ public class MypageController {
 	private BookingService bookingService;
 	@Autowired
 	private RentalService rentalService;
+	@Autowired
+	private PaymentService paymentService;
 	
 	/* 로그인한 회원의 최근 예매내역 1건 + 최근 대관내역 1건 조회 */
 	@RequestMapping(value = "/{member_num}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -127,6 +133,30 @@ public class MypageController {
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			
+			// 예매상세내역정보
+			MyBookingDetailDTO dto = bookingService.detail(booking_num);
+			map.put("dto", dto);
+			
+			// 예매취소가능여부 (현재일이 공연일 3일이내면 false)
+			boolean cancle = bookingService.getScheduleDate(booking_num);
+			map.put("cancle", cancle);
+			
+			return map;
+			
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			return null;
+		}
+	}
+	
+	@GetMapping(value = "/ticket/cancle/{booking_num}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> ticketCancle(@PathVariable("booking_num") int booking_num) {
+		
+		try {
+			log.info(booking_num);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
 			MyBookingDetailDTO dto = bookingService.detail(booking_num);
 			map.put("dto", dto);
 			
@@ -135,6 +165,24 @@ public class MypageController {
 		} catch (Exception e) {
 			log.info(e.getMessage());
 			return null;
+		}
+	}
+	
+	@PostMapping(value = "/ticket/cancle", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public String ticketCancleOk(@RequestBody int booking_num) {
+		
+		try {
+			log.info(booking_num);
+			
+			int n = paymentService.ticketCancle(booking_num);
+			
+			if( n > 0 ) return "success";
+			
+			return "fail";
+			
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			return "fail";
 		}
 	}
 }

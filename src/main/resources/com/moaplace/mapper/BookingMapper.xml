@@ -75,4 +75,11 @@
 		where b.booking_num = #{booking_num}
 	</select>
 	
+	<!-- booking_num으로 공연일 조회 -->
+	<select id="getScheduleDate" resultType="String" parameterType="int">
+		select sc.schedule_date from booking b
+		join schedule sc on (b.schedule_num = sc.schedule_num)
+		where booking_num = #{booking_num}
+	</select>
+	
 </mapper>

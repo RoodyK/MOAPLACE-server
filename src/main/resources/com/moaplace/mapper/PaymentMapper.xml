@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.PaymentMapper">
+	
+	<!-- 예매번호로 공연정보 조회해서 결제상태 결제취소로 변경 -->
+	<update id="ticketCancle" parameterType="int">
+		update payment set payment_status = '결제취소'
+		where booking_num = #{booking_num}
+	</update>
+	
+</mapper>
