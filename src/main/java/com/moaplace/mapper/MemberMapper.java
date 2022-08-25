@@ -1,5 +1,8 @@
 package com.moaplace.mapper;
 
+
+import org.apache.ibatis.annotations.Mapper;
+import com.moaplace.vo.MemberVO;
 import java.util.List;
 
 import com.moaplace.dto.MemberInfoResponseDTO;
@@ -26,4 +29,5 @@ public interface MemberMapper {
 	public MemberVO findOne();
 	
 	public int join(MemberJoinRequestDTO dto);
+
 }
