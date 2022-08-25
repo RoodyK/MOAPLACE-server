@@ -150,6 +150,7 @@
 			<artifactId>commons-dbcp2</artifactId>
 			<version>2.9.0</version>
 		</dependency>
+		
 		<!-- ojdbc8 -->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
@@ -161,20 +162,16 @@
 		    <artifactId>oraclepki</artifactId>
 		    <version>21.6.0.0.1</version>
 		</dependency>
-		
 		<dependency>
 		    <groupId>com.oracle.database.security</groupId>
 		    <artifactId>osdt_cert</artifactId>
 		    <version>21.6.0.0.1</version>
 		</dependency>
-		
 		<dependency>
 		    <groupId>com.oracle.database.security</groupId>
 		    <artifactId>osdt_core</artifactId>
 		    <version>21.6.0.0.1</version>
 		</dependency>
-
-		
 		
 		<!-- lombok -->
 		<dependency>
@@ -250,6 +247,20 @@
 		    <groupId>com.fasterxml.jackson.dataformat</groupId>
 		    <artifactId>jackson-dataformat-xml</artifactId>
 		    <version>2.13.3</version>
+		</dependency>
+		
+		<!-- jwt -->
+		<!-- io.jsonwebtoken/jjwt -->
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt</artifactId>
+		    <version>0.9.1</version>
+		</dependency>
+		<!-- jaxb-api 자바9버전이후에 xml처리를 위한 모듈 -->
+		<dependency>
+		    <groupId>javax.xml.bind</groupId>
+		    <artifactId>jaxb-api</artifactId>
+		    <version>2.3.1</version>
 		</dependency>
 		
 	</dependencies>
