@@ -100,11 +100,12 @@ public class ShowService {
 	}
 	
 	
-	public List<ShowListDTO> showList(){
+	public List<ShowListDTO> showList(HashMap<String, Object> map){
 		
-		List<ShowListDTO> list=showmapper.showList();
+		List<ShowListDTO> list = showmapper.showList(map);
 		
-		log.info(list);
+		int cntRow = showmapper.cntRow();
+		log.info(cntRow);
 		
 		return list;
 	}
@@ -139,5 +140,10 @@ public class ShowService {
 		dto.setDetailImgs(arrList);
 		
 		return dto;
+	}
+	
+	public int countRow() {
+		
+		return showmapper.cntRow();
 	}
 }

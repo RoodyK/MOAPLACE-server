@@ -19,6 +19,7 @@ import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
 import com.moaplace.service.ShowService;
+import com.moaplace.util.PageUtil;
 
 import lombok.extern.log4j.Log4j;
 
@@ -49,15 +50,25 @@ public class ShowInsertController {
 		return map;
 		
 	}
-	@GetMapping(value = "/list")
-	public HashMap<String, Object> list(){
+	@GetMapping(value = "/list/{pageNum}")
+	public HashMap<String, Object> list(
+			@PathVariable("pageNum") int pageNum){
 		
-		List<ShowListDTO> list=service.showList();
-		HashMap<String, Object> map=new HashMap<String, Object>();
-		map.put("list",list);
-		if(list.size() < 1) {
-			return null;
+		if(pageNum==0) {
+			pageNum=1;
 		}
+		PageUtil pu = new PageUtil(pageNum,5,5,service.countRow());
+		
+		HashMap<String, Object> sList = new HashMap<String, Object>();
+			sList.put("startRow",pu.getStartRow());
+			sList.put("endRow",pu.getEndRow());
+
+		List<ShowListDTO> list=service.showList(sList);
+		HashMap<String, Object> map=new HashMap<String, Object>();
+			map.put("list",list);
+			map.put("pageNum",pageNum);
+			map.put("pageInfo",pu);
+			
 		return map;
 	}
 	
