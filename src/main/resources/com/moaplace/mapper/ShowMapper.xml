@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     
+<mapper namespace="com.moaplace.mapper.ShowMapper">
+	
+	<select id="list" resultType="com.moaplace.vo.ShowVO" parameterType="hashmap">
+		select * from (
+		    select rownum rnum, s.* from (
+		        select * from show
+		        <![CDATA[ WHERE show_start >= #{start_date} AND show_start <= #{end_date} ]]>
+		        order by show_num desc
+		    ) s
+		) sh
+		<![CDATA[ where rnum >= #{startRow} and rnum <= #{endRow} ]]>
+	</select>
+	
+	<!-- 전체 공연 갯수 -->
+     <select id="count" resultType="int">
+     	select NVL(count(*),0) cnt from show      	
+     </select>
+</mapper>
