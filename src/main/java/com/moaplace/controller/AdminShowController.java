@@ -1,4 +1,4 @@
-package com.moaplace.controller.admin.show;
+package com.moaplace.controller;
 
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import lombok.extern.log4j.Log4j;
 @RestController
 @RequestMapping("/admin/show")
 @Log4j
-public class ShowInsertController {
+public class AdminShowController {
 	@Autowired private ShowService service;
 	
 	
@@ -50,38 +50,50 @@ public class ShowInsertController {
 		return map;
 		
 	}
-	@GetMapping(value = "/list/{pageNum}")
+	@GetMapping(value = "/list/{pageNum}/{status}/{field}/{search}")
 	public HashMap<String, Object> list(
-			@PathVariable("pageNum") int pageNum){
+			@PathVariable( "pageNum" ) int pageNum,
+			@PathVariable( "status" ) String status,
+			@PathVariable( "field" ) String field,
+			@PathVariable( "search" ) String search){
 		
-		if(pageNum==0) {
+		
+		log.info("페이지 요청 들어옴");
+		
+		if(pageNum==0) { //페이지값이 넘어오지 않았을 때 기본 1로 고정
 			pageNum=1;
 		}
+		
 		PageUtil pu = new PageUtil(pageNum,5,5,service.countRow());
 		
 		HashMap<String, Object> sList = new HashMap<String, Object>();
-			sList.put("startRow",pu.getStartRow());
-			sList.put("endRow",pu.getEndRow());
+		
+			sList.put( "startRow", pu.getStartRow());
+			sList.put( "endRow", pu.getEndRow());
+			sList.put( "showCheck", status);
+			sList.put( "field", field);
+			sList.put( "search", search);
 
 		List<ShowListDTO> list=service.showList(sList);
+		
 		HashMap<String, Object> map=new HashMap<String, Object>();
-			map.put("list",list);
-			map.put("pageNum",pageNum);
-			map.put("pageInfo",pu);
+		
+			map.put( "list", list);
+			map.put( "pageNum", pageNum);
+			map.put( "pageInfo", pu);
 			
 		return map;
 	}
 	
-	@GetMapping( value = "/detail/{showNum}")
+	@GetMapping( value = "/detail/{showNum}/{field}/{search}")
 	public HashMap<String, Object> showDetail(
 			@PathVariable("showNum") int showNum){
 		
-		log.info("요청 들어옴");
+		
 		ShowDetailViewDTO dto= service.showDetail(showNum);
 		HashMap<String, Object> map=new HashMap<String, Object>();
 			map.put("list",dto);
 		return map;
 	}
-	
 	
 }
