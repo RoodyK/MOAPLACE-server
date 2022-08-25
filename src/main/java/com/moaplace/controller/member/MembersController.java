@@ -113,14 +113,19 @@ public class MembersController {
 	// 회원정보
 	@GetMapping(value = "/login/member/info", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MemberInfoResponseDTO> getMemberInfo(
+	public ResponseEntity<Map<String, Object>> getMemberInfo(
 			HttpServletRequest request) {
+		
+		Map<String, Object> map = new HashMap<>();
 		
 		String token = request.getHeader("Authorization");
 		String id = tokenService.getUserId(token);
+		String roles = (String) tokenService.getClaims(token).get("roles");
 		
 		MemberInfoResponseDTO info = memberService.getMemberInfo(id);
+		map.put("info", info);
+		map.put("roles", roles);
 		
-		return ResponseEntity.ok().body(info);
+		return ResponseEntity.ok().body(map);
 	}
 }
