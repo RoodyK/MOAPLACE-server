@@ -72,10 +72,11 @@ public class RentalTest {
 		map.put("startRow", 1);
 		map.put("endRow", 3);
 		
-		List<MyRentalDTO> list = service.list(map);
+		List<MyRentalDTO> list = service.myList(map);
 		
 		log.info("list : " + list);
 	}
+	
 	
 	@Test
 	public void listCount() {

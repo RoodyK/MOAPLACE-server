@@ -21,7 +21,7 @@ public interface RentalMapper {
 	List<RentalVO> list(HashMap<String, Object> map);
 	int updateState(HashMap<String, Object> map);
 	List<RentalCalendarDTO> getSchedules(HashMap<String, String> map);
-	RentalVO detail(int rental_num)
+	RentalVO detail(int rental_num);
 	RentalVO select();
   
   

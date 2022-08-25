@@ -28,7 +28,7 @@ public class RentalVO {
 	private String rental_time;
 	private String rental_originfilename;
 	private String rental_savefilename;
-	private int rental_filesize;
+	private long rental_filesize;
 	private String rental_ownsname;
 	private String rental_ownsphone;
 	private String rental_ownemail;
