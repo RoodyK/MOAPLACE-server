@@ -1,6 +1,6 @@
 package com.moaplace.controller.rental;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals; 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Date;
