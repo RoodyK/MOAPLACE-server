@@ -1,4 +1,4 @@
-package com.moaplace.controller;
+package com.moaplace.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -121,5 +121,10 @@ public class BookingTest {
 	public void detail() {
 		MyBookingDetailDTO dto = service.detail(1);
 		log.info("detail : " + dto);
+	}
+	
+	@Test
+	public void getScheduleDate() {
+		log.info("getScheduleDate : " + service.getScheduleDate(1));
 	}
 }
