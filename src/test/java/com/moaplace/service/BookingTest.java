@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
-import com.moaplace.service.BookingService;
 
 import lombok.extern.log4j.Log4j;
 

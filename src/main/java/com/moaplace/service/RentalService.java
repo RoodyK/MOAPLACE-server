@@ -1,5 +1,8 @@
 package com.moaplace.service;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,4 +27,15 @@ public class RentalService {
 	public MyRentalDTO recentRental(int member_num) {
 		return mapper.recentRental(member_num);
 	}
+	
+	// member_num + startdate + enddate + startrow + endrow 받아서 기간설정 + 페이징 조회
+	public List<MyRentalDTO> list(HashMap<String, Object> map) {
+		return mapper.list(map);
+	}
+	
+	// 기간설정  + 페이징 조회된 내역 개수
+	public int listCount(HashMap<String, Object> map) {
+		return mapper.listCount(map);
+	}
+	
 }

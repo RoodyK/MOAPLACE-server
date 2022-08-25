@@ -20,9 +20,9 @@ public class PageUtil {
 	
 	/*
 	 * @param pageNum 페이지번호
-	 * @param rowBlockCount 한페이지에 보여질 글의 개수
+	 * @param rowBlockCount 한페이지에 보여질 행의 개수
 	 * @param pageBlockCount 한페이지에 보여질 페이지의 개수
-	 * @param totalRowCount 전체 글의 개수
+	 * @param totalRowCount 전체 행의 개수
 	 */
 	
 	public PageUtil(int pageNum, int rowBlockCount, int pageBlockCount, int totalRowCount) {

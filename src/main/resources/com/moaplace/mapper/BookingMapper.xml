@@ -41,7 +41,7 @@
 		        and b.regdate between #{startdate} and #{enddate}
 		        order by b.booking_num desc
 		    )r
-		)where rownum between #{startRow} and #{endRow}
+		)where rnum between #{startRow} and #{endRow}
 	</select>
 	
 	<!-- 기간설정  + 페이징 조회된 내역 개수 -->

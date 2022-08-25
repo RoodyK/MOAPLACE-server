@@ -22,4 +22,32 @@
 		) where rownum = 1
 	</select>
 	
+	<!-- member_num + startdate + enddate + startrow + endrow 받아서 기간설정 + 페이징 조회 -->
+	<select id="list" resultType="com.moaplace.dto.MyRentalDTO" parameterType="hashmap">
+		select * from (
+		    select r.*,rownum rnum from (
+		        select r.rental_num,r.regdate,h.hall_name,r.rental_date,r.rental_time,r.rental_state
+		        from rental r
+		        join hall h on (r.hall_num = h.hall_num)
+		        where r.member_num = #{member_num}
+		        and r.regdate between #{startdate} and #{enddate}
+		        order by r.rental_num desc
+		    )r
+		)where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 기간설정  + 페이징 조회된 내역 개수 -->
+	<select id="listCount" resultType="int" parameterType="hashmap">
+		select NVL(count(*),0) cnt from (
+		    select r.*,rownum rnum from (
+		        select r.rental_num,r.regdate,h.hall_name,r.rental_date,r.rental_time,r.rental_state
+		        from rental r
+		        join hall h on (r.hall_num = h.hall_num)
+		        where r.member_num = #{member_num}
+		        and r.regdate between #{startdate} and #{enddate}
+		        order by r.rental_num desc
+		    )r
+		)
+	</select>
+	
 </mapper>
