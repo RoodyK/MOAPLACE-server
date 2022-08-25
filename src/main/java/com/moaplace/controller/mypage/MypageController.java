@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.dto.MyRentalDTO;
+import com.moaplace.dto.MyRentalDetailDTO;
 import com.moaplace.service.BookingService;
 import com.moaplace.service.PaymentService;
 import com.moaplace.service.RentalService;
@@ -74,6 +75,7 @@ public class MypageController {
 		}
 	}
 	
+	/* 예매내역 5행 5페이지 조회 + 페이징 */
 	@RequestMapping(value = {"/ticket/list/{member_num}/{startdate}/{enddate}", 
 			"/ticket/list/{member_num}/{startdate}/{enddate}/{pageNum}"},
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -125,6 +127,7 @@ public class MypageController {
 		}
 	}
 	
+	/* 예매상세내역 조회 */
 	@RequestMapping(value = "/ticket/detail/{booking_num}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> ticketDetail(@PathVariable("booking_num") int booking_num) {
 		
@@ -149,6 +152,7 @@ public class MypageController {
 		}
 	}
 	
+	/* 예매취소 페이지 데이터 조회 */
 	@GetMapping(value = "/ticket/cancle/{booking_num}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> ticketCancle(@PathVariable("booking_num") int booking_num) {
 		
@@ -168,6 +172,7 @@ public class MypageController {
 		}
 	}
 	
+	/* 예매취소 실행 */
 	@PostMapping(value = "/ticket/cancle", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String ticketCancleOk(@RequestBody int booking_num) {
 		
@@ -186,6 +191,7 @@ public class MypageController {
 		}
 	}
 	
+	/* 대관내역 5행 5페이지 조회 + 페이징 */
 	@RequestMapping(value = {"/rental/list/{member_num}/{startdate}/{enddate}", 
 			"/rental/list/{member_num}/{startdate}/{enddate}/{pageNum}"},
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -228,6 +234,29 @@ public class MypageController {
 			map.put("startPage", pageUtil.getStartPageNum()); // 페이지시작번호
 			map.put("endPage", pageUtil.getEndPageNum()); // 페이지끝번호
 			map.put("pageCnt", pageUtil.getTotalPageCount()); // 전체 페이지수
+			
+			return map;
+			
+		} catch (Exception e) {
+			log.info(e.getMessage());
+			return null;
+		}
+	}
+	
+	/* 대관상세내역 조회 */
+	@RequestMapping(value = "/rental/detail/{rental_num}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Map<String, Object> rentalDetail(@PathVariable("rental_num") int rental_num) {
+		
+		try {
+			log.info(rental_num);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			// 예매상세내역정보
+			MyRentalDetailDTO dto = rentalService.detail(rental_num);
+			map.put("dto", dto);
+			
+			// 답변여부 검사 필요한지 하면서 생각좀해봄
 			
 			return map;
 			

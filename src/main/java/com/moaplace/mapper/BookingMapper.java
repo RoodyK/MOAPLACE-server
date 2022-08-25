@@ -26,7 +26,7 @@ public interface BookingMapper {
 	// booking_num으로 예매상세내역 조회
 	MyBookingDetailDTO detail(int booking_num);
 	
-	// booking_num으로 공연일 조회
+	// booking_num으로 공연일 조회(예매취소여부 조회용)
 	String getScheduleDate(int booking_num);
 	
 }

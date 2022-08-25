@@ -50,4 +50,13 @@
 		)
 	</select>
 	
+	<!-- rental_num으로 대관상세내역 조회 -->
+	<select id="detail" resultType="com.moaplace.dto.MyRentalDetailDTO" parameterType="int">
+		select r.*,h.hall_name,ra.answer_content
+		from rental r
+		join hall h on (r.hall_num = h.hall_num)
+		left join rental_answer ra on (r.rental_num = ra.rental_num)
+		where r.rental_num = #{rental_num}
+	</select>
+	
 </mapper>

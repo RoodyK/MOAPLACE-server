@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.moaplace.dto.MyRentalDTO;
+import com.moaplace.dto.MyRentalDetailDTO;
 import com.moaplace.mapper.RentalMapper;
 
 @Service
@@ -37,5 +38,10 @@ public class RentalService {
 	public int listCount(HashMap<String, Object> map) {
 		return mapper.listCount(map);
 	}
+	
+	// rental_num으로 대관상세내역 조회
+	public MyRentalDetailDTO detail(int rental_num) {
+		return mapper.detail(rental_num);
+	};
 	
 }

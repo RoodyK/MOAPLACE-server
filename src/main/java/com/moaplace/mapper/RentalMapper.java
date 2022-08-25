@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.moaplace.dto.MyRentalDTO;
+import com.moaplace.dto.MyRentalDetailDTO;
 
 @Mapper
 public interface RentalMapper {
@@ -21,4 +22,7 @@ public interface RentalMapper {
 	
 	// 기간설정  + 페이징 조회된 내역 개수
 	int listCount(HashMap<String, Object> map);
+	
+	// rental_num으로 대관상세내역 조회
+	MyRentalDetailDTO detail(int rental_num);
 }
