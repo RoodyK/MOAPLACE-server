@@ -5,4 +5,9 @@
  
 <mapper namespace="com.moaplace.mapper.MemberMapper">
 
+	<select id="qnaMember" resultType="com.moaplace.dto.QnaMemberDTO">
+    	select member_id, member_name, member_phone, member_email 
+    	from member where member_num=#{member_num}
+  	</select>
+
 </mapper>
