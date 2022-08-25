@@ -60,4 +60,9 @@
 		WHERE rental_date between #{startDate} and #{endDate}
 		ORDER BY rental_date asc, rental_time asc
 	</select>
+	
+	<select id="detail" resultType="com.moaplace.vo.RentalVO">
+		select * from rental
+		where rental_num = #{rental_num}
+	</select>
 </mapper>

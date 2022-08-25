@@ -35,4 +35,8 @@ public class RentalService {
 	public List<RentalCalendarDTO> getSchedules(HashMap<String, String> map){
 		return mapper.getSchedules(map);
 	}
+	
+	public RentalVO detail(int rental_num) {
+		return mapper.detail(rental_num);
+	}
 }
