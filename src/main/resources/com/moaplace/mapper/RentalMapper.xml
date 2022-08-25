@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.RentalMapper">
+	
+	<insert id="insert">
+		insert into rental values
+		(rental_seq.nextval, #{member_num}, #{hall_num}, 
+		#{rental_name}, #{rental_phone}, #{rental_email},
+		#{rental_title}, #{rental_genre}, #{rental_date}, #{rental_time},
+		#{rental_savefilename}, #{rental_originfilename}, #{rental_filesize},
+		#{rental_ownsname}, #{rental_ownsphone}, #{rental_ownemail},#{rental_content},
+		sysdate,'신청완료')
+	</insert>
+	
+	<select id="list" resultType="com.moaplace.dto.RentalListDTO">
+		select * from
+		(
+			select r.*, rownum rnum
+			from(
+				SELECT 
+					r.rental_num, h.hall_name, 
+					r.rental_name, r.rental_title, 
+					r.rental_date, r.rental_time, r.regdate, r.rental_state
+				FROM rental r, hall h
+				<where>
+					r.hall_num = h.hall_num
+					<if test="keyword !=null and keyword != '' ">	
+						AND ${sort} like '%'||#{keyword}||'%'
+					</if>
+				</where>
+				order by rental_num desc
+			)r
+		)
+		<![CDATA[where rnum >= #{startRow} and rnum <= #{endRow}]]>
+	</select>
+	
+	<select id="getCount" resultType="int" parameterType="hashmap">
+		select NVL(count(*),0) from rental
+		<where>
+			<if test="keyword !=null and keyword != '' ">	
+				${sort} like '%'||#{keyword}||'%'
+			</if>
+		</where>
+	</select>
+	
+	
+	<update id="updateState">
+		update rental
+		set rental_state = #{rental_state}
+		where rental_num = #{rental_num}
+	</update>
+	
+	
+	<select id="getSchedules" resultType="com.moaplace.dto.RentalCalendarDTO">
+		SELECT rental_num, hall_num, rental_date, rental_time,rental_title
+		FROM rental
+		WHERE rental_date between #{startDate} and #{endDate}
+		ORDER BY rental_date asc, rental_time asc
+	</select>
+</mapper>
