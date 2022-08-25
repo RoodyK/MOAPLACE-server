@@ -60,13 +60,15 @@
 	</select>
 	
 	<!-- 전체 글의 갯수 -->
-	<select parameterType="hashmap" id="getcount" resultType="int">
+	<select parameterType="hashmap" id="getCount" resultType="int">
 		select NVL(count(*),0) cnt from 
-		 (select n.notice_num,n,notice_title, n.notice_content, n_notice_regdate,s.sort_name, s.sort_num
-		  from notice n , sort s, member m
-		    where n.sort_num = s.sort_num
-		    and n.member_num = m.member_num
-		    order by n.notice_num desc) a
+		 (
+		  select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_name, s.sort_num
+		    from notice n , sort s, member m
+		      where n.sort_num = s.sort_num
+		       and n.member_num = m.member_num
+		       order by n.notice_num desc
+		   ) a
 		    <include refid="search" />
 	</select>
 
