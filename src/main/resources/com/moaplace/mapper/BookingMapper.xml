@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.BookingMapper">
+	
+	<!-- member_num으로 회원의 예매내역 존재여부 + 내역 개수 확인 -->
+	<select id="bookingExist" resultType="int" parameterType="int">
+		select NVL(count(*),0) cnt from booking
+		where member_num = #{member_num}
+	</select>
+	
+	<!-- member_num으로 회원의 가장 최근 예매내역 1건 조회 -->
+	<select id="recentBooking" resultType="com.moaplace.dto.MyBookingDTO" parameterType="int">
+		select * from (
+		    select b.booking_num,b.regdate,sh.show_thumbnail,sh.show_name,h.hall_name,
+		    sc.schedule_date,sc.schedule_time,b.booking_seat,b.booking_price,p.payment_status,sh.show_num
+		    from booking b
+		    join payment p on (b.booking_num = p.booking_num)
+		    join schedule sc on (b.schedule_num = sc.schedule_num)
+		    join show sh on (sc.show_num = sh.show_num)
+		    join hall h on (sh.hall_num = h.hall_num)
+		    where b.member_num = #{member_num}
+		    order by b.booking_num desc
+		) where rownum = 1
+	</select>
+	
+	<!-- member_num + startdate + enddate + startrow + endrow 받아서 기간설정 + 페이징 조회 -->
+	<select id="list" resultType="com.moaplace.dto.MyBookingDTO" parameterType="hashmap">
+		select * from (
+		    select r.*,rownum rnum from (
+		        select b.booking_num,b.regdate,sh.show_thumbnail,sh.show_name,h.hall_name,
+		        sc.schedule_date,sc.schedule_time,b.booking_seat,b.booking_price,p.payment_status,sh.show_num
+		        from booking b
+		        join payment p on (b.booking_num = p.booking_num)
+		        join schedule sc on (b.schedule_num = sc.schedule_num)
+		        join show sh on (sc.show_num = sh.show_num)
+		        join hall h on (sh.hall_num = h.hall_num)
+		        where b.member_num = #{member_num}
+		        and b.regdate between #{startdate} and #{enddate}
+		        order by b.booking_num desc
+		    )r
+		)where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 기간설정  + 페이징 조회된 내역 개수 -->
+	<select id="listCount" resultType="int" parameterType="hashmap">
+		select NVL(count(*),0) cnt from (
+		    select r.*,rownum rnum from (
+		        select b.booking_num,b.regdate,sh.show_thumbnail,sh.show_name,h.hall_name,
+		        sc.schedule_date,sc.schedule_time,b.booking_seat,b.booking_price,p.payment_status,sh.show_num
+		        from booking b
+		        join payment p on (b.booking_num = p.booking_num)
+		        join schedule sc on (b.schedule_num = sc.schedule_num)
+		        join show sh on (sc.show_num = sh.show_num)
+		        join hall h on (sh.hall_num = h.hall_num)
+		        where b.member_num = #{member_num}
+		        and b.regdate between #{startdate} and #{enddate}
+		        order by b.booking_num desc
+		    )r
+		)
+	</select>
+	
+	<!-- booking_num으로 예매상세내역 조회 -->
+	<select id="detail" resultType="com.moaplace.dto.MyBookingDetailDTO" parameterType="int">
+		select b.booking_num,b.regdate,sh.show_name,sc.schedule_date,sc.schedule_time,
+		b.booking_seat,h.hall_name,p.payment_date,b.booking_price,b.use_point,
+		p.payment_method,p.payment_status,sh.show_num
+		from booking b
+		join payment p on (b.booking_num = p.booking_num)
+		join schedule sc on (b.schedule_num = sc.schedule_num)
+		join show sh on (sc.show_num = sh.show_num)
+		join hall h on (sh.hall_num = h.hall_num)
+		where b.booking_num = #{booking_num}
+	</select>
+	
+	<!-- booking_num으로 공연일 조회(예매취소여부 조회용) -->
+	<select id="getScheduleDate" resultType="String" parameterType="int">
+		select sc.schedule_date from booking b
+		join schedule sc on (b.schedule_num = sc.schedule_num)
+		where booking_num = #{booking_num}
+	</select>
+	
+</mapper>

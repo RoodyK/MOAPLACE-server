@@ -88,10 +88,26 @@
 	]]>
 </select>
 
-<select id="cntRow" resultType="int">
+  <select id="cntRow" resultType="int">
 
-SELECT NVL(COUNT(*),0) FROM show
+  SELECT NVL(COUNT(*),0) FROM show
 
-</select>
+  </select>
+
+	<select id="list" resultType="com.moaplace.vo.ShowVO" parameterType="hashmap">
+		select * from (
+		    select rownum rnum, s.* from (
+		        select * from show
+		        <![CDATA[ WHERE show_start >= #{start_date} AND show_start <= #{end_date} ]]>
+		        order by show_num desc
+		    ) s
+		) sh
+		<![CDATA[ where rnum >= #{startRow} and rnum <= #{endRow} ]]>
+	</select>
+	
+	<!-- 전체 공연 갯수 -->
+   <select id="count" resultType="int">
+    select NVL(count(*),0) cnt from show      	
+   </select>
 
 </mapper>

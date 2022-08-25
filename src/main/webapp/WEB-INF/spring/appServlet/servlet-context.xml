@@ -35,6 +35,11 @@
 	<context:component-scan base-package="com.moaplace.controller" />
 	<context:component-scan base-package="com.moaplace.controller.rental" />
 	
-	
+<!-- 	<interceptors>
+		<interceptor>
+			<mapping path="/users/login/member/**"/>
+			<beans:bean class="com.moaplace.authentication.BearerTokenAuthenticationFilter" />
+		</interceptor>
+	</interceptors>  -->
 	
 </beans:beans>

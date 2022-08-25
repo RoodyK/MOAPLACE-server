@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PageUtil {
+
 	private int pageNum; // 페이지번호
 	private int startRow; // 시작행번호 
 	private int endRow; // 끝행번호
@@ -23,7 +24,7 @@ public class PageUtil {
 	 * @param totalRowCount 전체 행의 갯수
 	 */
 	public PageUtil(int pageNum, int rowBlockCount, int pageBlockCount, int totalRowCount) {
-
+	
 		this.pageNum = pageNum;
 		this.rowBlockCount = rowBlockCount;
 		this.pageBlockCount = pageBlockCount;
@@ -34,7 +35,7 @@ public class PageUtil {
 		totalPageCount = (int)Math.ceil(totalRowCount /(double)rowBlockCount);
 		startPageNum = (pageNum -1)/pageBlockCount * pageBlockCount + 1;
 		endPageNum = startPageNum + pageBlockCount - 1;
-    
+
 		if(totalPageCount < endPageNum) {
 			endPageNum = totalPageCount;
 		}

@@ -11,8 +11,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
-	<context:property-placeholder location="classpath:oracle.properties"/>
-	 
+	<context:property-placeholder location="classpath:oracle.properties, classpath:mailAuth.properties"/>
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
@@ -32,7 +31,7 @@
 	
 	<aop:config>
 		<aop:aspect ref="logAdvice">
-			<aop:pointcut expression="execution(* com.radi.service..*(..))" id="pointcut"/>
+			<aop:pointcut expression="execution(* com.moaplace.service..*(..))" id="pointcut"/>
 			<aop:around method="invokeService" pointcut-ref="pointcut"/>
 		</aop:aspect>
 	</aop:config>
