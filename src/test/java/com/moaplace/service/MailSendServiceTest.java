@@ -1,8 +1,5 @@
-package com.moaplace.controller;
+package com.moaplace.service;
 
-import java.sql.SQLException;
-
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +14,21 @@ import lombok.extern.log4j.Log4j;
 	"file:src/main/webapp/WEB-INF/spring/mail-context.xml"
 })
 @Log4j
-public class DataSoruceTest {
+public class MailSendServiceTest {
 
 	@Autowired
-	private BasicDataSource dataSource;
+	private MailSendService service;
 	
 	@Test
 	public void test() {
-		try {
-			log.info(dataSource.getConnection());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		String email = "pps8853@naver.com";
+		
+		String code = service.joinEmail(email);
+		
+		if(code != null) {
+			log.info(code);
 		}
-
 	}
+	
 }

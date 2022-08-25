@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	
+	<!-- SSL(Secure Sockets Layer) / TLS(Transport Layer Security)-->
+	<!-- 사용자와 웹 브라우저 간 통신을 암호화 하는데 사용하는 프로토콜 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.host}" /> <!-- 연결할 smtp 서버 -->
+		<property name="port" value="${mail.port}" /> <!-- smtp서버 포트번호 -->
+		<property name="username" value="${mail.username}" /> <!-- 전송보낼 이메일 -->
+		<property name="password" value="${mail.password}" /> <!-- 비밀번호 -->
+		<property name="defaultEncoding" value="utf-8" /> 
+		<!-- SSL 인증코드 관련 프로퍼티 -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtps.ssl.checkserveridentity">true</prop>
+				<prop key="mail.debug">true</prop>
+				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>
