@@ -10,9 +10,17 @@
     	from member where member_num=#{member_num}
   	</select>
 
+	<!-- 일치하는 회원 찾기 -->
 	<select id="findById" resultType="string">
 		SELECT member_id FROM member
-		WHERE member_name = #{member_name} AND member_email = #{member_email} AND enabled = 1
+		<if test="name != null and name != ''">
+			WHERE member_name = #{name} 
+		</if>
+		<if test="id != null and id != ''">
+			WHERE member_id = #{id} 
+		</if>
+		AND member_email = #{email} 
+		AND enabled = 1
 	</select>
 	
 	<select id="findByPassword" resultType="string">
@@ -53,5 +61,10 @@
 	<select id="findOne" resultType="com.moaplace.vo.MemberVO">
 		SELECT * FROM member WHERE member_id = #{member_id} AND enabled = 1
 	</select>
+	
+	<update id="newPassword">
+		UPDATE member SET member_pwd = #{member_pwd}
+		WHERE member_id = #{member_id} AND enabled = 1		
+	</update>
 	
 </mapper>

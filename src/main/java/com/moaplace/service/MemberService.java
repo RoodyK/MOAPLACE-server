@@ -2,6 +2,7 @@ package com.moaplace.service;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,5 +81,21 @@ public class MemberService {
 		return mapper.memberInfo(id);
 	}
 	
+	// 아이디 찾기/비밀번호 재설정
+	public String findById(Map<String, Object> map) {
+		String id = mapper.findById(map);
+		
+		return id;
+	}
+	
+	public int newPassword(MemberLoginRequestDTO dto) {
+		
+		String pwd = passwordEncoder.encode(dto.getMember_pwd());
+		dto.setMember_pwd(pwd);
+		
+		int n = mapper.newPassword(dto);
+		
+		return n;
+	}
+	
 }
-
