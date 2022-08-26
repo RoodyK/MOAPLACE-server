@@ -13,15 +13,15 @@ public interface ShowMapper {
 	int showInsert(ShowVO vo);
   
 	List<ShowListDTO> showList(HashMap<String, Object> map);
+	
   
 	List<MapperDetailDTO> showDetail(int num);
   
-	int cntRow();
-
-
-
-
-  List<ShowVO> list(HashMap<String, Object> map);
+	int firstCntRow();
+	
+	int currentCntRow(HashMap<String, Object> map);
+	
+	List<ShowVO> list(HashMap<String, Object> map);
   
 	int count();
 

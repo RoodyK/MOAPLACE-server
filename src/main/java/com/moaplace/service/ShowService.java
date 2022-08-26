@@ -33,6 +33,8 @@ public class ShowService {
 	@Autowired 
 	private GradeMapper gradeMapper;
 	
+	////////////////////////연희 시작/////////////////////////
+	
 	@Transactional(rollbackFor = {Exception.class})
 	public int showInsert(ShowInsertRequestDTO dto) {
 		
@@ -100,11 +102,8 @@ public class ShowService {
 	
 	
 	public List<ShowListDTO> showList(HashMap<String, Object> map){
-		
+	
 		List<ShowListDTO> list = showMapper.showList(map);
-		
-		int cntRow = showMapper.cntRow();
-		log.info(cntRow);
 		
 		return list;
 	}
@@ -143,9 +142,16 @@ public class ShowService {
 	
 	public int countRow() {
 		
-		return showMapper.cntRow();
+		return showMapper.firstCntRow();
 	}
 	
+	public int currentListRow(HashMap<String, Object> map) {
+		
+		return showMapper.currentCntRow(map);
+	}
+	
+	
+		////////////////////////연희 끝/////////////////////////
 	
 	
 	public List<ShowDTO> list(HashMap<String, Object> map) {
