@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-            
+            	
     
     
     <wb-module deploy-name="controller-1.0.0-BUILD-SNAPSHOT">
@@ -29,7 +29,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated"/>
                 
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-test-sources/test-annotations"/>
                                 		
         
         
@@ -40,13 +39,11 @@
         
         
         <property name="context-root" value="controller"/>
-                                	
-    
+                        	
     
     
     </wb-module>
-                
-
+            
 
 
 </project-modules>

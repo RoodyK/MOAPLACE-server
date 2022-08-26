@@ -6,6 +6,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class MailSendService {
 
 	@Autowired
 	private JavaMailSenderImpl mailSender;
+	
+	@Value("${mail.username}")
+	private String myMail;
 	
 	// 인증번호 난수 생성
 	private int makeRandom() {
@@ -34,7 +38,7 @@ public class MailSendService {
 		
 		int n = makeRandom();
 		// 보낼 이메일
-		String setFrom = "pps8853@naver.com";
+		String setFrom = myMail;
 		// 받는 이메일
 		String toMail = email;
 		// 메일 제목
@@ -63,7 +67,6 @@ public class MailSendService {
 			// MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 			// true 매개값을 전달하면 multipart 형식의 메시지 전달이 가능, 문자 인코딩 설정도 가능하다.
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-			helper.setSubject("MOA PLACE 회원가입 인증번호 입니다.");
 			helper.setFrom(setFrom);
 			helper.setTo(toMail);
 			helper.setSubject(title);

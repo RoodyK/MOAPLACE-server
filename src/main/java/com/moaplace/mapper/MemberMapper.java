@@ -1,5 +1,10 @@
 package com.moaplace.mapper;
 
+
+import com.moaplace.dto.QnaMemberDTO;
+
+import org.apache.ibatis.annotations.Mapper;
+import com.moaplace.vo.MemberVO;
 import java.util.List;
 
 import com.moaplace.dto.MemberInfoResponseDTO;
@@ -9,6 +14,8 @@ import com.moaplace.dto.MemberLoginResponseDTO;
 import com.moaplace.vo.MemberVO;
 
 public interface MemberMapper {
+	
+	QnaMemberDTO qnaMember(int member_num);
 
 	public String findById();
 	
@@ -26,4 +33,5 @@ public interface MemberMapper {
 	public MemberVO findOne();
 	
 	public int join(MemberJoinRequestDTO dto);
+
 }

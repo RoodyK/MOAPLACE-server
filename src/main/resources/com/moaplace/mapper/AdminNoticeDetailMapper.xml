@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.AdminNoticeDetailMapper">
+  <insert parameterType="com.moaplace.vo.AdminNoticeDetailVO" id="detailinsert">
+   insert into notice_detail values(notice_detail_seq.nextval, #{notice_num}, #{notice_orgfile}, #{notice_savefile}, #{notice_filesize})
+ </insert>
+</mapper>
