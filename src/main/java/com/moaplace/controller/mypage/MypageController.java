@@ -226,7 +226,7 @@ public class MypageController {
 			map.put("startRow", pageUtil.getStartRow()); // 시작행번호
 			map.put("endRow", pageUtil.getEndRow()); // 끝행번호
 			
-			List<MyRentalDTO> list = rentalService.list(map); // 예매내역 리스트
+			List<MyRentalDTO> list = rentalService.myList(map); // 예매내역 리스트
 			map.put("list", list);
 			
 			map.put("listCnt", totalRowCount); // 전체 결과 개수
@@ -253,7 +253,7 @@ public class MypageController {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			
 			// 예매상세내역정보
-			MyRentalDetailDTO dto = rentalService.detail(rental_num);
+			MyRentalDetailDTO dto = rentalService.myDetail(rental_num);
 			map.put("dto", dto);
 			
 			// 답변여부 검사 필요한지 하면서 생각좀해봄

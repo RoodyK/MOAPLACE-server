@@ -11,7 +11,7 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
-	<context:property-placeholder location="classpath:oracle.properties, classpath:mailAuth.properties"/>
+	<context:property-placeholder location="classpath:oracle.properties"/>
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
@@ -36,19 +36,14 @@
 		</aop:aspect>
 	</aop:config>
 	
-		<mybatis-spring:scan base-package="com.moaplace.mapper"/>
-	
-	<context:component-scan base-package="com.moaplace.service" />
-
-	<context:component-scan base-package="com.moaplace.util" />
 	<mybatis-spring:scan base-package="com.moaplace.mapper"/>
-
+	<context:component-scan base-package="com.moaplace.service" />
+	<context:component-scan base-package="com.moaplace.util" />
 	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	
 	<tx:annotation-driven/>
 	
 </beans>

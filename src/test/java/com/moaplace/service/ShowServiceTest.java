@@ -7,14 +7,13 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.dto.showDTO;
+import com.moaplace.dto.admin.show.ShowListDTO;
+import com.moaplace.mapper.ShowMapper;
 import com.moaplace.util.ShowListPageUtil;
-import com.moaplace.vo.ShowVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -25,11 +24,23 @@ public class ShowServiceTest {
 
 	@Autowired
   private ShowService service;
-	@Value("${oracle.download}")
-	private String savePath;
+	
+	@Autowired
+	private ShowMapper mapper;
 	
 	@Test
 	public void test() {
+		
+		HashMap<String, Object> sList = new HashMap<String, Object>();
+		
+		sList.put( "startRow", 1);
+		sList.put( "endRow", 5);
+		sList.put( "showCheck", "Y");
+		sList.put( "field", "hall");
+		sList.put( "search", "모던홀");
+		
+		List<ShowListDTO> list=mapper.showList(sList);
+		log.info(list);
 //		List<ShowVO> list=service.selectName();
 //		log.info(list);
 //		log.info(savePath);

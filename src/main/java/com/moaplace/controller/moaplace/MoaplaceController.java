@@ -61,10 +61,10 @@ public class MoaplaceController {
 	 
 	//공지사항 리스트 - 리스트 및 검색
 	@GetMapping(value= {
-			"/list/{sort_num}/{member_num}",
-			"/list/{sort_num}/{field}/{keyword}/{member_num}"}, produces = { MediaType.APPLICATION_JSON_VALUE })
+			"/list/{sort_num}/{member_num}/{pageNum}",
+			"/list/{sort_num}/{field}/{keyword}/{member_num}/{pageNum}"}, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HashMap<String, Object> list(
-			@PathVariable(required = false,value="1") String pageNum,
+			@PathVariable(required = false) String pageNum,
 			@PathVariable(required = false) String sort_num,
 			@PathVariable(required = false) String field,
 			@PathVariable(required = false) String keyword,
@@ -74,26 +74,41 @@ public class MoaplaceController {
 		log.info("keyword : " + keyword);
 		log.info("member_num : " + member_num);
 		
+		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("member_num", Integer.parseInt(member_num));
 		map.put("sort_num", Integer.parseInt(sort_num));
 		map.put("field",field);
 		map.put("keyword",keyword);
 		
-		int totalRowCount = service.getCount(map);
-		PageUtil pu = new PageUtil(Integer.parseInt(pageNum),5,10,totalRowCount);
+		int totalRowCount = service.getCount(map); //전체 글 개수
+		PageUtil pu = new PageUtil(Integer.parseInt(pageNum),5,5,totalRowCount);
 		int startRow = pu.getStartRow(); //시작행 번호
 		int endRow = pu.getEndRow(); //끝행번호
-		
-		log.info("startRow : " + startRow);
+		int startPageNum = pu.getStartPageNum(); //시작 페이지 번호
+		int endPageNum = pu.getPageNum(); //끝 페이지 번호
+		int totalPageCount = pu.getTotalPageCount(); //전체 글 개수
+
+		log.info("===============================================");
+		log.info("pageNum : " + pageNum);
+		log.info("totalRowCount : " + totalRowCount);
+		log.info("startPageNum : " + startPageNum);
+		log.info("endPageNum : " + endPageNum);
 		log.info("endRow : " + endRow);
-	
+		log.info("startRow : " + startRow);
+		log.info("totalPageCount: " + totalPageCount);
+		log.info("===============================================");
+	    
+		map.put("startPageNum" , startPageNum);
+		map.put("endPageNum" , endPageNum);
+		map.put("totalPageCount" , totalPageCount);
+		map.put("totalRowCount" , totalRowCount);
 		map.put("startRow" , startRow);
 		map.put("endRow", endRow);
 		List<AdminListDTO> list= service.listAll(map);
 		
         map.put("list",list);
-        map.put("pu",pu);
+//        map.put("pu",pu);// resp.data.pu.startPageNum 
         return map;
 
 	}

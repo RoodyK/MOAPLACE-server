@@ -34,7 +34,7 @@ import lombok.extern.log4j.Log4j;
 @CrossOrigin("*")
 @RequestMapping("/users")
 @Log4j
-public class MembersController {
+public class MemberController {
 
 	@Autowired
 	private MemberService memberService;

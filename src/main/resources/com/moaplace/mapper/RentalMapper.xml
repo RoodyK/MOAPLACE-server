@@ -59,11 +59,9 @@
 		where r.rental_num = #{rental_num}
 	</select>
   
+
   
-  
-  
-  
-  // 혜인
+  <!-- 혜인 -->
 	
 	<insert id="insert" parameterType="com.moaplace.vo.RentalVO">
 		insert into rental values
@@ -125,8 +123,11 @@
 	<select id="detail" resultType="com.moaplace.vo.RentalVO">
 		select * from rental
 		where rental_num = #{rental_num}
+	</select>
   
 	<select id="select" resultType="com.moaplace.vo.RentalVO">
 		select * from rental	
 	</select>
+
+	
 </mapper>

@@ -8,16 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.moaplace.dto.ShowDTO;
 import com.moaplace.dto.admin.show.MapperDetailDTO;
 import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
 import com.moaplace.mapper.GradeMapper;
+import com.moaplace.mapper.ShowImgMapper;
 import com.moaplace.mapper.ShowMapper;
-import com.moaplace.mapper.Show_imgMapper;
 import com.moaplace.vo.GradeVO;
-import com.moaplace.vo.ShowVO;
 import com.moaplace.vo.ShowImgVO;
+import com.moaplace.vo.ShowVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -26,11 +27,13 @@ import lombok.extern.log4j.Log4j;
 public class ShowService {
 	
 	@Autowired 
-	private ShowMapper showmapper;
+	private ShowMapper showMapper;
 	@Autowired 
-	private Show_imgMapper show_imgMapper;
+	private ShowImgMapper showImgMapper;
 	@Autowired 
 	private GradeMapper gradeMapper;
+	
+	////////////////////////연희 시작/////////////////////////
 	
 	@Transactional(rollbackFor = {Exception.class})
 	public int showInsert(ShowInsertRequestDTO dto) {
@@ -56,7 +59,7 @@ public class ShowService {
 		log.info("인서트 전 : " + showVO.getShow_num());
 		
 		//공연정보 인서트
-		int showResult = showmapper.showInsert(showVO);
+		int showResult = showMapper.showInsert(showVO);
 		
 		log.info("인서트 후 : "+showVO.getShow_num());
 		
@@ -73,7 +76,7 @@ public class ShowService {
 				dto.getShow_detail_img()[i].getBytes()
 			);
 			
-			showImgResult += show_imgMapper.showImgInsert(imgVO);
+			showImgResult += showImgMapper.showImgInsert(imgVO);
 			
 		}
 		
@@ -99,18 +102,15 @@ public class ShowService {
 	
 	
 	public List<ShowListDTO> showList(HashMap<String, Object> map){
-		
-		List<ShowListDTO> list = showmapper.showList(map);
-		
-		int cntRow = showmapper.cntRow();
-		log.info(cntRow);
+	
+		List<ShowListDTO> list = showMapper.showList(map);
 		
 		return list;
 	}
 	
 	public ShowDetailViewDTO showDetail(int num) {
 		
-		List<MapperDetailDTO> list = showmapper.showDetail(num);
+		List<MapperDetailDTO> list = showMapper.showDetail(num);
 		ShowDetailViewDTO dto = new ShowDetailViewDTO();
 		
 		dto.setNum(list.get(0).getNum());
@@ -142,38 +142,37 @@ public class ShowService {
 	
 	public int countRow() {
 		
-		return showmapper.cntRow();
-
-
-import com.moaplace.dto.showDTO;
-import com.moaplace.mapper.ShowMapper;
-import com.moaplace.vo.ShowVO;
-
-import lombok.extern.log4j.Log4j;
-
-@Log4j
-@Service
-public class ShowService {
+		return showMapper.firstCntRow();
+	}
 	
-	@Autowired private ShowMapper dao;
+	public int currentListRow(HashMap<String, Object> map) {
+		
+		return showMapper.currentCntRow(map);
+	}
 	
-	public List<showDTO> list(HashMap<String, Object> map) {
+	
+		////////////////////////연희 끝/////////////////////////
+	
+	
+	public List<ShowDTO> list(HashMap<String, Object> map) {
 
 		
-		List<ShowVO> list = dao.list(map);
+		List<ShowVO> list = showMapper.list(map);
 		
-		List<showDTO> list2 = new ArrayList<>();
+		List<ShowDTO> list2 = new ArrayList<>();
 		
 		for(ShowVO vo : list) {
 			log.info(vo.getShow_thumbnail());
-			list2.add(new showDTO(vo.getShow_num(), vo.getGenre_num(), vo.getHall_num(), vo.getShow_name(), vo.getShow_start(), vo.getShow_end(), vo.getShow_check(), new String(vo.getShow_thumbnail())));
+			list2.add(new ShowDTO(vo.getShow_num(), vo.getGenre_num(), vo.getHall_num(), vo.getShow_name(), vo.getShow_start(), vo.getShow_end(), vo.getShow_check(), new String(vo.getShow_thumbnail())));
 		}
 		
 		return list2;
 	}
 	
 	public int count() {
-		return dao.count();
+		return showMapper.count();
 
 	}
+	
 }
+

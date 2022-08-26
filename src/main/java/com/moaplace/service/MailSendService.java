@@ -6,6 +6,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ public class MailSendService {
 
 	@Autowired
 	private JavaMailSenderImpl mailSender;
+	
+	@Value("${mail.username}")
+	private String myMail;
 	
 	// 인증번호 난수 생성
 	private int makeRandom() {
@@ -34,7 +38,7 @@ public class MailSendService {
 		
 		int n = makeRandom();
 		// 보낼 이메일
-		String setFrom = "pps8853@naver.com";
+		String setFrom = myMail;
 		// 받는 이메일
 		String toMail = email;
 		// 메일 제목

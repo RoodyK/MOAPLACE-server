@@ -21,13 +21,10 @@ public interface RentalMapper {
 	List<RentalVO> list(HashMap<String, Object> map);
 	int updateState(HashMap<String, Object> map);
 	List<RentalCalendarDTO> getSchedules(HashMap<String, String> map);
-	RentalVO detail(int rental_num)
+	RentalVO detail(int rental_num);
 	RentalVO select();
   
-  
-  
-  
-  
+ 
 	// member_num으로 회원의 대관내역 존재여부 확인
 	int rentalExist(int member_num);
 	

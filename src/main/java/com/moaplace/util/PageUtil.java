@@ -24,13 +24,11 @@ public class PageUtil {
 	 * @param totalRowCount 전체 행의 갯수
 	 */
 	public PageUtil(int pageNum, int rowBlockCount, int pageBlockCount, int totalRowCount) {
-	
 		this.pageNum = pageNum;
 		this.rowBlockCount = rowBlockCount;
 		this.pageBlockCount = pageBlockCount;
 		this.totalRowCount = totalRowCount;
-
-		startRow = (pageNum -1) * rowBlockCount + 1;
+		startRow = (pageNum - 1) * rowBlockCount + 1;
 		endRow = startRow + rowBlockCount - 1;
 		totalPageCount = (int)Math.ceil(totalRowCount /(double)rowBlockCount);
 		startPageNum = (pageNum -1)/pageBlockCount * pageBlockCount + 1;
@@ -40,4 +38,5 @@ public class PageUtil {
 			endPageNum = totalPageCount;
 		}
 	}
+
 }
