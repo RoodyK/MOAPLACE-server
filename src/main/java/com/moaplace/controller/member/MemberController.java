@@ -125,7 +125,8 @@ public class MemberController {
 	}
 	
 	// 회원 권한
-	@GetMapping(value = "/login/member/role")
+	@GetMapping(value = "/login/member/role",
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> getMemberRoles(
 			HttpServletRequest request) {
 		
@@ -135,5 +136,53 @@ public class MemberController {
 		map.put("roles", roles);
 		
 		return ResponseEntity.ok().body(map); 
+	}
+	
+	// 아이디 찾기
+	@PostMapping(value = "/login/find/id",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> findMemberId(
+			@RequestBody Map<String, Object> reqInfo) {
+		
+		String id = memberService.findById(reqInfo);
+		if(id != null) {
+			String email = (String) reqInfo.get("email");
+			mailService.findById(email, id);
+		}
+		
+		log.info(reqInfo);
+		return id != null
+				? ResponseEntity.ok().body("success")
+				: ResponseEntity.badRequest().body("fail");
+	}
+	
+	// 비밀번호 재설정 이메일 발송
+	@PostMapping(value = "/login/find/pwd",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> resetPassword(
+			@RequestBody Map<String, Object> reqInfo) {
+		
+		String id = memberService.findById(reqInfo);
+		if(id != null) {
+			String email = (String) reqInfo.get("email");
+			mailService.resetPassword(email, id);
+		}
+		
+		log.info(reqInfo);
+		return id != null
+				? ResponseEntity.ok().body("success")
+				: ResponseEntity.badRequest().body("fail");
+	}
+	
+	@PostMapping(value = "/login/reset/password",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> newPassword(
+			@RequestBody MemberLoginRequestDTO dto) {
+		
+		int n = memberService.newPassword(dto);
+		
+		return n > 0
+				? ResponseEntity.ok().body("success")
+				: ResponseEntity.badRequest().body("fail");
 	}
 }
