@@ -67,7 +67,6 @@ public class MailSendService {
 			// MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 			// true 매개값을 전달하면 multipart 형식의 메시지 전달이 가능, 문자 인코딩 설정도 가능하다.
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-			helper.setSubject("MOA PLACE 회원가입 인증번호 입니다.");
 			helper.setFrom(setFrom);
 			helper.setTo(toMail);
 			helper.setSubject(title);
