@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.util.ShowListPageUtil;
+import com.moaplace.util.PageUtil;
 
 import lombok.extern.log4j.Log4j;
 
@@ -38,7 +38,7 @@ public class ShowServiceTest {
 		HashMap<String, Object> map=new HashMap<String, Object>();
 		
 		int totalRowCount=service.count();
-		ShowListPageUtil sp=new ShowListPageUtil(1,8, 5, totalRowCount);
+		PageUtil sp=new PageUtil(1,8, 5, totalRowCount);
 		int startRow=sp.getStartRow();//시작행번호
 		int endRow=sp.getEndRow();//끝행번호
 		

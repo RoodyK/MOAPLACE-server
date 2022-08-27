@@ -21,7 +21,7 @@ public interface ShowMapper {
 
 
 
-  List<ShowVO> list(HashMap<String, Object> map);
+	List<ShowVO> list(HashMap<String, Object> map);
   
 	int count();
 

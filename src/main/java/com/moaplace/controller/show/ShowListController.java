@@ -1,4 +1,4 @@
-package com.moaplace.controller;
+package com.moaplace.controller.show;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.ShowDTO;
 import com.moaplace.service.ShowService;
-import com.moaplace.util.ShowListPageUtil;
+import com.moaplace.util.PageUtil;
 
 @RestController
 @RequestMapping("/preview")
 @CrossOrigin("*")
 public class ShowListController {
 	
-	@Autowired private ShowService service;
+	@Autowired 
+	private ShowService service;
 	
 	@GetMapping(value = "/{pagenum}/{start_date}/{end_date}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ShowDTO> list(
@@ -33,9 +34,9 @@ public class ShowListController {
 		HashMap<String, Object> map=new HashMap<String, Object>();
 		
 		int totalRowCount=service.count();
-		ShowListPageUtil sp=new ShowListPageUtil(pagenum,8, 5, totalRowCount);
-		int startRow=sp.getStartRow();//시작행번호
-		int endRow=sp.getEndRow();//끝행번호
+		PageUtil pu=new PageUtil(pagenum,8, 5, totalRowCount);
+		int startRow=pu.getStartRow();//시작행번호
+		int endRow=pu.getEndRow();//끝행번호
 		
 		map.put("start_date", start_date);
 		map.put("end_date", end_date);
