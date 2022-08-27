@@ -1,29 +1,29 @@
 package com.moaplace.dto.admin.show;
 
+import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+
+import com.moaplace.vo.GradeVO;
+import com.moaplace.vo.ShowVO;
 
 import lombok.Data;
 
 @Data
-public class ShowDetailViewDTO {
-	
+public class ShowDetailDTO {
 	private int num;					//공연번호
 	private String title;				//공연명
-	private String hall;				//공연장명
-	private String genre;				//장르명
+	private int hall;					//공연장명
+	private int genre;					//장르명
 	private String status;				//공연상태
 	private int runningTime;			//러닝타임
 	private int intermission;			//인터미션
-	private int seats;					//총좌석수
 	private String age;					//상연등급
 	private String startDate;			//공연시작일
 	private String endDate;				//공연종료일
 	private String blockStartDate;		//공연중단시작일
 	private String blockEndDate;		//공연중단종료일
-	private String thumbnail;			//섬네일
-	private List<String> detailImgs;	//상세이미지
-	private int rprice;					//R석 가격
-	private int sprice;					//S석 가격
-	private int aprice;					//A석 가격
-
+	private String showThumbnail;
+	List<GradeVO> seatPrice;
+	List<String> imgDetails;
 }

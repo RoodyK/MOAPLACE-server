@@ -13,4 +13,18 @@
 	</foreach>
 
 </update>
+
+<select id="gradeSelect" parameterType="int" resultType="com.moaplace.vo.GradeVO">
+	select * from grade where show_num=#{num}
+</select>
+
+<update id="gradeUpdate" parameterType="hashmap" >
+	
+	<foreach collection="list" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+	update grade set grade_price=#{item.grade_price} 
+	where show_num=#{item.show_num} AND grade_seat=#{item.grade_seat}
+	</foreach>
+	
+</update>
+
 </mapper>

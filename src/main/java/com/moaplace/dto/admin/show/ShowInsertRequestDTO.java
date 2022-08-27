@@ -19,7 +19,11 @@ public class ShowInsertRequestDTO {
 	private String show_thumbnail; 					//섬네일
 	private String[] show_detail_img;				//상세이미지
 	private List<byte[]> show_detail_img_data;		//DB에 저장될 바이트로 전환된 상세이미지
-	private int rPrice;								//R석 가격
-	private int sPrice;								//S석 가격
-	private int aPrice;								//A석 가격
+	private int rprice;								//R석 가격
+	private int sprice;								//S석 가격
+	private int aprice;								//A석 가격
+	private int pageNum;
+	private String status;
+	private String field;
+	private String search;
 }

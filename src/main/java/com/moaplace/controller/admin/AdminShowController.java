@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.moaplace.dto.admin.show.MapperDetailDTO;
 import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
+import com.moaplace.dto.admin.show.ShowUpdateDTO;
 import com.moaplace.service.ShowService;
 import com.moaplace.util.PageUtil;
 
@@ -34,20 +35,25 @@ public class AdminShowController {
 	
 	// 포스트로 보내온 등록 데이터 제이슨으로 받아서 DB에 저장
 	@PostMapping(
-			value = "/insertShow", 
+			value = "/insert", 
 			consumes= {MediaType.APPLICATION_JSON_VALUE})
 	
-	public HashMap<String, Object> insert(@RequestBody ShowInsertRequestDTO dto) {		
-		
+	public HashMap<String, Object> showInsert(
+			@RequestBody ShowInsertRequestDTO dto) {		
 		//@RequestBody로 insert요청 들어온 데이터 전부 DTO로 받아서 insert 서비스로 보내기
 		int result= service.showInsert(dto);
 		
 		//해시맵에 데이터 담아서 결과값을 클라이언트로 보냄
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
+		
 		//결과값에 따라 데이터 다르게 보내기 
 		if(result>4) { //데이터 등록하면 최소 5개 이상이 등록되므로(공연정보 1개, 좌석RSA 각각 3개, 상세정보이미지 1개)
-			map.put("result", true);	
+			map.put("result", true);
+			map.put("pageNum",dto.getPageNum());
+			map.put("status",dto.getStatus());
+			map.put("selectField",dto.getField());
+			map.put("search",dto.getSearch());
 		}else {
 			map.put("result", false);
 		}
@@ -107,21 +113,63 @@ public class AdminShowController {
 		map.put("status", status);
 		map.put("selectField", field);
 		map.put("search", search);
-		log.info("status"+status);
+		
 		return map;
 	}
 	
 	//공연상세페이지 조회 - 공연번호 받아옴
 	
-	@GetMapping( value = "/detail/{showNum}")
+	@GetMapping( 
+			value = {"/detail", 
+					"/detail/{showNum}",
+					"/detail/{showNum}/{pageNum}",
+					"/detail/{showNum}/{pageNum}/{status}",
+					"/detail/{showNum}/{pageNum}/{status}/{selectField}",
+					"/detail/{showNum}/{pageNum}/{status}/{selectField}/{search}", 
+			}, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+
 	public HashMap<String, Object> showDetail(
-			@PathVariable("showNum") int showNum){
-		
+			@PathVariable ( required = false ) int showNum,
+			@PathVariable ( required = false ) int pageNum,
+			@PathVariable ( required = false ) String status,
+			@PathVariable ( required = false ) String selectField,
+			@PathVariable ( required = false ) String search
+			){
+		log.info("어쨌든 요청 들어옴------------------------");
 		ShowDetailViewDTO dto= service.showDetail(showNum);
+		
 		HashMap<String, Object> map=new HashMap<String, Object>();
 		map.put("list",dto);
+		map.put("pageNum",pageNum);
+		map.put("status",status);
+		map.put("selectField",selectField);
+		map.put("search",search);
+
 		return map;
 		
+	}
+	
+	@PostMapping(
+			value = "/update", 
+			consumes= {MediaType.APPLICATION_JSON_VALUE})
+	public HashMap<String, Object> showUpdate(@RequestBody ShowUpdateDTO dto) {
+		log.info("데이터 받았음");
+		
+		int result = service.showUpdate(dto);
+		
+		//해시맵에 데이터 담아서 결과값을 클라이언트로 보냄
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		
+		
+		//결과값에 따라 데이터 다르게 보내기 
+		if(result>1) {
+			map.put("result", true);
+		}else {
+			map.put("result", false);
+		}
+		
+		return map;
 	}
 	
 }
