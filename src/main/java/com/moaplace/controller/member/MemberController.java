@@ -178,12 +178,28 @@ public class MemberController {
 				: ResponseEntity.badRequest().body("fail");
 	}
 	
+	// 비밀번호 재설정
 	@PostMapping(value = "/login/reset/password",
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> newPassword(
 			@RequestBody MemberLoginRequestDTO dto) {
 		
 		int n = memberService.newPassword(dto);
+		
+		return n > 0
+				? ResponseEntity.ok().body("success")
+				: ResponseEntity.badRequest().body("fail");
+	}
+	
+	// 회원탈퇴
+	@GetMapping(value = "/mypage/withdrawal",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<String> withdrawal(HttpServletRequest request) {
+		String token = request.getHeader("Authorization");
+		String jwtToken = token.split(" ")[1];
+		String id = tokenService.getUserId(jwtToken);
+		
+		int n = memberService.withdrawal(id);
 		
 		return n > 0
 				? ResponseEntity.ok().body("success")

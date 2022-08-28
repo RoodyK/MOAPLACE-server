@@ -98,4 +98,8 @@ public class MemberService {
 		return n;
 	}
 	
+	public int withdrawal(String id) {
+		
+		return mapper.withdrawal(id);
+	}
 }
