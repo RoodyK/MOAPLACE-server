@@ -67,4 +67,8 @@
 		WHERE member_id = #{member_id} AND enabled = 1		
 	</update>
 	
+	<update id="withdrawal">
+		UPDATE member SET enabled = 0
+		WHERE member_id = #{member_id} AND enabled = 1
+	</update>
 </mapper>

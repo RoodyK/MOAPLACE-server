@@ -33,5 +33,7 @@ public interface MemberMapper {
 	public int join(MemberJoinRequestDTO dto);
 	
 	public int newPassword(MemberLoginRequestDTO dto);
+	
+	public int withdrawal(String member_id);
 
 }
