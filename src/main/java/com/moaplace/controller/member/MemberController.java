@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.moaplace.dto.MemberInfoResponseDTO;
-import com.moaplace.dto.MemberJoinRequestDTO;
-import com.moaplace.dto.MemberLoginRequestDTO;
-import com.moaplace.dto.MemberLoginResponseDTO;
+import com.moaplace.authentication.AuthorizationType;
+import com.moaplace.dto.member.MemberInfoResponseDTO;
+import com.moaplace.dto.member.MemberJoinRequestDTO;
+import com.moaplace.dto.member.MemberLoginRequestDTO;
+import com.moaplace.dto.member.MemberLoginResponseDTO;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.service.JWTService;
 import com.moaplace.service.MailSendService;
@@ -66,8 +67,6 @@ public class MemberController {
 		
 		String email = (String) data.get("email");
 		String authNumber = mailService.joinEmail(email);
-
-		log.info("헤더 : " + headers.get("Authorization"));
 		
 		return new ResponseEntity<>(authNumber, HttpStatus.OK);
 	}
@@ -101,7 +100,7 @@ public class MemberController {
 		try {
 			MemberLoginResponseDTO member = memberService.login(dto);
 			String token = tokenService.createToken(member.getMember_id(), member.getAuthority());
-			responseToken.put("token", token);
+			responseToken.put("token", AuthorizationType.BEARER.thisName() + " " + token);
 			
 			return new ResponseEntity<>(responseToken, HttpStatus.OK);
 		}catch(WrongIdPasswordException e) {
@@ -117,7 +116,9 @@ public class MemberController {
 			HttpServletRequest request) {
 		
 		String token = request.getHeader("Authorization");
-		String id = tokenService.getUserId(token);
+		log.info("Authorization" + token);
+		String jwtToken = token.split(" ")[1];
+		String id = tokenService.getUserId(jwtToken);
 		
 		MemberInfoResponseDTO info = memberService.getMemberInfo(id);
 		
@@ -132,7 +133,10 @@ public class MemberController {
 		
 		Map<String, Object> map = new HashMap<>();
 		String token = request.getHeader("Authorization");
-		String roles = (String) tokenService.getClaims(token).get("roles");
+		log.info("Authorization" + token);
+		String jwtToken = token.split(" ")[1];
+		String roles = (String) tokenService.getClaims(jwtToken).get("roles");
+		
 		map.put("roles", roles);
 		
 		return ResponseEntity.ok().body(map); 

@@ -28,7 +28,7 @@
 		WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 
-	<select id="memberInfo" resultType="com.moaplace.dto.MemberInfoResponseDTO">
+	<select id="memberInfo" resultType="com.moaplace.dto.member.MemberInfoResponseDTO">
 		SELECT
 			member_num, member_id, member_email, member_name, member_gender,
 			member_birth, member_phone, member_address, regDate, member_point
@@ -36,7 +36,7 @@
 		WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 	
-	<select id="login" resultType="com.moaplace.dto.MemberLoginResponseDTO">
+	<select id="login" resultType="com.moaplace.dto.member.MemberLoginResponseDTO">
 		SELECT member_id, authority FROM member
 		WHERE member_id = #{member_id} AND member_pwd = #{member_pwd} AND enabled = 1
 	</select>
