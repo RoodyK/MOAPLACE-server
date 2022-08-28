@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.moaplace.dto.MemberInfoResponseDTO;
-import com.moaplace.dto.MemberJoinRequestDTO;
-import com.moaplace.dto.MemberLoginRequestDTO;
-import com.moaplace.dto.MemberLoginResponseDTO;
+import com.moaplace.dto.member.MemberInfoResponseDTO;
+import com.moaplace.dto.member.MemberJoinRequestDTO;
+import com.moaplace.dto.member.MemberLoginRequestDTO;
+import com.moaplace.dto.member.MemberLoginResponseDTO;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.MemberMapper;
 import com.moaplace.vo.MemberVO;

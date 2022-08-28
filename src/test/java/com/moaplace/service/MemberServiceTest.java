@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.dto.MemberJoinRequestDTO;
+import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.vo.MemberVO;
 
 import lombok.extern.log4j.Log4j;

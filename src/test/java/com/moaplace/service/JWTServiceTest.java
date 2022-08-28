@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.moaplace.authentication.AuthorizationType;
+
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -46,6 +48,7 @@ public class JWTServiceTest {
 	public void enumTest() {
 		log.info(Auth.ROLE_ADMIN);
 		log.info(Auth.ROLE_MEMBER.name().equals("ROLE_MEMBER"));
+		log.info(Auth.ROLE_MEMBER.name().toLowerCase());
 	}
 	
 	// 토큰 생성 테스트
@@ -78,5 +81,20 @@ public class JWTServiceTest {
 		
 		String roles = (String) service.getClaims(jwtToken).get("roles");
 		log.info("roles : " + roles);
+	}
+	
+	@Test
+	public void stringTest() {
+//		String str = "BEARER";
+//		log.info(str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase());
+		
+		log.info(AuthorizationType.BEARER.thisName());
+	}
+	
+	@Test
+	public void bearerTest() {
+		String str = "Bearer token";
+		log.info(str.split(" ")[1]);
+		log.info(AuthorizationType.BEARER.thisName() + " " + "token");
 	}
 }

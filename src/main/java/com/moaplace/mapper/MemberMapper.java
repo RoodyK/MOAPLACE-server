@@ -4,11 +4,11 @@ package com.moaplace.mapper;
 import java.util.List;
 import java.util.Map;
 
-import com.moaplace.dto.MemberInfoResponseDTO;
-import com.moaplace.dto.MemberJoinRequestDTO;
-import com.moaplace.dto.MemberLoginRequestDTO;
-import com.moaplace.dto.MemberLoginResponseDTO;
 import com.moaplace.dto.QnaMemberDTO;
+import com.moaplace.dto.member.MemberInfoResponseDTO;
+import com.moaplace.dto.member.MemberJoinRequestDTO;
+import com.moaplace.dto.member.MemberLoginRequestDTO;
+import com.moaplace.dto.member.MemberLoginResponseDTO;
 import com.moaplace.vo.MemberVO;
 
 public interface MemberMapper {
