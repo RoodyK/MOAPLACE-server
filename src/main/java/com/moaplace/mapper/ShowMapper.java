@@ -14,8 +14,9 @@ public interface ShowMapper {
   
 	List<ShowListDTO> showList(HashMap<String, Object> map);
 	
-  
 	List<MapperDetailDTO> showDetail(int num);
+	
+	int showUpdate(ShowVO vo);
   
 	int firstCntRow();
 	
@@ -24,5 +25,7 @@ public interface ShowMapper {
 	List<ShowVO> list(HashMap<String, Object> map);
   
 	int count();
+	
+	ShowVO showSelect(int num);
 
 }

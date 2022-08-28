@@ -161,6 +161,27 @@
   
   </select>
 
+<update id="showUpdate" parameterType="com.moaplace.vo.ShowVO">
+ 	update show set genre_num = #{genre_num}, hall_num = #{hall_num}, show_name = #{show_name},
+	
+		show_start = #{show_start}, show_end = #{show_end},
+		<if test="stop_start != null">
+		stop_start = #{stop_start},
+		</if>
+		<if test="stop_end != null">
+		stop_end = #{stop_end},
+		</if>
+		show_check = #{show_check}, show_age = #{show_age},
+		
+		intermission = #{intermission}, running_time = #{running_time},
+		
+		show_thumbnail = #{show_thumbnail} 
+		
+		WHERE show_num = #{show_num}
+</update>
+
+
+
 <!-- ////////////// 연희 끝 ////////////// -->
 
 

@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.moaplace.dto.ShowDTO;
 import com.moaplace.dto.admin.show.MapperDetailDTO;
+import com.moaplace.dto.admin.show.ShowDetailDTO;
 import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
+import com.moaplace.dto.admin.show.ShowUpdateDTO;
 import com.moaplace.mapper.GradeMapper;
 import com.moaplace.mapper.ShowImgMapper;
 import com.moaplace.mapper.ShowMapper;
@@ -75,21 +77,18 @@ public class ShowService {
 				showVO.getShow_num(),
 				dto.getShow_detail_img()[i].getBytes()
 			);
-			
 			showImgResult += showImgMapper.showImgInsert(imgVO);
-			
 		}
-		
+
 		//좌석등급별가격 인서트
-		
 		//해시맵 안에 좌석등급별 GradeVO객체를 담은 arraylist를 저장
 		HashMap<String, Object> gradeMap = new HashMap<String, Object>();
 		
 			ArrayList<GradeVO> gradeList=new ArrayList<GradeVO>();
 			
-				gradeList.add(new GradeVO("R",showVO.getShow_num(),dto.getRPrice()));
-				gradeList.add(new GradeVO("S",showVO.getShow_num(),dto.getSPrice()));
-				gradeList.add(new GradeVO("A",showVO.getShow_num(),dto.getAPrice()));
+				gradeList.add(new GradeVO("R",showVO.getShow_num(),dto.getRprice()));
+				gradeList.add(new GradeVO("S",showVO.getShow_num(),dto.getSprice()));
+				gradeList.add(new GradeVO("A",showVO.getShow_num(),dto.getAprice()));
 		
 			//좌석등급별가격 인서트
 			gradeMap.put("list",gradeList);
@@ -97,7 +96,6 @@ public class ShowService {
 		int gradeResult= gradeMapper.gradeInsert(gradeMap);
 
 		return showResult+showImgResult+gradeResult;
-		
 	}
 	
 	
@@ -109,8 +107,10 @@ public class ShowService {
 	}
 	
 	public ShowDetailViewDTO showDetail(int num) {
-		
+			
 		List<MapperDetailDTO> list = showMapper.showDetail(num);
+		List<GradeVO> gradeVOs = gradeMapper.gradeSelect(num);
+		
 		ShowDetailViewDTO dto = new ShowDetailViewDTO();
 		
 		dto.setNum(list.get(0).getNum());
@@ -137,7 +137,90 @@ public class ShowService {
 		
 		dto.setDetailImgs(arrList);
 		
+		for(GradeVO gvo : gradeVOs) {
+			if(gvo.getGrade_seat().equals("R"))dto.setRprice(gvo.getGrade_price());
+			if(gvo.getGrade_seat().equals("S"))dto.setSprice(gvo.getGrade_price());
+			if(gvo.getGrade_seat().equals("A"))dto.setAprice(gvo.getGrade_price());
+		}
 		return dto;
+	}
+	
+	@Transactional(rollbackFor = {Exception.class})
+	public int showUpdate(ShowUpdateDTO dto){
+
+		//base64 스트링 인코딩된 썸네일 이미지 데이터 byte로 변환
+		byte[] thumb = dto.getShowThumbnail().getBytes();
+		
+		int hallNum = 0;
+		int genreNum=0;
+		
+		switch(dto.getHall()) {
+		case "모던홀" : hallNum=1;break;
+		case "오케스트라홀" : hallNum=2;break;
+		case "아트홀" : hallNum=3;break;
+		}
+		
+		switch(dto.getGenre()) {
+		case "연극" : genreNum = 1; break;
+		case "뮤지컬" : genreNum = 2; break;
+		case "대중음악" : genreNum = 3; break;
+		case "기악" : genreNum = 4; break;
+		case "성악" : genreNum = 5; break;
+		case "오페라" : genreNum = 6; break;
+		case "무용" : genreNum = 7; break;
+		}
+		
+		//ShowVO에 생성자로 insert요청으로 들어온 DTO에서 뽑아온 정보 삽입 
+		ShowVO showVO=new ShowVO(
+				dto.getShowNum(),
+				genreNum,
+				hallNum,
+				dto.getTitle(),
+				dto.getStartDate(),
+				dto.getEndDate(),
+				dto.getGoing(),
+				dto.getPauseStart(),
+				dto.getPauseEnd(),
+				dto.getShowAge(),
+				dto.getIntermission(),
+				dto.getRunningTime(),
+				thumb);
+		
+		//공연정보 업데이트
+		int showResult = showMapper.showUpdate(showVO);
+		log.info("업데이트 행수 : "+showResult);
+		
+		//해당 공연번호의 상세이미지 모두 삭제 후 다시 상세이미지 개수만큼 반복하면서 상세이미지 테이블에 데이터 입력 
+		
+		int delImgData = showImgMapper.showImgUpDel(dto.getShowNum());
+		int showImgResult = 0;
+		
+		for(int i=0; i < dto.getImgDetails().length; i++) {
+			
+			ShowImgVO imgVO = new ShowImgVO(
+				0, 
+				dto.getShowNum(),
+				dto.getImgDetails()[i].getBytes()
+			);
+			showImgResult += showImgMapper.showImgInsert(imgVO);
+		}
+		
+		//좌석등급별가격 업데이트
+		//해시맵 안에 좌석등급별 GradeVO객체를 담은 arraylist를 저장
+		HashMap<String, Object> gradeMap = new HashMap<String, Object>();
+		
+		ArrayList<GradeVO> gradeList=new ArrayList<GradeVO>();
+		gradeList.add(new GradeVO("R",dto.getShowNum(),dto.getRprice()));
+		gradeList.add(new GradeVO("S",dto.getShowNum(),dto.getSprice()));
+		gradeList.add(new GradeVO("A",dto.getShowNum(),dto.getAprice()));
+		
+		//좌석등급별가격 해시맵에 담기
+		gradeMap.put("list",gradeList);
+		log.info("R-::"+gradeList.get(0));
+		int gradeResult= gradeMapper.gradeUpdate(gradeMap);
+
+		return showResult+delImgData+showImgResult+gradeResult;	
+
 	}
 	
 	public int countRow() {

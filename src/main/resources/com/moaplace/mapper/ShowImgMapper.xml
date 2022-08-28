@@ -9,4 +9,9 @@
 	INSERT INTO show_img VALUES(show_img_seq.nextval, #{show_num}, #{show_detail_img})
 </insert>
 
+<delete id="showImgUpDel" parameterType="com.moaplace.vo.ShowImgVO">
+	DELETE FROM show_img
+	WHERE show_num = #{show_num}
+</delete>
+
 </mapper>

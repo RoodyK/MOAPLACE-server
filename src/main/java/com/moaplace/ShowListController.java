@@ -1,4 +1,4 @@
-package com.moaplace.controller;
+package com.moaplace;
 
 import java.util.HashMap;
 import java.util.List;
