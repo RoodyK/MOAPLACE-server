@@ -47,10 +47,14 @@
 	</select>
 
 	<insert id="join">
+		<!-- 결과값인 bnum이 자동으로 파라미터로 받은 VO에 주입됨 -->
+		<selectKey keyProperty="member_num" order="BEFORE" resultType="int">
+			SELECT member_seq.nextval FROM dual
+		</selectKey>
 		INSERT INTO 
 		member(member_num, member_id, member_pwd, member_email, member_name,
 			member_gender, member_birth, member_phone, member_address, member_point)
-		VALUES(member_seq.nextval, #{member_id}, #{member_pwd}, #{member_email}, #{member_name},
+		VALUES(#{member_num}, #{member_id}, #{member_pwd}, #{member_email}, #{member_name},
 			#{member_gender}, #{member_birth}, #{member_phone}, #{member_address}, 2000)
 	</insert>
 	
@@ -71,4 +75,18 @@
 		UPDATE member SET enabled = 0
 		WHERE member_id = #{member_id} AND enabled = 1
 	</update>
+	
+	<select id="apiCheck" resultType="com.moaplace.dto.member.ApiLoginDTO">
+		select m.member_id, m.authority, a.member_email 
+		FROM member m JOIN api_auth a
+		ON m.member_email = a.member_email 
+		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND a.api_name = 'kakao'
+	</select>
+	
+	<select id="apiLogin" resultType="com.moaplace.dto.member.MemberLoginResponseDTO">
+		select m.member_id, m.authority
+		FROM member m JOIN api_auth a
+		ON m.member_email = a.member_email 
+		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND m.member_id = #{member_id} AND a.api_name = 'kakao'
+	</select>
 </mapper>
