@@ -7,13 +7,18 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.moaplace.dto.member.ApiLoginDTO;
 import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
+import com.moaplace.exception.MemberNotJoinException;
 import com.moaplace.exception.WrongIdPasswordException;
+import com.moaplace.mapper.ApiAuthMapper;
 import com.moaplace.mapper.MemberMapper;
+import com.moaplace.vo.ApiAuthVO;
 import com.moaplace.vo.MemberVO;
 
 import lombok.extern.log4j.Log4j;
@@ -24,6 +29,8 @@ public class MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
+	@Autowired
+	private ApiAuthMapper apiMapper;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -38,14 +45,22 @@ public class MemberService {
 		return false;
 	}
 	
+	@Transactional(rollbackFor = Exception.class)
 	public int join(MemberJoinRequestDTO dto) {
 		// 비밀번호 암호화
 		String password = passwordEncoder.encode(dto.getMember_pwd());
 		log.info(password);
-		
 		dto.setMember_pwd(password);
 		
 		int n = mapper.join(dto);
+		
+		if(n > 0 && dto.getApi().equals("using")) {
+			ApiAuthVO vo = new ApiAuthVO(
+					0, dto.getMember_num(), dto.getMember_email(), "kakao");
+			n = apiMapper.apiJoin(vo);
+		}else {
+			throw new MemberNotJoinException();
+		}
 		
 		if(n > 0) return n;
 		return -1;
@@ -88,6 +103,7 @@ public class MemberService {
 		return id;
 	}
 	
+	// 새비밀번호로 변경
 	public int newPassword(MemberLoginRequestDTO dto) {
 		
 		String pwd = passwordEncoder.encode(dto.getMember_pwd());
@@ -98,8 +114,19 @@ public class MemberService {
 		return n;
 	}
 	
+	// 회원탈퇴
 	public int withdrawal(String id) {
 		
 		return mapper.withdrawal(id);
+	}
+	
+	// 카카오api 가입된 이메일이 있는지 확인
+	public ApiLoginDTO apiCheck(String email) {
+		return mapper.apiCheck(email);
+	}
+	
+	// 카카오 로그인
+	public MemberLoginResponseDTO apiLogin(ApiLoginDTO dto) {
+		return mapper.apiLogin(dto);
 	}
 }
