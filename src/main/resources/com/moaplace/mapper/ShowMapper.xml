@@ -98,7 +98,7 @@
 		select * from (
 		    select rownum rnum, s.* from (
 		        select * from show
-		        <![CDATA[ WHERE show_start >= #{start_date} AND show_start <= #{end_date} ]]>
+		        where show_start between #{start_date} and #{end_date}
 		        order by show_num desc
 		    ) s
 		) sh
@@ -106,8 +106,8 @@
 	</select>
 	
 	<!-- 전체 공연 갯수 -->
-   <select id="count" resultType="int">
-    select NVL(count(*),0) cnt from show      	
+   <select id="count" resultType="int" parameterType="hashmap">
+    select NVL(count(*),0) cnt from show where show_start between #{start_date} and #{end_date}     	
    </select>
 
 </mapper>

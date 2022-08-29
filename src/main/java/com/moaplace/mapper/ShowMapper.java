@@ -23,6 +23,6 @@ public interface ShowMapper {
 
 	List<ShowVO> list(HashMap<String, Object> map);
   
-	int count();
+	int count(HashMap<String, Object> map);
 
 }

@@ -163,8 +163,8 @@ public class ShowService {
 		return list2;
 	}
 	
-	public int count() {
-		return showMapper.count();
+	public int count(HashMap<String, Object> map) {
+		return showMapper.count(map);
 
 	}
 	
