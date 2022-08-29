@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.moaplace.dto.showDTO;
+import com.moaplace.dto.ShowDTO;
 import com.moaplace.service.ShowService;
 import com.moaplace.util.ShowListPageUtil;
 
@@ -23,7 +23,7 @@ public class ShowListController {
 	@Autowired private ShowService service;
 	
 	@GetMapping(value = "/{pagenum}/{start_date}/{end_date}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<showDTO> list(
+	public List<ShowDTO> list(
 			@PathVariable(required = true) Integer pagenum,
 			@PathVariable(required = true) String start_date,
 			@PathVariable(required = true) String end_date){

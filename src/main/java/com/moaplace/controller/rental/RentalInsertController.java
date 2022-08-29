@@ -1,28 +1,28 @@
 package com.moaplace.controller.rental;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
-import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.moaplace.dto.RentalCalendarDTO;
 import com.moaplace.dto.RentalInsertDTO;
 import com.moaplace.service.RentalService;
 import com.moaplace.util.FileUtil;
+import com.moaplace.util.PageUtil;
 import com.moaplace.vo.RentalVO;
 
 import lombok.extern.log4j.Log4j;
@@ -31,7 +31,7 @@ import lombok.extern.log4j.Log4j;
 @RestController
 @RequestMapping("/rental")
 @Log4j
-public class InsertController {
+public class RentalInsertController {
 	@Autowired
 	private RentalService service;
 	@Autowired
@@ -63,8 +63,7 @@ public class InsertController {
 				vo.setRental_email(dto.getRental_email());
 				vo.setRental_title(dto.getRental_title());
 				vo.setRental_genre(dto.getRental_genre());
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-				vo.setRental_date(formatter.parse(dto.getRental_date()));
+				vo.setRental_date(dto.getRental_date());
 				vo.setRental_time(dto.getRental_time());
 				vo.setRental_originfilename(String.valueOf(fileinfo.get("orgfilename")));
 				vo.setRental_savefilename(String.valueOf(fileinfo.get("savefilename")));

@@ -11,6 +11,7 @@ import com.moaplace.dto.MemberInfoResponseDTO;
 import com.moaplace.dto.MemberJoinRequestDTO;
 import com.moaplace.dto.MemberLoginRequestDTO;
 import com.moaplace.dto.MemberLoginResponseDTO;
+import com.moaplace.dto.MyBookingCancleRequestDTO;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.MemberMapper;
 import com.moaplace.vo.MemberVO;
@@ -80,5 +81,13 @@ public class MemberService {
 		return mapper.memberInfo(id);
 	}
 	
+	/* (예매취소용)입력값과 비밀번호 일치 체크하기 */
+	public boolean pwdCheck(MyBookingCancleRequestDTO dto) {
+		
+		String memberPwd = mapper.findByPassword(dto.getMember_id());
+		boolean isPassword = passwordEncoder.matches(dto.getMember_pwd(), memberPwd);
+		
+		return isPassword;
+	}
 }
 

@@ -13,7 +13,7 @@ public class MyBookingDTO {
 
 	private int booking_num;
 	private Date regdate;
-	private byte[] show_thumbnail;
+	private String show_thumbnail;
 	private String show_name;
 	private String hall_name;
 	private Date schedule_date;

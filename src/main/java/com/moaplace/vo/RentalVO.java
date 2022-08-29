@@ -1,6 +1,8 @@
 package com.moaplace.vo;
 
-import java.util.Date;
+import java.sql.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,15 +23,17 @@ public class RentalVO {
 	private String rental_email;
 	private String rental_title;
 	private String rental_genre;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date rental_date;
 	private String rental_time;
 	private String rental_originfilename;
 	private String rental_savefilename;
-	private int rental_filesize;
+	private long rental_filesize;
 	private String rental_ownsname;
 	private String rental_ownsphone;
 	private String rental_ownemail;
 	private String rental_content;
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
 	private Date regdate;
 	private String rental_state;
 }

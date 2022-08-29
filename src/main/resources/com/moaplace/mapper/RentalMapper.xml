@@ -23,7 +23,7 @@
 	</select>
 	
 	<!-- member_num + startdate + enddate + startrow + endrow 받아서 기간설정 + 페이징 조회 -->
-	<select id="list" resultType="com.moaplace.dto.MyRentalDTO" parameterType="hashmap">
+	<select id="myList" resultType="com.moaplace.dto.MyRentalDTO" parameterType="hashmap">
 		select * from (
 		    select r.*,rownum rnum from (
 		        select r.rental_num,r.regdate,h.hall_name,r.rental_date,r.rental_time,r.rental_state
@@ -51,13 +51,17 @@
 	</select>
 	
 	<!-- rental_num으로 대관상세내역 조회 -->
-	<select id="detail" resultType="com.moaplace.dto.MyRentalDetailDTO" parameterType="int">
+	<select id="myDetail" resultType="com.moaplace.dto.MyRentalDetailDTO" parameterType="int">
 		select r.*,h.hall_name,ra.answer_content
 		from rental r
 		join hall h on (r.hall_num = h.hall_num)
 		left join rental_answer ra on (r.rental_num = ra.rental_num)
 		where r.rental_num = #{rental_num}
 	</select>
+  
+
+  
+  <!-- 혜인 -->
 	
 	<insert id="insert" parameterType="com.moaplace.vo.RentalVO">
 		insert into rental values
@@ -68,8 +72,62 @@
 		#{rental_ownsname}, #{rental_ownsphone}, #{rental_ownemail},#{rental_content},
 		sysdate,'신청완료')
 	</insert>
+
+	
+	<select id="list" resultType="com.moaplace.dto.RentalListDTO">
+		select * from
+		(
+			select r.*, rownum rnum
+			from(
+				SELECT 
+					r.rental_num, h.hall_name, 
+					r.rental_name, r.rental_title, 
+					r.rental_date, r.rental_time, r.regdate, r.rental_state
+				FROM rental r, hall h
+				<where>
+					r.hall_num = h.hall_num
+					<if test="keyword !=null and keyword != '' ">	
+						AND ${sort} like '%'||#{keyword}||'%'
+					</if>
+				</where>
+				order by rental_num desc
+			)r
+		)
+		<![CDATA[where rnum >= #{startRow} and rnum <= #{endRow}]]>
+	</select>
+	
+	<select id="getCount" resultType="int" parameterType="hashmap">
+		select NVL(count(*),0) from rental
+		<where>
+			<if test="keyword !=null and keyword != '' ">	
+				${sort} like '%'||#{keyword}||'%'
+			</if>
+		</where>
+	</select>
+	
+	
+	<update id="updateState">
+		update rental
+		set rental_state = #{rental_state}
+		where rental_num = #{rental_num}
+	</update>
+	
+	
+	<select id="getSchedules" resultType="com.moaplace.dto.RentalCalendarDTO">
+		SELECT rental_num, hall_num, rental_date, rental_time,rental_title
+		FROM rental
+		WHERE rental_date between #{startDate} and #{endDate}
+		ORDER BY rental_date asc, rental_time asc
+	</select>
+	
+	<select id="detail" resultType="com.moaplace.vo.RentalVO">
+		select * from rental
+		where rental_num = #{rental_num}
+	</select>
   
 	<select id="select" resultType="com.moaplace.vo.RentalVO">
 		select * from rental	
 	</select>
+
+	
 </mapper>
