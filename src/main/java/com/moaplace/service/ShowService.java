@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.moaplace.dto.ShowDTO;
 import com.moaplace.dto.admin.show.MapperDetailDTO;
-import com.moaplace.dto.admin.show.ShowDetailDTO;
 import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
@@ -40,9 +39,6 @@ public class ShowService {
 	@Transactional(rollbackFor = {Exception.class})
 	public int showInsert(ShowInsertRequestDTO dto) {
 		
-		//base64 스트링 인코딩된 썸네일 이미지 데이터 byte로 변환
-		byte[] thumb = dto.getShow_thumbnail().getBytes();
-		
 		//ShowVO에 생성자로 insert요청으로 들어온 DTO에서 뽑아온 정보 삽입 
 		ShowVO showVO=new ShowVO(
 				0,
@@ -56,14 +52,12 @@ public class ShowService {
 				dto.getShow_age(),
 				dto.getIntermission(),
 				dto.getRunning_time(),
-				thumb);
+				dto.getShow_thumbnail());
 		
-		log.info("인서트 전 : " + showVO.getShow_num());
 		
 		//공연정보 인서트
 		int showResult = showMapper.showInsert(showVO);
 		
-		log.info("인서트 후 : "+showVO.getShow_num());
 		
 		//상세이미지 개수만큼 반복하면서 상세이미지 테이블에 데이터 입력 
 		
@@ -75,7 +69,7 @@ public class ShowService {
 					
 				0, 
 				showVO.getShow_num(),
-				dto.getShow_detail_img()[i].getBytes()
+				dto.getShow_detail_img()[i]
 			);
 			showImgResult += showImgMapper.showImgInsert(imgVO);
 		}
@@ -107,10 +101,9 @@ public class ShowService {
 	}
 	
 	public ShowDetailViewDTO showDetail(int num) {
-			
+
 		List<MapperDetailDTO> list = showMapper.showDetail(num);
-		List<GradeVO> gradeVOs = gradeMapper.gradeSelect(num);
-		
+		List<GradeVO> gradeVOs = gradeMapper.gradeSelect(num);		
 		ShowDetailViewDTO dto = new ShowDetailViewDTO();
 		
 		dto.setNum(list.get(0).getNum());
@@ -126,13 +119,13 @@ public class ShowService {
 		dto.setEndDate(list.get(0).getEndDate());
 		dto.setBlockStartDate(list.get(0).getBlockStartDate());
 		dto.setBlockEndDate(list.get(0).getBlockEndDate());
-		dto.setThumbnail(new String(list.get(0).getThumbnail()));
+		dto.setThumbnail(list.get(0).getThumbnail());
+		
 		
 		ArrayList<String> arrList = new ArrayList<>();
-		
 		for(int i=0; i < list.size(); i++) {
 			MapperDetailDTO reqDto =list.get(i);
-			arrList.add(new String(reqDto.getDetailImgs()));
+			arrList.add(reqDto.getDetailImgs());
 		}
 		
 		dto.setDetailImgs(arrList);
@@ -147,9 +140,6 @@ public class ShowService {
 	
 	@Transactional(rollbackFor = {Exception.class})
 	public int showUpdate(ShowUpdateDTO dto){
-
-		//base64 스트링 인코딩된 썸네일 이미지 데이터 byte로 변환
-		byte[] thumb = dto.getShowThumbnail().getBytes();
 		
 		int hallNum = 0;
 		int genreNum=0;
@@ -184,11 +174,10 @@ public class ShowService {
 				dto.getShowAge(),
 				dto.getIntermission(),
 				dto.getRunningTime(),
-				thumb);
+				dto.getShowThumbnail());
 		
 		//공연정보 업데이트
 		int showResult = showMapper.showUpdate(showVO);
-		log.info("업데이트 행수 : "+showResult);
 		
 		//해당 공연번호의 상세이미지 모두 삭제 후 다시 상세이미지 개수만큼 반복하면서 상세이미지 테이블에 데이터 입력 
 		
@@ -200,7 +189,7 @@ public class ShowService {
 			ShowImgVO imgVO = new ShowImgVO(
 				0, 
 				dto.getShowNum(),
-				dto.getImgDetails()[i].getBytes()
+				dto.getImgDetails()[i]
 			);
 			showImgResult += showImgMapper.showImgInsert(imgVO);
 		}
@@ -216,12 +205,12 @@ public class ShowService {
 		
 		//좌석등급별가격 해시맵에 담기
 		gradeMap.put("list",gradeList);
-		log.info("R-::"+gradeList.get(0));
 		int gradeResult= gradeMapper.gradeUpdate(gradeMap);
 
 		return showResult+delImgData+showImgResult+gradeResult;	
 
 	}
+	
 	
 	public int countRow() {
 		
