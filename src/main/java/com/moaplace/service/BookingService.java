@@ -84,4 +84,9 @@ public class BookingService {
 		}
 	}
 	
+	// booking_num으로 member_num 조회
+	public int cancleInfoCheck(int booking_num) {
+		return mapper.cancleInfoCheck(booking_num);
+	}
+	
 }
