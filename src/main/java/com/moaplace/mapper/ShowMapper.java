@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.moaplace.dto.admin.show.MapperDetailDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
+import com.moaplace.dto.admin.show.ShowPartInfo;
 import com.moaplace.vo.ShowVO;
 
 public interface ShowMapper {
@@ -15,6 +16,8 @@ public interface ShowMapper {
 	List<ShowListDTO> showList(HashMap<String, Object> map);
 	
 	List<MapperDetailDTO> showDetail(int num);
+	
+	List<ShowPartInfo> searchShow(String title);
 	
 	int showUpdate(ShowVO vo);
   

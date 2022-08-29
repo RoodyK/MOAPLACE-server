@@ -107,6 +107,24 @@
 	]]>
 </select>
 
+<select id="searchShow" parameterType="String" resultType="com.moaplace.dto.admin.show.ShowPartInfo">
+	
+			SELECT 
+				show_num num, 
+				show_name title, 
+				show_check status, 
+				show_age age, 
+				TO_CHAR(show_start, 'YYYY-MM-DD') startDate, 
+				TO_CHAR(show_end, 'YYYY-MM-DD') endDate, 
+				TO_CHAR(stop_start, 'YYYY-MM-DD') blockStartDate, 
+				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate, 
+				show_thumbnail thumbnail
+			FROM show	
+			WHERE show_name like '%'||#{title}||'%'
+
+</select>
+
+
   <select id="firstCntRow" resultType="int">
 
   SELECT NVL(COUNT(*),0) FROM show
