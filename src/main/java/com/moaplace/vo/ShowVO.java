@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class ShowVO {
+
 	private int show_num;
 	private int genre_num;
 	private int hall_num;

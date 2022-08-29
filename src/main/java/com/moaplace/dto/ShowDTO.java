@@ -7,7 +7,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class showDTO {
+public class ShowDTO {
+	
 	private int show_num;
 	private int genre_num;
 	private int hall_num;
