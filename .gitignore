@@ -9,9 +9,11 @@
 target/
 .idea
 src/main/resources/oracle.properties
-# */src/main/webapp/resources/images/
-# images/
+src/main/resources/mailAuth.properties
 */src/main/webapp/WEB-INF/classes/
 */src/main/webapp/WEB-INF/lib/
 .classpath
 .factorypath
+.apt_generated/
+.apt_generated_tests/
+.springBeans

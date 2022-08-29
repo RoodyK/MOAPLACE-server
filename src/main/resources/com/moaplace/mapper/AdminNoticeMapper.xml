@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.moaplace.mapper.AdminNoticeMapper">
+	<insert parameterType="com.moaplace.vo.AdminNoticeVO"
+		id="insert">
+		<selectKey keyProperty="notice_num" order="BEFORE"
+			resultType="int">
+			select notice_seq.nextval from dual
+		</selectKey>
+		insert into notice values(#{notice_num}, 1, #{sort_num},
+		#{notice_title}, #{notice_content}, sysdate, 0)
+	</insert>
+
+	<sql id="search">
+	<!-- field O -> where field 
+	     field O , sort_num O -> where field and sort_num
+	     field X , sort_num O -> where sort_num // overrides 단어로만 시작된다면 그 단어를 지워줌
+	                                               and를 prefixOverrides가 지워줌 -->
+	  <trim prefix="where" prefixOverrides="and">
+		<!-- field(column) 포함된 keyword의 값이 포함 된 데이터를 조회한다. --> 
+		<if test="field!=null and field!=''"> 
+		  <choose>
+		     <when test="field=='total'">
+		        notice_title like '%'||#{keyword}||'%' OR
+		        notice_content like '%'||#{keyword}||'%'
+		     </when>
+		     <when test="field=='title'">
+		       notice_title like '%'||#{keyword}||'%'
+		     </when>
+		     <when test="field=='content'">
+		       notice_content like '%'||#{keyword}||'%'
+		     </when>
+		  </choose>
+		  </if>
+	      <if test="sort_num!=0">	  
+		   and sort_num = #{sort_num}
+		  </if>
+	  </trim>
+	</sql>
+
+	<select parameterType="hashmap" id="listAll" resultType="com.moaplace.dto.AdminListDTO">
+       select * from 
+         (
+          select b.*,rownum rnum from
+		   (
+		    select a.* from
+		     (
+		      select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_num, s.sort_name
+		        from notice n, sort s, member m
+	              where n.sort_num = s.sort_num
+		          and n.member_num = m.member_num
+		          order by n.notice_num desc
+		          ) a     
+		   <include refid="search" /> 
+		   ) b 
+		 ) <![CDATA[  where rnum>=#{startRow} and rnum<=#{endRow} ]]>
+	</select>
+	
+	<!-- 전체 글의 갯수 -->
+	<select parameterType="hashmap" id="getCount" resultType="int">
+		select NVL(count(*),0) cnt from 
+		 (
+		  select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_name, s.sort_num
+		    from notice n , sort s, member m
+		      where n.sort_num = s.sort_num
+		       and n.member_num = m.member_num
+		       order by n.notice_num desc
+		   ) a
+		    <include refid="search" />
+	</select>
+
+</mapper>

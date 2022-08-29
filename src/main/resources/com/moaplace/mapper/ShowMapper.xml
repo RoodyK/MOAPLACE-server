@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.ShowMapper">
+
+<insert id="showInsert" parameterType="com.moaplace.vo.ShowVO">
+	<!-- 셀렉트키로 인서트 전에 시퀀스번호 받아옴(셀렉트로 불러오면서 nextval로 넘어감) -->
+	<selectKey keyProperty="show_num" order="BEFORE" resultType="int">
+		select show_seq.nextval from dual
+	</selectKey>
+	
+	insert into show values(#{show_num},#{genre_num},#{hall_num},#{show_name},
+	
+	#{show_start},#{show_end},#{show_check},null,null,#{show_age},
+	
+	#{intermission},#{running_time},#{show_thumbnail})
+</insert>
+
+<select id="showList" parameterType="hashmap" resultType="com.moaplace.dto.admin.show.ShowListDTO">
+
+	SELECT * FROM (
+
+		SELECT ROWNUM rn, A.* 
+		
+		FROM(
+		
+			SELECT s.show_num num, h.hall_name hall, s.show_name title, 
+			
+			TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
+				
+			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
+			
+			<trim prefix="WHERE" prefixOverrides="AND">
+				<if test="showCheck != all">
+					show_check = #{showCheck}
+				</if>
+				<if test="search = title">
+					AND show_name = #{search}
+				</if>
+				<if test="search = hall">
+					AND ${field} = #{search}
+				</if>
+				<if test="search = showNum">
+					AND ${field} = #{search}
+				</if>
+			</trim>
+			
+			ORDER BY show_num DESC) A) 
+			
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+
+<select id="showDetail" parameterType="int" resultType="com.moaplace.dto.admin.show.MapperDetailDTO">
+	<![CDATA[
+		SELECT a.* , i.show_detail_img detailImgs 
+		
+			FROM (
+			
+			SELECT 
+				s.show_num num, 
+				s.show_name title, 
+				h.hall_name hall, 
+				g.genre_category genre,
+				s.show_check status, 
+				s.running_time runningTime, 
+				s.intermission intermission, 
+				(h.hall_cols * hall_rows) seats,
+				s.show_age age, 
+				TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, 
+				TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, 
+				TO_CHAR(s.stop_start, 'YYYY-MM-DD') blockStartDate, 
+				TO_CHAR(s.stop_end, 'YYYY-MM-DD') blockEndDate, 
+				s.show_thumbnail thumbnail
+			
+			FROM show s 
+			INNER JOIN hall h 
+			ON h.hall_num = s.hall_num 
+			
+			INNER JOIN genre g 
+			ON s.genre_num = g.genre_num) a 
+			
+		RIGHT JOIN show_img i
+		ON a.num = i.show_num 
+		
+		WHERE show_num = #{num}
+	]]>
+</select>
+
+  <select id="cntRow" resultType="int">
+
+  SELECT NVL(COUNT(*),0) FROM show
+
+  </select>
+
+	<select id="list" resultType="com.moaplace.vo.ShowVO" parameterType="hashmap">
+		select * from (
+		    select rownum rnum, s.* from (
+		        select * from show
+		        <![CDATA[ WHERE show_start >= #{start_date} AND show_start <= #{end_date} ]]>
+		        order by show_num desc
+		    ) s
+		) sh
+		<![CDATA[ where rnum >= #{startRow} and rnum <= #{endRow} ]]>
+	</select>
+	
+	<!-- 전체 공연 갯수 -->
+   <select id="count" resultType="int">
+    select NVL(count(*),0) cnt from show      	
+   </select>
+
+
+	<!-- 메인페이지 진행중인 공연 시작 ========================= -->
+	
+	<select id="getRunningShow" resultType="com.moaplace.dto.MainShowDTO">
+		select show_num, show_name, show_thumbnail
+		from show
+		where 
+			show_check = 'Y'
+			and show_end >= sysdate
+		order by show_start asc
+	</select>
+	
+	<!-- 메인페이지 진행중인 공연 끝 =========================-->
+</mapper>
