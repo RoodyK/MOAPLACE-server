@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.moaplace.dto.QnaMemberDTO;
+import com.moaplace.dto.member.ApiLoginDTO;
 import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
@@ -35,5 +36,9 @@ public interface MemberMapper {
 	public int newPassword(MemberLoginRequestDTO dto);
 	
 	public int withdrawal(String member_id);
+	
+	public ApiLoginDTO apiCheck(String member_email);
+	
+	public MemberLoginResponseDTO apiLogin(ApiLoginDTO dto);
 
 }

@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.authentication.AuthorizationType;
+import com.moaplace.dto.member.ApiLoginDTO;
 import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
+import com.moaplace.exception.MemberNotJoinException;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.service.JWTService;
 import com.moaplace.service.MailSendService;
@@ -44,10 +46,6 @@ public class MemberController {
 	@Autowired
 	private JWTService tokenService;
 
-	/*
-	 * 회원가입 관련 컨트롤러
-	 */
-	
 	// 아이디 중복 확인
 	@GetMapping(value = "/join/checkId/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> checkId(@PathVariable("id") String id) {
@@ -77,17 +75,18 @@ public class MemberController {
 	public ResponseEntity<String> joinMember(
 			@RequestBody MemberJoinRequestDTO dto, @RequestHeader HttpHeaders headers) {
 		
-		log.info(dto);
-		int n = memberService.join(dto);
+		try {
+			log.info(dto);
+			int n = memberService.join(dto);
+			
+			return n == 1 
+					? new ResponseEntity<>("success", HttpStatus.OK)
+					: new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+		}catch(MemberNotJoinException e) {
+			return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
+		}
 		
-		return n == 1 
-				? new ResponseEntity<>("success", HttpStatus.OK)
-				: new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
 	}
-	
-	/*
-	 * 회원 로그인
-	 */
 	
 	// 로그인
 	@PostMapping(value = "/login/result", 
@@ -204,5 +203,42 @@ public class MemberController {
 		return n > 0
 				? ResponseEntity.ok().body("success")
 				: ResponseEntity.badRequest().body("fail");
+	}
+	
+	// api가입 되어있는지 체크
+	@PostMapping(value = "/login/api/kakao",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> apiCheck(@RequestBody Map<String, Object> map) {
+		
+		String email = (String) map.get("email");
+		ApiLoginDTO dto = memberService.apiCheck(email);
+		Map<String, Object> response = new HashMap<>();
+		
+		if(dto != null) {
+			response.put("result", dto);
+		}else {
+			response.put("result", "using");
+		}
+		
+		return ResponseEntity.ok().body(response);
+	}
+	
+	@PostMapping(value = "/login/api/result",
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Map<String, Object>> login(
+			@RequestBody ApiLoginDTO dto) {
+		log.info("controller dto : " + dto);
+		Map<String, Object> responseToken = new HashMap<>();
+		
+		try {
+			MemberLoginResponseDTO member = memberService.apiLogin(dto);
+			String token = tokenService.createToken(member.getMember_id(), member.getAuthority());
+			responseToken.put("token", AuthorizationType.BEARER.thisName() + " " + token);
+			
+			return new ResponseEntity<>(responseToken, HttpStatus.OK);
+		}catch(WrongIdPasswordException e) {
+			responseToken.put("fail", "fail");
+			return new ResponseEntity<>(responseToken, HttpStatus.BAD_REQUEST);
+		}
 	}
 }
