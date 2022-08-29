@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.FaqMapper">
+
+	<!-- faq 등록 -->
+	<insert id="insert" parameterType="com.moaplace.vo.FaqVO">
+		insert into faq
+		values(FAQ_SEQ.nextval,#{member_num},#{sort_num},#{faq_title},#{faq_content})
+  	</insert>
+	
+	<!-- 검색 조건 -->
+	<sql id="search">	
+		<where>
+			<!-- 관리자 리스트 검색 -->
+			<if test='field != null and field != "" and field != "all"'>
+				a.${field} like '%'||#{keyword, jdbcType=VARCHAR}||'%'
+			</if>
+			
+			<!-- 사용자 리스트 검색 -->
+			<if test='field == "all"'>
+				a.faq_title like '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				or a.faq_content like '%'||#{keyword, jdbcType=VARCHAR}||'%'
+			</if>		
+
+			<if test='sort_num > 0'>
+				AND a.sort_num = #{sort_num}
+			</if>
+		</where>
+	</sql>
+		
+	<!-- faq 리스트 -->
+	<select id="list" parameterType="hashmap" resultType="com.moaplace.dto.AdminFaqListDTO">		
+		select * from 
+		(
+			select b.*, rownum rnum from 
+			(
+	            select a.* from 
+	            (
+	                select f.*, s.sort_name
+	                from faq f
+	                join sort s
+	                on s.sort_num = f.sort_num
+	                order by f.faq_num desc
+	            ) a
+				<include refid="search"/>
+		    ) b
+		)
+		<![CDATA[	where rnum>=#{startRow} and rnum<=#{endRow}	]]>
+	</select>
+
+	<!-- faq 리스트 카운트 -->
+	<select id="listCnt" parameterType="hashmap" resultType="int">
+		select NVL(count(*),0) cnt from (
+	    	select f.*, s.sort_name
+	        from faq f
+	        join sort s
+	        on s.sort_num = f.sort_num
+	        order by f.faq_num desc
+		) a
+	    <include refid="search"/>
+	</select>
+	
+	<!-- 상세 조회 -->
+	<select id="detail" parameterType="int" resultType="com.moaplace.vo.FaqVO">
+		select * from faq
+		join sort
+		on sort.sort_num = faq.sort_num
+		where faq.faq_num=#{faq_num}
+	</select>
+	
+	<!--  faq 수정 -->
+	<update id="update" parameterType="com.moaplace.vo.FaqVO">
+		update faq set sort_num=#{sort_num}, faq_title=#{faq_title}, faq_content=#{faq_content}
+		where faq_num=#{faq_num}
+	</update>
+	
+	<!-- faq 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from faq where faq_num=#{faq_num}
+	</delete>
+
+</mapper>

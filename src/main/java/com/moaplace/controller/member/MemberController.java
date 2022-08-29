@@ -71,7 +71,7 @@ public class MemberController {
 		
 		return new ResponseEntity<>(authNumber, HttpStatus.OK);
 	}
-	
+
 	// 회원가입
 	@PostMapping(value = "/join/result",
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -110,22 +110,30 @@ public class MemberController {
 		}
 	}
 	
-	// 회원정보
+	// 회원 정보
 	@GetMapping(value = "/login/member/info", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Map<String, Object>> getMemberInfo(
+	public ResponseEntity<MemberInfoResponseDTO> getMemberInfo(
 			HttpServletRequest request) {
-		
-		Map<String, Object> map = new HashMap<>();
 		
 		String token = request.getHeader("Authorization");
 		String id = tokenService.getUserId(token);
-		String roles = (String) tokenService.getClaims(token).get("roles");
 		
 		MemberInfoResponseDTO info = memberService.getMemberInfo(id);
-		map.put("info", info);
+		
+		return ResponseEntity.ok().body(info);
+	}
+	
+	// 회원 권한
+	@GetMapping(value = "/login/member/role")
+	public ResponseEntity<Map<String, Object>> getMemberRoles(
+			HttpServletRequest request) {
+		
+		Map<String, Object> map = new HashMap<>();
+		String token = request.getHeader("Authorization");
+		String roles = (String) tokenService.getClaims(token).get("roles");
 		map.put("roles", roles);
 		
-		return ResponseEntity.ok().body(map);
+		return ResponseEntity.ok().body(map); 
 	}
 }
