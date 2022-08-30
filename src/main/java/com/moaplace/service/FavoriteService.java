@@ -24,4 +24,9 @@ public class FavoriteService {
 	public int listCount(int member_num) {
 		return mapper.listCount(member_num);
 	}
+	
+	// 등록한 관심공연 삭제
+	public int delete(HashMap<String, Object> map) {
+		return mapper.delete(map);
+	}
 }

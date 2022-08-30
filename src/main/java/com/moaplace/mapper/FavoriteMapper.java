@@ -12,4 +12,7 @@ public interface FavoriteMapper {
 	
 	// member_num으로 관심공연 개수 조회
 	int listCount(int member_num);
+	
+	// 등록한 관심공연 삭제
+	int delete(HashMap<String, Object> map);
 }
