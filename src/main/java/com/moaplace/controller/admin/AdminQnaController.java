@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.AdminQnaListDTO;
+import com.moaplace.dto.AnswerInsertDTO;
 import com.moaplace.dto.QnaAnswerDTO;
 import com.moaplace.dto.QnaMemberDTO;
 import com.moaplace.service.AnswerService;
+import com.moaplace.service.MailSendService;
 import com.moaplace.service.QnaService;
 import com.moaplace.util.PageUtil;
 import com.moaplace.vo.AnswerVO;
@@ -38,14 +40,15 @@ public class AdminQnaController {
 	private QnaService qnaService;
 	@Autowired
 	private AnswerService answerService;
+	@Autowired
+	private MailSendService mailService;
 	
 	// 답변만 삭제
-	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/answer/delete/{qna_num}")
 	public String delete(@PathVariable int qna_num){
 		try {
-			log.info(qna_num);
 			
+			log.info(qna_num);			
 			answerService.delete(qna_num);
 			
 			// 문의글 상태 변경
@@ -67,8 +70,10 @@ public class AdminQnaController {
 				 consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String update(@RequestBody AnswerVO vo){
 		try {
+			
 			log.info(vo);
 			answerService.update(vo);
+			
 			return "success";
 			
 		} catch (Exception e) {
@@ -77,21 +82,24 @@ public class AdminQnaController {
 		}
 	}
 	
-	// 답변 등록 
-	
+	// 답변 등록 	
 	@PostMapping(value = "/answer/insert",
 				 consumes = MediaType.APPLICATION_JSON_VALUE)
-	public String insert(@RequestBody AnswerVO vo){
+	public String insert(@RequestBody AnswerInsertDTO dto){
 		try {
-			log.info(vo);			
-			answerService.insert(vo); // 답변 등록
+			
+			log.info(dto);			
+			// 답변 등록
+			answerService.insert(dto); 
 			
 			// 문의글 상태 변경
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("qna_state", "답변완료");
-			map.put("qna_num", vo.getQna_num());
-			
+			map.put("qna_num", dto.getQna_num());				
 			qnaService.changeState(map);
+			
+			// 답변완료 메일전송
+			mailService.qnaEmail(dto.getEmail());
 			
 			return "success";
 			
@@ -105,8 +113,8 @@ public class AdminQnaController {
 	@GetMapping(value="/detail/{qna_num}",
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> detail(@PathVariable int qna_num){
-		
 		try {			
+			
 			log.info(qna_num);
 						
 			QnaVO detail = qnaService.detail(qna_num);
@@ -118,9 +126,9 @@ public class AdminQnaController {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("detail", detail);
 			map.put("answer", answer);			
-			map.put("member", member);
-			
+			map.put("member", member);			
 			log.info(map);
+			
 			return map;
 			
 		} catch (Exception e) {
@@ -134,11 +142,11 @@ public class AdminQnaController {
 	public String changeState(@PathVariable String qna_state,
 							  @PathVariable int qna_num){		
 		try {
+			
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("qna_state", qna_state);
 			map.put("qna_num", qna_num);
-			log.info(map);
-			
+			log.info(map);			
 			qnaService.changeState(map);
 			
 			return "success";
@@ -169,11 +177,10 @@ public class AdminQnaController {
 			int totalRowCount = qnaService.adminListCnt(map); // 전체 결과 개수 구하기
 			PageUtil util = new PageUtil(pageNum, 5, 5, totalRowCount);
 			map.put("startRow", util.getStartRow()); // 시작행 번호
-			map.put("endRow", util.getEndRow()); // 끝행 번호
+			map.put("endRow", util.getEndRow()); // 끝행 번호			
 			
 			List<AdminQnaListDTO> list = qnaService.adminList(map); // 리스트 불러오기
-			map.put("list", list); 
-			
+			map.put("list", list); 			
 			map.put("pageNum", pageNum); // 페이지 번호
 			map.put("startPage", util.getStartPageNum()); // 페이지 시작번호
 			map.put("endPage", util.getEndPageNum()); // 페이지 마지막번호

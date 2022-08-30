@@ -1,5 +1,6 @@
 package com.moaplace.mapper;
 
+import com.moaplace.dto.AnswerInsertDTO;
 import com.moaplace.dto.QnaAnswerDTO;
 import com.moaplace.vo.AnswerVO;
 
@@ -9,6 +10,6 @@ public interface AnswerMapper {
 	AnswerVO selectAdmin(int qna_num);
 	int delete(int qna_num);
 	int update(AnswerVO vo);
-	int insert(AnswerVO vo);
+	int insert(AnswerInsertDTO dto);
 	
 }
