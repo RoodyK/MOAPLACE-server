@@ -7,21 +7,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.MyBookingCancleRequestDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.dto.MyFavoriteDTO;
+import com.moaplace.dto.MyInfoEditDTO;
 import com.moaplace.dto.MyRentalDTO;
 import com.moaplace.dto.MyRentalDetailDTO;
 import com.moaplace.dto.MyReviewDTO;
@@ -379,5 +380,16 @@ public class MypageController {
 			log.info(e.getMessage());
 			return null;
 		}
+	}
+	
+	/* 회원 정보수정 */
+	@PostMapping(value = "/info/edit", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String infoEdit(@RequestBody MyInfoEditDTO dto) {
+		
+		log.info(dto);
+		int n = memberService.myInfoEdit(dto);
+		
+		if(n > 0) return "success";
+		return "fail";
 	}
 }

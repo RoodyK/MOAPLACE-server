@@ -12,6 +12,7 @@ import com.moaplace.dto.MemberJoinRequestDTO;
 import com.moaplace.dto.MemberLoginRequestDTO;
 import com.moaplace.dto.MemberLoginResponseDTO;
 import com.moaplace.dto.MyBookingCancleRequestDTO;
+import com.moaplace.dto.MyInfoEditDTO;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.MemberMapper;
 import com.moaplace.vo.MemberVO;
@@ -88,6 +89,20 @@ public class MemberService {
 		boolean isPassword = passwordEncoder.matches(dto.getMember_pwd(), memberPwd);
 		
 		return isPassword;
+	}
+	
+	/* 회원 정보 수정 */
+	public int myInfoEdit(MyInfoEditDTO dto) {
+		// 비밀번호 암호화
+		String password = passwordEncoder.encode(dto.getMember_pwd());
+		log.info(password);
+		
+		dto.setMember_pwd(password);
+		
+		int n = mapper.myInfoEdit(dto);
+		
+		if(n > 0) return n;
+		return -1;
 	}
 }
 
