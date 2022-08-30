@@ -5,5 +5,31 @@
  
 <mapper namespace="com.moaplace.mapper.ReviewMapper">
 	
+	<!-- member_num + startRow + endRow로 관람후기 리스트 불러오기 + 페이징 -->
+	<select id="myList" resultType="com.moaplace.dto.MyReviewDTO" parameterType="hashmap">
+		select * from (
+		    select rownum rnum,r.* from (
+		        select r.review_num,r.member_num,r.show_num,s.show_thumbnail,
+		        s.show_name,r.review_grade,r.review_content,r.review_regdate
+		        from review r
+		        join show s on (r.show_num = s.show_num)
+		        where member_num = #{member_num}
+		        order by r.review_num desc
+		    )r
+		)where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- member_num으로 관람후기 내역 개수 조회 -->
+	<select id="myListCount" resultType="int" parameterType="int">
+		select NVL(count(*),0) cnt from (
+		    select rownum rnum,r.* from (
+		        select *
+		        from review r
+		        join show s on (r.show_num = s.show_num)
+		        where member_num = #{member_num}
+		        order by r.review_num desc
+		    )r
+		)
+	</select>
 	
 </mapper>
