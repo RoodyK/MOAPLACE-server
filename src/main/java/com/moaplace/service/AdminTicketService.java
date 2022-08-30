@@ -55,11 +55,11 @@ public class AdminTicketService {
 		return scheduleMapper.scheduleAllCount();
 	}
 	
-	
 	//공연일정 보여주기 
 	public List<ScheduleListDTO> sheduleList(HashMap<String, Object> map){
 		
 		return scheduleMapper.scheduleList(map);
 	}
+
 	
 }
