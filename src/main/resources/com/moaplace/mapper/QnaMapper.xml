@@ -5,37 +5,56 @@
  
 <mapper namespace="com.moaplace.mapper.QnaMapper">
 
+	<!-- 문의글 등록 -->
 	<insert id="insert" parameterType="com.moaplace.vo.QnaVO">
 		insert into qna 
 		values(QNA_SEQ.nextval,#{member_num},#{sort_num},#{qna_title},#{qna_content},sysdate,'대기중')
   	</insert>
-
+	
+	<!-- 검색 조건 -->
 	<sql id="search">
-		<if test='field != null and field != "" and field != "all"'>
-			where a.${field} like '%'||#{keyword, jdbcType=VARCHAR}||'%'
-		</if>
+	
+		<!-- 관리자 리스트 검색 -->
+		<where>
+			<if test='field != null and field != "" and field != "all"'>
+				a.${field} like '%'||#{keyword, jdbcType=VARCHAR}||'%'
+			</if>
+			
+			<if test='sort_num > 0'>
+				AND a.sort_num = #{sort_num}
+			</if>
+		</where>
+					
+		<!-- 사용자 리스트 검색 -->
 		<if test='field == "all"'>
-			where a.qna_title like '%'||#{keyword, jdbcType=VARCHAR}||'%' or a.qna_content like '%'||#{keyword, jdbcType=VARCHAR}||'%'	
-		</if>
+			where a.qna_title like '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+			or a.qna_content like '%'||#{keyword, jdbcType=VARCHAR}||'%'
+		</if>		
+
 	</sql>
 		
+	<!-- 사용자 페이지 리스트 -->
 	<select id="list" parameterType="hashmap" resultType="com.moaplace.dto.QnaListDTO">		
 		select * from
 		(
-		    select b.*, rownum rnum from (
-		        select a.* from (
-		            select * from qna
-		            join sort
-					on sort.sort_num = qna.sort_num
-		            where member_num=#{member_num}
-		            order by qna_num desc
-		        ) a
+		    select b.*, rownum rnum from 
+		    (
+		        select a.* from 
+		        (
+		            select q.*, s.sort_name
+                    from qna q
+		            join sort s
+					on s.sort_num = q.sort_num
+		            where q.member_num=#{member_num}
+		            order by q.qna_num desc
+		    	) a
 			<include refid="search"/>
 		    ) b
 		)
 		<![CDATA[	where rnum>=#{startRow} and rnum<=#{endRow}	]]>
 	</select>
 
+	<!-- 사용자 페이지 리스트 카운트 -->
 	<select id="listCnt" parameterType="hashmap" resultType="int">
 		select NVL(count(*),0) cnt from (
 		    select * from qna 
@@ -43,7 +62,48 @@
 		) a
 	    <include refid="search"/>
 	</select>
+	<!-- /////////////////// -->
 	
+	<!-- 관리자 페이지 리스트 -->
+	<select id="adminList" parameterType="hashmap" resultType="com.moaplace.dto.AdminQnaListDTO">		
+		select * from
+		(
+		    select b.*, rownum rnum from (
+		        select a.* from (
+                    select q.*, an.answer_regdate, s.sort_name, m.member_id, m.member_name 
+                    from qna q
+                    left join answer an
+                    on an.qna_num = q.qna_num
+                    left join sort s
+    				on q.sort_num = s.sort_num
+					left join member m
+    				on m.member_num = q.member_num
+					order by q.qna_num desc
+		        ) a
+			<include refid="search"/>
+		    ) b
+		)
+		<![CDATA[	where rnum>=#{startRow} and rnum<=#{endRow}	]]>
+	</select>
+
+	<!-- 관리자 페이지 리스트 카운트 -->
+	<select id="adminListCnt" parameterType="hashmap" resultType="int">
+		select NVL(count(*),0) cnt from (
+        	select q.*, an.answer_regdate, s.sort_name, m.member_id, m.member_name 
+            from qna q
+            left join answer an
+            on an.qna_num = q.qna_num
+            left join sort s
+    		on q.sort_num = s.sort_num
+			left join member m
+    		on m.member_num = q.member_num
+			order by q.qna_num desc
+		) a
+	    <include refid="search"/>
+	</select>
+	<!-- ////////////////////// -->
+	
+	<!-- 상세 조회 -->
 	<select id="detail" parameterType="int" resultType="com.moaplace.vo.QnaVO">
 		select * from qna
 		join sort 
@@ -51,11 +111,18 @@
 		where qna.qna_num=#{qna_num}
 	</select>
 	
+	<!-- 사용자 문의글 내용 수정 -->
 	<update id="update" parameterType="com.moaplace.vo.QnaVO">
 		update qna set sort_num=#{sort_num}, qna_title=#{qna_title}, qna_content=#{qna_content}
 		where qna_num=#{qna_num}
 	</update>
 	
+	<!-- 관리자 문의 상태 변경 -->	
+	<update id="changeState" parameterType="hashmap">
+		update qna set qna_state=#{qna_state} where qna_num=#{qna_num}
+	</update>
+	
+	<!-- 문의글 삭제 -->
 	<delete id="delete" parameterType="int">
 		delete from qna where qna_num=#{qna_num}
 	</delete>

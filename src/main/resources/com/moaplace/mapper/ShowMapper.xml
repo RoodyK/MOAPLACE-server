@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.ShowMapper">
+
+<!-- ////////////// 연희 시작 ////////////// -->
+
+<insert id="showInsert" parameterType="com.moaplace.vo.ShowVO">
+	<!-- 셀렉트키로 인서트 전에 시퀀스번호 받아옴(셀렉트로 불러오면서 nextval로 넘어감) -->
+	<selectKey keyProperty="show_num" order="BEFORE" resultType="int">
+		select show_seq.nextval from dual
+	</selectKey>
+	
+	insert into show values(#{show_num},#{genre_num},#{hall_num},#{show_name},
+	
+	#{show_start},#{show_end},#{show_check},null,null,#{show_age},
+	
+	#{intermission},#{running_time},#{show_thumbnail})
+</insert>
+
+<select id="showList" parameterType="hashmap" resultType="com.moaplace.dto.admin.show.ShowListDTO">
+
+	SELECT * FROM (
+
+		SELECT ROWNUM rn, A.* 
+		
+		FROM(
+		
+			SELECT s.show_num num, h.hall_name hall, s.show_name title, 
+			
+			TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
+				
+			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
+			
+			<trim prefix="WHERE">
+				<if test="showCheck != 'all'">
+					<choose>
+						<when test="search == null or search == ''">							
+							show_check = #{showCheck} 						
+						</when>
+						<when test="field == 'title' and search != null and search != ''">
+							show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null and search != ''">
+							show_check = #{showCheck} AND hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and search != null and search != ''">
+							show_check = #{showCheck} AND s.show_num LIKE '%'||#{search}||'%'
+						</when>
+					</choose>
+				</if>
+				<if test="showCheck == 'all' and search != null and search != ''">
+					<choose>
+						<when test="field == 'title' and search != null and search != ''">
+							show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null and search != ''">
+							hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and (search != null and search != '')">
+							show_num = #{search}
+						</when>
+					</choose>
+				</if>
+			</trim>
+			
+			ORDER BY show_num DESC) A) 
+			
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
+
+<select id="showDetail" parameterType="int" resultType="com.moaplace.dto.admin.show.MapperDetailDTO">
+	<![CDATA[
+		SELECT a.* , i.show_detail_img detailImgs 
+		
+			FROM (
+			
+			SELECT 
+				s.show_num num, 
+				s.show_name title, 
+				h.hall_name hall, 
+				g.genre_category genre,
+				s.show_check status, 
+				s.running_time runningTime, 
+				s.intermission intermission, 
+				(h.hall_cols * hall_rows) seats,
+				s.show_age age, 
+				TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, 
+				TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, 
+				TO_CHAR(s.stop_start, 'YYYY-MM-DD') blockStartDate, 
+				TO_CHAR(s.stop_end, 'YYYY-MM-DD') blockEndDate, 
+				s.show_thumbnail thumbnail
+			
+			FROM show s 
+			INNER JOIN hall h 
+			ON h.hall_num = s.hall_num 
+			
+			INNER JOIN genre g 
+			ON s.genre_num = g.genre_num) a 
+			
+		RIGHT JOIN show_img i
+		ON a.num = i.show_num 
+		
+		WHERE show_num = #{num}
+	]]>
+</select>
+
+  <select id="firstCntRow" resultType="int">
+
+  SELECT NVL(COUNT(*),0) FROM show
+
+  </select>
+  
+  <select id="currentCntRow" resultType="int" parameterType="hashmap">
+  
+  SELECT NVL(COUNT(*),0) FROM (
+  
+  	SELECT s.show_num num, h.hall_name hall, s.show_name title, 
+			
+		TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
+			
+		FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
+			
+			<trim prefix="WHERE">
+				<if test="showCheck != 'all'">
+					<choose>
+						<when test="search == null or search == ''">							
+							show_check = #{showCheck} 						
+						</when>
+						<when test="field == 'title' and search != null and search != ''">
+							show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null and search != ''">
+							show_check = #{showCheck} AND hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and search != null and search != ''">
+							show_check = #{showCheck} AND s.show_num LIKE '%'||#{search}||'%'
+						</when>
+					</choose>
+				</if>
+			</trim>
+			<trim prefix="WHERE">
+				<if test="showCheck == 'all' and search != null and search != ''">
+					<choose>
+						<when test="field == 'title' and search != null and search != ''">
+							show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null and search != ''">
+							hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and (search != null and search != '')">
+							show_num LIKE '%'||#{search}||'%'
+						</when>
+					</choose>
+				</if>
+			</trim>
+			
+		ORDER BY show_num DESC)
+  
+  </select>
+
+<update id="showUpdate" parameterType="com.moaplace.vo.ShowVO">
+ 	update show set genre_num = #{genre_num}, hall_num = #{hall_num}, show_name = #{show_name},
+	
+		show_start = #{show_start}, show_end = #{show_end},
+		<if test="stop_start != null">
+		stop_start = #{stop_start},
+		</if>
+		<if test="stop_end != null">
+		stop_end = #{stop_end},
+		</if>
+		show_check = #{show_check}, show_age = #{show_age},
+		
+		intermission = #{intermission}, running_time = #{running_time},
+		
+		show_thumbnail = #{show_thumbnail} 
+		
+		WHERE show_num = #{show_num}
+</update>
+
+
+
+<!-- ////////////// 연희 끝 ////////////// -->
+
+
+	<select id="list" resultType="com.moaplace.vo.ShowVO" parameterType="hashmap">
+		select * from (
+		    select rownum rnum, s.* from (
+		        select * from show
+		        <![CDATA[ WHERE show_start >= #{start_date} AND show_start <= #{end_date} ]]>
+		        order by show_num desc
+		    ) s
+		) sh
+		<![CDATA[ where rnum >= #{startRow} and rnum <= #{endRow} ]]>
+	</select>
+	
+	<!-- 전체 공연 갯수 -->
+   <select id="count" resultType="int">
+    select NVL(count(*),0) cnt from show      	
+   </select>
+
+</mapper>
