@@ -58,8 +58,39 @@
 			#{member_gender}, #{member_birth}, #{member_phone}, #{member_address}, 2000)
 	</insert>
 	
-	<select id="selectAll" resultType="com.moaplace.vo.MemberVO">
-		SELECT * FROM member
+	<sql id="search">
+	<!-- <![CDATA[]]> -->
+			<trim prefix="WHERE">
+	      <if test="sorted == 'all'">
+	      	enabled LIKE '%%'
+	      </if>
+	      <if test="sorted != 'all'">
+	      	enabled LIKE '%'||#{sorted}||'%'
+	      </if>
+	      <trim prefix="AND">
+		      <if test="field != null and field != '' and word != null">
+		      	${field} LIKE '%'||#{word}||'%'
+		      </if>
+		    </trim>
+			</trim>
+	    ORDER BY member_num desc
+	</sql>
+	
+	<select id="selectAll" resultType="com.moaplace.dto.member.AdminMemberInfoResponseDTO">
+		SELECT * FROM (
+	    SELECT ROWNUM rn, member_num, member_id, member_email, member_name, 
+	        member_phone, regdate, member_point, enabled
+	    from (
+	        SELECT * FROM member 
+	        <include refid="search" />
+	        ) m
+	    ) mm
+		<![CDATA[ WHERE RN >= #{startRow} AND RN <= #{endRow} ]]>
+	</select>
+	
+	<select id="getCount" resultType="int">
+		SELECT NVL(COUNT(member_num), 0) FROM member
+		<include refid="search" />
 	</select>
 	
 	<select id="findOne" resultType="com.moaplace.vo.MemberVO">
@@ -89,4 +120,5 @@
 		ON m.member_email = a.member_email 
 		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND m.member_id = #{member_id} AND a.api_name = 'kakao'
 	</select>
+	
 </mapper>

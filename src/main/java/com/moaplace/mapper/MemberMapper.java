@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.moaplace.dto.QnaMemberDTO;
+import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
 import com.moaplace.dto.member.ApiLoginDTO;
 import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
+import com.moaplace.vo.ApiAuthVO;
 import com.moaplace.vo.MemberVO;
 
 public interface MemberMapper {
@@ -25,7 +27,9 @@ public interface MemberMapper {
 	
 	public MemberLoginResponseDTO login(MemberLoginRequestDTO dto);
 	
-	public List<MemberVO> selectAll();
+	public List<AdminMemberInfoResponseDTO> selectAll(Map<String, Object> map);
+	
+	public int getCount(Map<String, Object> map);
 	
 	public String checkId(String member_id);
 	
