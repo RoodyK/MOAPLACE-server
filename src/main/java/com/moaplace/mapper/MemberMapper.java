@@ -11,6 +11,7 @@ import com.moaplace.dto.MemberInfoResponseDTO;
 import com.moaplace.dto.MemberJoinRequestDTO;
 import com.moaplace.dto.MemberLoginRequestDTO;
 import com.moaplace.dto.MemberLoginResponseDTO;
+import com.moaplace.dto.MyInfoEditDTO;
 import com.moaplace.vo.MemberVO;
 
 public interface MemberMapper {
@@ -33,5 +34,8 @@ public interface MemberMapper {
 	public MemberVO findOne();
 	
 	public int join(MemberJoinRequestDTO dto);
+	
+	// 회원 정보 수정
+	public int myInfoEdit(MyInfoEditDTO dto);
 
 }
