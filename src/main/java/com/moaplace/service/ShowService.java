@@ -217,10 +217,6 @@ public class ShowService {
 		return showMapper.firstCntRow();
 	}
 	
-	public int currentListRow(HashMap<String, Object> map) {
-		
-		return showMapper.currentCntRow(map);
-	}
 	
 	
 		////////////////////////연희 끝/////////////////////////

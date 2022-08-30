@@ -60,7 +60,7 @@
 							hall_name LIKE '%'||#{search}||'%'
 						</when>
 						<when test="field == 'showNum' and (search != null and search != '')">
-							show_num = #{search}
+							s.show_num = #{search}
 						</when>
 					</choose>
 				</if>
@@ -129,54 +129,6 @@
 
   SELECT NVL(COUNT(*),0) FROM show
 
-  </select>
-  
-  <select id="currentCntRow" resultType="int" parameterType="hashmap">
-  
-  SELECT NVL(COUNT(*),0) FROM (
-  
-  	SELECT s.show_num num, h.hall_name hall, s.show_name title, 
-			
-		TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
-			
-		FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
-			
-			<trim prefix="WHERE">
-				<if test="showCheck != 'all'">
-					<choose>
-						<when test="search == null or search == ''">							
-							show_check = #{showCheck} 						
-						</when>
-						<when test="field == 'title' and search != null and search != ''">
-							show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
-						</when>
-						<when test="field == 'hall' and search != null and search != ''">
-							show_check = #{showCheck} AND hall_name LIKE '%'||#{search}||'%'
-						</when>
-						<when test="field == 'showNum' and search != null and search != ''">
-							show_check = #{showCheck} AND s.show_num LIKE '%'||#{search}||'%'
-						</when>
-					</choose>
-				</if>
-			</trim>
-			<trim prefix="WHERE">
-				<if test="showCheck == 'all' and search != null and search != ''">
-					<choose>
-						<when test="field == 'title' and search != null and search != ''">
-							show_name LIKE '%'||#{search}||'%'
-						</when>
-						<when test="field == 'hall' and search != null and search != ''">
-							hall_name LIKE '%'||#{search}||'%'
-						</when>
-						<when test="field == 'showNum' and (search != null and search != '')">
-							show_num LIKE '%'||#{search}||'%'
-						</when>
-					</choose>
-				</if>
-			</trim>
-			
-		ORDER BY show_num DESC)
-  
   </select>
 
 <update id="showUpdate" parameterType="com.moaplace.vo.ShowVO">

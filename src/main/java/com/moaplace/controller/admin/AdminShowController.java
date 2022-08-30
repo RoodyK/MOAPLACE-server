@@ -100,7 +100,8 @@ public class AdminShowController {
 		// 검색어가 있고, 공연상태별 모아보기가 선택됐을 때 다시 조회된 행 번호 카운트해서 페이징처리 유틸에 새로 덮어씌우기 
 		if(search!=null || !status.equals("all")) {
 			pu = new PageUtil(
-					pageNum,5,5,service.currentListRow(sList));
+					pageNum,5,5,list.size());
+					
 		};
 		
 		// 해시맵에 조회된 공연목록, 페이지번호, 페이징유틸 정보 담아서 클라이언트로 보내기
