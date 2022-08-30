@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.moaplace.dto.AdminDetailDTO;
 import com.moaplace.dto.AdminListDTO;
+import com.moaplace.dto.AdminNoticeDetailDTO;
 import com.moaplace.mapper.AdminNoticeDetailMapper;
 import com.moaplace.mapper.AdminNoticeMapper;
 import com.moaplace.vo.AdminNoticeDetailVO;
@@ -35,8 +37,8 @@ public class AdminNoticeService {
     //파일 및 공지 사항 등록
 	@Transactional(rollbackFor = Exception.class)
 	public int insert(List<MultipartFile> multipartFile, AdminNoticeVO vo) {
-		log.info("인자로 받은 AdminNOticeVO : " + vo);
-		log.info("==============================");
+		log.info("인자로 받은 AdminNoticeVO : " + vo);
+		log.info("============================서비스 확인값==========================");
 		mapper.insert(vo);
 		log.info("selectKey 사용 후 VO : " + vo);
 		try {
@@ -68,6 +70,8 @@ public class AdminNoticeService {
 			e1.printStackTrace();
 			return -1;
 		}
+//		log.info("mapper.insert값 확인 try 후: "+vo);
+//		log.info("================================================================");
 		return 1;
 	}
 	
@@ -79,5 +83,55 @@ public class AdminNoticeService {
 	//전체 글 개수 
 	public int getCount(HashMap<String,Object> map) {
 		return mapper.getCount(map);
+	}
+	
+	//글 상세보기
+	public List<AdminDetailDTO> detail(int notice_num){
+		return mapper.detail(notice_num);
+	}
+	
+	//글  상세보기 : 파일 없을때
+	public List<AdminListDTO> detaillist(int notice_num){
+		return mapper.detaillist(notice_num);
+	}
+	
+	//파일 리스트 불러오기
+	public List<AdminNoticeDetailDTO> filelist(int notice_num){
+		return mapper.filelist(notice_num);
+	}
+	
+	//파일 다운로드 
+	public AdminNoticeDetailDTO filedown(int notice_detail_num){
+		return mapper.filedown(notice_detail_num);
+	}
+	
+	//삭제하기 위한 파일
+	public AdminNoticeDetailDTO selectfile(int notice_detail_num) {
+		return mapper.selectfile(notice_detail_num);
+	}
+	
+	//파일 삭제를 위한 넘버 받기,. resultType = int > int 배열로 받기
+	public List<Integer> selectnum(int notice_num) {
+		return mapper.selectnum(notice_num);
+	}
+
+	// 파일이 없는 경우 삭제
+	public int delete(int notice_num) {
+		return mapper.delete(notice_num);
+	}
+
+	// 파일이 있는 경우 삭제
+	public int alldelete(int notice_num) {
+		return mapper.alldelete(notice_num);
+	}
+	
+	//수정용 파일 개별 삭제 
+	public int deletefile(int notice_detail_num) {
+		return mapper.deletefile(notice_detail_num);
+	}
+	
+	//수정용
+	public AdminListDTO selectdetail(int notice_num) {
+		return mapper.selectdetail(notice_num);
 	}
 }
