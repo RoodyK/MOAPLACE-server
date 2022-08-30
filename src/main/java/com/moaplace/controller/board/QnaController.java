@@ -38,15 +38,15 @@ public class QnaController {
 	private AnswerService answerService;
 	
 	// 문의글 삭제
-	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value="/delete/{qna_num}")
-	public String delete(@PathVariable int qna_num){
-	
+	public String delete(@PathVariable int qna_num){	
 		try {
+			
 			log.info(qna_num);						
 			QnaAnswerDTO answer = answerService.select(qna_num);
 			
-			if(answer!=null) { // 답변이 있으면 먼저 삭제
+			// 답변이 있으면 먼저 삭제
+			if(answer!=null) { 
 				answerService.delete(qna_num);
 			}
 			qnaService.delete(qna_num);
@@ -65,8 +65,10 @@ public class QnaController {
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public String update(@RequestBody QnaVO vo){
 		try {
+			
 			log.info(vo);
 			qnaService.update(vo);
+			
 			return "success";
 			
 		} catch (Exception e) {
@@ -80,8 +82,10 @@ public class QnaController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public QnaVO updateForm(@RequestParam int qna_num){
 		try {
+			
 			log.info(qna_num);
 			QnaVO detail = qnaService.detail(qna_num);
+			
 			return detail;
 			
 		} catch (Exception e) {
@@ -95,14 +99,15 @@ public class QnaController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public Map<String, Object> detail(@RequestParam int qna_num){
 		try {
-			log.info(qna_num);
-						
+			
+			log.info(qna_num);						
 			QnaVO detail = qnaService.detail(qna_num);
 			QnaAnswerDTO answer = answerService.select(qna_num);
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("detail", detail);
-			map.put("answer", answer);			
+			map.put("answer", answer);		
+			
 			return map;
 			
 		} catch (Exception e) {
@@ -122,7 +127,7 @@ public class QnaController {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("member_num", member_num); // 회원번호 추가	
 						
-			// 전체 검색일 때 (검색 필드는 없고 키워드만 있을 때)
+			// 전체 검색일 때 (검색필드 없이 키워드만 있을 때)
 			if(StringUtils.isEmpty(field) && !StringUtils.isEmpty(keyword)) {
 				field = "all";
 			}
@@ -138,8 +143,7 @@ public class QnaController {
 			map.put("endRow", util.getEndRow()); // 끝행 번호
 			
 			List<QnaListDTO> list = qnaService.list(map); // 리스트 불러오기
-			map.put("list", list); 
-			
+			map.put("list", list); 			
 			map.put("listCnt", totalRowCount); // 전체 결과 개수
 			map.put("pageNum", pageNum); // 페이지 번호
 			map.put("startPage", util.getStartPageNum()); // 페이지 시작번호
@@ -155,14 +159,15 @@ public class QnaController {
 	}
 	
 	// 문의글 등록 
-	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/insert",
 				consumes = MediaType.APPLICATION_JSON_VALUE,
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public String insert(@RequestBody QnaVO vo){
 		try {
+			
 			log.info(vo);			
 			qnaService.insert(vo);
+			
 			return "success";
 			
 		} catch (Exception e) {

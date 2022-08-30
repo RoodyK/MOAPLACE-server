@@ -32,7 +32,7 @@
 	</sql>
 		
 	<!-- faq 리스트 -->
-	<select id="list" parameterType="hashmap" resultType="com.moaplace.dto.AdminFaqListDTO">		
+	<select id="list" parameterType="hashmap" resultType="com.moaplace.dto.FaqListDTO">		
 		select * from 
 		(
 			select b.*, rownum rnum from 
