@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.moaplace.dto.FaqListDTO;
+import com.moaplace.dto.AdminFaqListDTO;
 import com.moaplace.mapper.FaqMapper;
 import com.moaplace.vo.FaqVO;
 
@@ -20,7 +20,7 @@ public class FaqService {
 		return faqMapper.insert(vo);
 	}
 	
-	public List<FaqListDTO> list(HashMap<String, Object> map){
+	public List<AdminFaqListDTO> list(HashMap<String, Object> map){
 		return faqMapper.list(map);
 	}
 	
