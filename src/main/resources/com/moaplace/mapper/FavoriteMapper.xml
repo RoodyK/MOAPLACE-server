@@ -9,7 +9,7 @@
 	<select id="myList" resultType="com.moaplace.dto.MyFavoriteDTO" parameterType="hashmap">
 		select * from (
 		    select rownum rnum,r.* from (
-		        select f.member_num,s.show_name,s.show_start,s.show_end,g.genre_category,s.show_thumbnail
+		        select f.member_num,f.show_num,s.show_name,s.show_start,s.show_end,g.genre_category,s.show_thumbnail
 		        from favorite f
 		        join show s on (f.show_num = s.show_num)
 		        join genre g on (s.genre_num = g.genre_num)
@@ -23,7 +23,7 @@
 	<select id="listCount" resultType="int" parameterType="int">
 		select NVL(count(*),0) cnt from (
 		    select rownum rnum,r.* from (
-		        select f.member_num,s.show_name,s.show_start,s.show_end,g.genre_category,s.show_thumbnail
+		        select *
 		        from favorite f
 		        join show s on (f.show_num = s.show_num)
 		        join genre g on (s.genre_num = g.genre_num)
@@ -31,4 +31,11 @@
 		    )r
 		)
 	</select>
+	
+	<!-- 등록한 관심공연 삭제 -->
+	<delete id="delete" parameterType="hashmap">
+		DELETE FROM favorite 
+		WHERE member_num = #{member_num} and show_num = #{show_num}
+	</delete>
+	
 </mapper>

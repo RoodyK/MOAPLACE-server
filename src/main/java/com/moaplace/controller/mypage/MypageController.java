@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.MyBookingCancleRequestDTO;
@@ -289,7 +290,7 @@ public class MypageController {
 	
 	/* 관심공연 조회 */
 	@GetMapping(value = "/performance/{member_num}/{pageNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> performance(@PathVariable int member_num, Integer pageNum) {
+	public Map<String, Object> performance(@PathVariable int member_num, @PathVariable Integer pageNum) {
 		
 		try {
 			log.info("member_num : " + member_num);
@@ -325,5 +326,14 @@ public class MypageController {
 			log.info(e.getMessage());
 			return null;
 		}
+	}
+	
+	/* 관심공연 삭제 실행 */
+	@PostMapping(value = "/performance/delete", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public String performanceDelete(@RequestBody HashMap<String, Object> map) {
+		log.info(map);
+		int n = favoriteService.delete(map);
+		if(n > 0) return "success";
+		return "fail";
 	}
 }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MyFavoriteDTO {
+	private int show_num;
 	private int rnum;
 	private int member_num;
 	private String show_name;
