@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.moaplace.dto.admin.show.ScheduleInsertRequestDTO;
+import com.moaplace.dto.admin.show.ScheduleListDTO;
 import com.moaplace.dto.admin.show.ShowPartInfo;
 import com.moaplace.mapper.ScheduleMapper;
 import com.moaplace.mapper.ShowMapper;
@@ -43,6 +44,11 @@ public class AdminTicketService {
 		}
 		
 		return result;
+	}
+	
+	public List<ScheduleListDTO> sheduleList(){
+		
+		return scheduleMapper.scheduleList();
 	}
 	
 }

@@ -11,4 +11,19 @@
 		#{schedule_time},#{schedule_date},#{schedule_YN})
 
 </insert>
+
+<select id="scheduleList" resultType="com.moaplace.dto.admin.show.ScheduleListDTO">
+
+	SELECT * FROM (
+		SELECT a.*, ROWNUM rn FROM(
+			SELECT s.show_num num, s.show_name title, 
+				t.schedule_date showDate, t.cntDate cntDate, s.show_check status 
+			FROM show s RIGHT JOIN (
+				SELECT show_num, schedule_date, nvl(count(*),0)cntDate 
+				FROM schedule GROUP BY schedule_date, show_num)t
+		ON s.show_num = t.show_num order by schedule_date desc ) a) 
+	WHERE rn BETWEEN 1 AND 5
+
+</select>
+
 </mapper>
