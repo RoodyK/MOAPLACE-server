@@ -94,20 +94,42 @@
 
   </select>
 
-	<select id="list" resultType="com.moaplace.vo.ShowVO" parameterType="hashmap">
+	<select id="list" resultType="com.moaplace.dto.ShowDTO" parameterType="hashmap">
 		select * from (
-		    select rownum rnum, s.* from (
+		    select rownum rnum, s.show_num, s.genre_num, s.hall_num, s.show_name, s.show_start, s.show_end, s.show_check, s.show_thumbnail from (
 		        select * from show
-		        where show_start between #{start_date} and #{end_date}
+		        where show_start between #{start_date} and #{end_date} 
+		        and hall_num in
+		        <foreach collection="hall_chk" item="hall_chk" separator="," open="(" close=")">
+		        	#{hall_chk}
+		        </foreach>
+				and genre_num in
+		        <foreach collection="genre_chk" item="genre_chk" separator="," open="(" close=")">
+		        	#{genre_chk}
+		        </foreach>
+		        <if test="keyword !=null and keyword != '' ">	
+					and show_name like '%'||#{keyword}||'%'
+				</if>
 		        order by show_num desc
 		    ) s
 		) sh
-		<![CDATA[ where rnum >= #{startRow} and rnum <= #{endRow} ]]>
+		where rnum between #{startRow} and #{endRow}
 	</select>
 	
 	<!-- 전체 공연 갯수 -->
    <select id="count" resultType="int" parameterType="hashmap">
-    select NVL(count(*),0) cnt from show where show_start between #{start_date} and #{end_date}     	
+   		select NVL(count(*),0) cnt from show where show_start between #{start_date} 
+   		and #{end_date} and hall_num in
+        <foreach collection="hall_chk" item="hall_chk" separator="," open="(" close=")">
+			#{hall_chk}
+		</foreach>
+		and genre_num in
+		<foreach collection="genre_chk" item="genre_chk" separator="," open="(" close=")">
+			#{genre_chk}
+		</foreach>
+		<if test="keyword !=null and keyword != '' ">	
+			and show_name like '%'||#{keyword}||'%'
+		</if>	
    </select>
 
 </mapper>

@@ -150,22 +150,13 @@ public class ShowService {
 	
 	public List<ShowDTO> list(HashMap<String, Object> map) {
 
-		
-		List<ShowVO> list = showMapper.list(map);
-		
-		List<ShowDTO> list2 = new ArrayList<>();
-		
-		for(ShowVO vo : list) {
-			log.info(vo.getShow_thumbnail());
-			list2.add(new ShowDTO(vo.getShow_num(), vo.getGenre_num(), vo.getHall_num(), vo.getShow_name(), vo.getShow_start(), vo.getShow_end(), vo.getShow_check(), new String(vo.getShow_thumbnail())));
-		}
-		
-		return list2;
+		return showMapper.list(map);
 	}
+
 	
 	public int count(HashMap<String, Object> map) {
+		
 		return showMapper.count(map);
-
 	}
 	
 }
