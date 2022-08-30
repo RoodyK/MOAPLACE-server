@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service;
 
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
+import com.moaplace.mapper.AllSeatMapper;
 import com.moaplace.mapper.BookingMapper;
 
 @Service
 public class BookingService {
 
 	@Autowired private BookingMapper mapper;
+	
+	@Autowired
+	private AllSeatMapper allSeatMapper;
 	
 	// member_num으로 회원의 예매내역 존재여부 확인
 	public boolean bookingExist(int member_num) {
@@ -84,4 +88,10 @@ public class BookingService {
 		}
 	}
 	
+	
+	//좌석 선택 페이지  상연일정(스케줄)번호로 이미 예매된 좌석 불러오기
+	public List<String> getBookingSeat(int schedule_num)
+	{
+		return allSeatMapper.getBookingSeat(schedule_num);
+	}
 }
