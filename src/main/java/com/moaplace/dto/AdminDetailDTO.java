@@ -5,18 +5,20 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
-@ToString
-public class AdminNoticeDTO {
+//파일 있을 때 list 
+public class AdminDetailDTO {
 	private int notice_num;
-	private int member_num;
-	private int sort_num;
 	private String sort_name;
 	private String notice_title;
 	private String notice_content;
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date notice_regdate;
 	private int notice_hit;
+	private int notice_detail_num;
+	private String notice_orgfile;
+	private String notice_savefile;
+	private long notice_filesize;
+
 }
