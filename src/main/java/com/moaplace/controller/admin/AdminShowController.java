@@ -100,7 +100,8 @@ public class AdminShowController {
 		// 검색어가 있고, 공연상태별 모아보기가 선택됐을 때 다시 조회된 행 번호 카운트해서 페이징처리 유틸에 새로 덮어씌우기 
 		if(search!=null || !status.equals("all")) {
 			pu = new PageUtil(
-					pageNum,5,5,service.currentListRow(sList));
+					pageNum,5,5,service.currentCnt(sList));
+					
 		};
 		
 		// 해시맵에 조회된 공연목록, 페이지번호, 페이징유틸 정보 담아서 클라이언트로 보내기
@@ -136,7 +137,7 @@ public class AdminShowController {
 			@PathVariable ( required = false ) String selectField,
 			@PathVariable ( required = false ) String search
 			){
-		log.info("어쨌든 요청 들어옴------------------------");
+		
 		ShowDetailViewDTO dto= service.showDetail(showNum);
 		
 		HashMap<String, Object> map=new HashMap<String, Object>();
@@ -150,6 +151,7 @@ public class AdminShowController {
 		
 	}
 	
+	// 공연목록 수정
 	@PostMapping(
 			value = "/update", 
 			consumes= {MediaType.APPLICATION_JSON_VALUE})

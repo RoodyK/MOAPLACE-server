@@ -17,8 +17,8 @@ public class MapperDetailDTO {
 	private String endDate;				//공연종료일
 	private String blockStartDate;		//공연중단시작일
 	private String blockEndDate;		//공연중단종료일
-	private byte[] thumbnail;			//섬네일
-	private byte[] detailImgs;			//상세이미지
+	private String thumbnail;			//섬네일
+	private String detailImgs;			//상세이미지
 	
 	
 	

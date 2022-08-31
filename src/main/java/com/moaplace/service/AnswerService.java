@@ -3,7 +3,6 @@ package com.moaplace.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.moaplace.dto.AnswerInsertDTO;
 import com.moaplace.dto.QnaAnswerDTO;
 import com.moaplace.mapper.AnswerMapper;
 import com.moaplace.vo.AnswerVO;
@@ -30,8 +29,8 @@ public class AnswerService {
 		return mapper.update(vo);
 	}
 	
-	public int insert(AnswerInsertDTO dto) {
-		return mapper.insert(dto);
+	public int insert(AnswerVO vo) {
+		return mapper.insert(vo);
 	}
 	
 }

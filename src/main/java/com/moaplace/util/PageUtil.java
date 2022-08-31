@@ -15,7 +15,7 @@ public class PageUtil {
 	private int endPageNum; // 끝페이지 번호
 	private int rowBlockCount; // 한페이지에 보여질 글의 개수
 	private int pageBlockCount; // 한페이지에 보여질 페이지의 개수
-	private int totalRowCount;
+	private int totalRowCount; // 총 게시글 수
 
 	/**
 	 * @param pageNum 페이지번호

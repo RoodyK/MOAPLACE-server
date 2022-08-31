@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.HallMapper">
+	
+	<!-- 좌석 선택 페이지  공연장 좌석수 조회 =========-->
+	<select id="getHallSeats" resultType="com.moaplace.dto.HallSeatDTO">
+		select hall_cols, hall_rows 
+		from hall
+		where hall_num = #{hall_num}
+	</select>
+	
+	<!-- 좌석 선택 페이지 좌석 등급별 행수 조회 (리스트 반환)===============-->
+	<select id="getTicketGrade" resultType="com.moaplace.dto.TicketGradeDTO">
+		select grade_seat, seat_line 
+		from ticket_grade
+		where hall_num = #{hall_num}
+	</select>
+	
+	
+	<!-- 좌석 등급별 가격 조회(리스트 반환) -->
+	<select id="getGradePrice" resultType="com.moaplace.dto.GradePriceDTO">
+		select grade_seat, grade_price 
+		from grade
+		where show_num = #{show_num}
+	</select>
+	
+</mapper>

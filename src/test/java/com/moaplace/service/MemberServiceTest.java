@@ -1,8 +1,11 @@
 package com.moaplace.service;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.dto.MemberJoinRequestDTO;
+import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
+import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.vo.MemberVO;
 
 import lombok.extern.log4j.Log4j;
@@ -29,21 +33,28 @@ public class MemberServiceTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	// 패스워드 인코더 테스트
 	@Test
 	public void passwordEncoderTest() {
-		
+		log.info(passwordEncoder.encode("123123"));
 		log.info(passwordEncoder.matches("!temp1234", "$2a$10$X5p.Ib1B0X22WGhh78DxA.x/NT.FaW6vKdr4VhYFF.neXOWCgB4o."));
 	}
 	
+	// 회원정보 테스트
 	@Test
 	public void selectListTest() {
-		List<MemberVO> vo = memberService.selectAll();
-		for( MemberVO m : vo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startRow", 1);
+		map.put("endRow", 5);
+		map.put("sorted", "all");
+		List<AdminMemberInfoResponseDTO> vo = memberService.selectAll(map);
+		for( AdminMemberInfoResponseDTO m : vo) {
 			System.out.println(m);
 		}
-		log.info(passwordEncoder.encode("123123"));
+
 	}
 	
+	// 회원가입 테스트
 	@Test
 	public void insertTest() {
 		MemberJoinRequestDTO dto = new MemberJoinRequestDTO();
@@ -59,5 +70,17 @@ public class MemberServiceTest {
 		
 		int n = memberService.join(dto);
 		assertEquals(1, n);
+	}
+	
+	// 아이디 찾기 테스트
+	@Test
+	public void findByIdTest() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("name", "관리자");
+		map.put("email", "admin@gmail.com");
+		
+		String id = memberService.findById(map);
+		
+		assertNotNull(id);
 	}
 }
