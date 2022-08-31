@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class ShowImgVO {
-
-	private int show_img_num;
+public class FavoriteVO {
 	private int show_num;
-	private String show_detail_img;
-
+	private int member_num;
 }

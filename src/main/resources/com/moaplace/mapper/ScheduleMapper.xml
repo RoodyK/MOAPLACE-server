@@ -206,6 +206,12 @@
 
 
 </select>
-
+	
+	<!-- 공연 시간 -->
+   <select id="schedule" resultType="com.moaplace.dto.ScheduleDTO" parameterType="int">
+   		select schedule_time, schedule_date, schedule_yn
+        from schedule
+        where show_num = #{show_num}
+   </select>
 
 </mapper>
