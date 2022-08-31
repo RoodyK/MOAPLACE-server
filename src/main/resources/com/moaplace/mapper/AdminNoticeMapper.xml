@@ -72,4 +72,21 @@
 		    <include refid="search" />
 	</select>
 
+
+	<!-- 메인페이지 새소식 조회 시작=================================== -->
+	<select id="getNotice" resultType="com.moaplace.dto.MainNoticeDTO">
+		SELECT no.*, rownum 
+		FROM
+		(
+			SELECT 
+				notice_num, notice_title, notice_content, notice_regdate
+			FROM
+				notice
+			ORDER BY 
+				notice_regdate DESC
+		)no
+		WHERE 
+		<![CDATA[  rownum <= 3 ]]>
+	</select>
+	<!-- 메인페이지 새소식 조회 끝=================================== -->
 </mapper>

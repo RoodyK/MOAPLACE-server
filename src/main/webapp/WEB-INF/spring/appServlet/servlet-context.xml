@@ -34,11 +34,11 @@
 	
 	<context:component-scan base-package="com.moaplace.controller.*" />
 
-<!-- 	<interceptors>
+ 	<interceptors>
 		<interceptor>
-			<mapping path="/users/login/member/**"/>
+			<mapping path="/**"/>
 			<beans:bean class="com.moaplace.authentication.BearerTokenAuthenticationFilter" />
 		</interceptor>
-	</interceptors>  -->
+	</interceptors>
 	
 </beans:beans>
