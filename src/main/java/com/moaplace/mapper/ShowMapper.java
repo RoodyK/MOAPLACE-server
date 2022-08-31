@@ -5,6 +5,7 @@ import java.util.List;
 
 
 import com.moaplace.dto.ShowDTO;
+import com.moaplace.dto.ShowDetailDTO;
 import com.moaplace.dto.MainShowDTO;
 
 import com.moaplace.dto.admin.show.MapperDetailDTO;
@@ -25,6 +26,8 @@ public interface ShowMapper {
   
 	int count(HashMap<String, Object> map);
 
+	List<ShowDetailDTO> detail(int show_num);
+	
 	int count();
 	
 	//메인페이지 진행중인 공연

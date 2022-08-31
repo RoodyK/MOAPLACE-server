@@ -13,4 +13,13 @@
 	</foreach>
 
 </update>
+
+	<!-- 좌석 가격 -->
+   <select id="grade" resultType="com.moaplace.dto.GradeDTO" parameterType="int">
+   		select grade_seat, grade_price
+        from grade
+        where show_num = #{show_num}
+        order by grade_price desc
+   </select>
+   
 </mapper>
