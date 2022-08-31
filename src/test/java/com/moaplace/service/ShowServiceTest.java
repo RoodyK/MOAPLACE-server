@@ -1,8 +1,6 @@
 package com.moaplace.service;
 
 
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,18 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
+import com.moaplace.dto.ShowImgDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
 import com.moaplace.mapper.ShowMapper;
-import com.moaplace.util.ShowListPageUtil;
-
-import com.moaplace.dto.GradeDTO;
-import com.moaplace.dto.ScheduleDTO;
-import com.moaplace.dto.ShowDTO;
-import com.moaplace.dto.ShowDetailDTO;
-import com.moaplace.dto.ShowImgDTO;
-import com.moaplace.util.PageUtil;
-import com.moaplace.vo.ShowImgVO;
 
 import lombok.extern.log4j.Log4j;
 

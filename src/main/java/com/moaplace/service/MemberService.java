@@ -123,7 +123,8 @@ public class MemberService {
 		
 		if(n > 0) return n;
 		return -1;
-
+	}
+	
 	// 아이디 찾기/비밀번호 재설정
 	public String findById(Map<String, Object> map) {
 		String id = mapper.findById(map);

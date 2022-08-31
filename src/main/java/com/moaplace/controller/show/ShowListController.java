@@ -16,8 +16,6 @@ import com.moaplace.dto.ShowDTO;
 import com.moaplace.service.ShowService;
 import com.moaplace.util.PageUtil;
 
-import lombok.extern.log4j.Log4j;
-
 @RestController
 @RequestMapping("/preview")
 @CrossOrigin("*")
