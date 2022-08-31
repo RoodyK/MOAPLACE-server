@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.moaplace.mapper.MoaplaceMapper">
+
+	<sql id="search">
+		<if test="field!=null and field!=''"> 
+		  <choose>
+		     <when test="field=='total'">
+		        notice_title like '%'||#{keyword}||'%' OR
+		        notice_content like '%'||#{keyword}||'%'
+		     </when>
+		     <when test="field=='title'">
+		       notice_title like '%'||#{keyword}||'%'
+		     </when>
+		     <when test="field=='content'">
+		       notice_content like '%'||#{keyword}||'%'
+		     </when>
+		  </choose>
+		  </if>
+	</sql>
+
+	<select parameterType="hashmap" id="listAll" resultType="com.moaplace.dto.AdminNoticeDTO">
+       select * from (
+          select b.*,rownum rnum from (
+		    select a.* from (
+		      select n.*,s.sort_name
+		          from notice n, sort s
+		           where n.sort_num = s.sort_num
+		          order by n.notice_num desc
+		          ) a <include refid="search" /> 
+		      ) b 
+		 ) <![CDATA[  where rnum>=#{startRow} and rnum<=#{endRow} ]]>
+	</select>
+	
+	<!-- 전체 글의 갯수 -->
+	<select parameterType="hashmap" id="getCount" resultType="int">
+		select NVL(count(*),0) cnt from 
+		 (
+		  select n.*, s.sort_name
+		    from notice n , sort s
+		    where n.sort_num = s.sort_num
+		       order by n.notice_num desc
+		   ) a
+		    <include refid="search" />
+	</select>
+	
+	<!-- 새 글 상세보기 리스트(+filelist) -->
+	<select id="detail" resultType="com.moaplace.dto.AdminDetailDTO" parameterType="int" >
+	      select a.* from ( select n.*, s.sort_name, d.notice_detail_num, d.notice_orgfile, d.notice_savefile, d.notice_filesize 
+		        from notice n, notice_detail d, sort s
+	                 where n.sort_num = s.sort_num
+		             and n.notice_num = d.notice_num ) a
+		             where notice_num = #{notice_num}
+	</select>
+    
+    <!-- 새 글 상세보기 파일이 없을 때  
+         detail 있을 때 d의 notice_num이 없기떄문에 리스트가 다 null값이 나옴 , 확인 필요-->
+	<select id="detaillist" resultType="com.moaplace.dto.AdminListDTO" parameterType="int">
+		select a.* from ( 
+		   select n.*,s.sort_name
+		     from notice n, sort s
+		        where n.sort_num = s.sort_num
+		   ) a
+		where notice_num = #{notice_num}
+	</select>
+	
+	<!-- 해당 번호에 받는 파일 불러오기 (DetailView용) -->
+	<select id="filelist" parameterType="int" resultType="com.moaplace.dto.AdminNoticeDetailDTO">
+	   select * from notice_detail where notice_num = #{notice_num}
+	</select>
+	
+	<!-- 해당 번호에 받는 파일 불러오기 (다운로드용) -->
+	<select id="filedown" parameterType="int" resultType="com.moaplace.dto.AdminNoticeDetailDTO">
+	   select * from notice_detail where notice_detail_num = #{notice_detail_num}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="addHit" parameterType="int">
+	   update notice set notice_hit=notice_hit+1 where notice_num=#{notice_num}
+	</update>
+	
+    <!-- 다음글(최신글) -->
+	<select id="getNext" parameterType="int" resultType="com.moaplace.dto.AdminNoticeDTO">
+	  <![CDATA[ select * from (
+	           select n.*,s.sort_name
+		          from notice n, sort s
+		           where n.sort_num = s.sort_num
+		           and notice_num > #{notice_num}
+		          order by n.notice_num asc
+	           ) where rownum=1 ]]>
+	</select>
+	
+	<!-- 이전글(과거글) -->
+	<select id="getPrev" parameterType="int" resultType="com.moaplace.dto.AdminNoticeDTO">
+	  <![CDATA[ select * from (
+	           select n.*,s.sort_name
+		          from notice n, sort s
+		           where n.sort_num = s.sort_num
+		           and notice_num < #{notice_num}
+		          order by n.notice_num desc
+	           ) where rownum=1 ]]>
+	</select>
+	
+	
+
+
+</mapper>

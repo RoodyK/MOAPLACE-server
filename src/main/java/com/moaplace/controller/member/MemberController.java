@@ -223,6 +223,7 @@ public class MemberController {
 		return ResponseEntity.ok().body(response);
 	}
 	
+	// api 로그인
 	@PostMapping(value = "/login/api/result",
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> login(

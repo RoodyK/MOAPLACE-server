@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
 import com.moaplace.dto.MyBookingCancleRequestDTO;
 import com.moaplace.dto.MyInfoEditDTO;
 import com.moaplace.dto.member.ApiLoginDTO;
@@ -21,7 +22,6 @@ import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.ApiAuthMapper;
 import com.moaplace.mapper.MemberMapper;
 import com.moaplace.vo.ApiAuthVO;
-import com.moaplace.vo.MemberVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -36,8 +36,12 @@ public class MemberService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	public List<MemberVO> selectAll() {
-		return mapper.selectAll();
+	public List<AdminMemberInfoResponseDTO> selectAll(Map<String, Object> map) {
+		return mapper.selectAll(map);
+	}
+	
+	public int getCount(Map<String, Object> map) {
+		return mapper.getCount(map);
 	}
 	
 	public boolean checkId(String reqId) {
@@ -154,4 +158,5 @@ public class MemberService {
 		return mapper.apiLogin(dto);
 
 	}
+	
 }

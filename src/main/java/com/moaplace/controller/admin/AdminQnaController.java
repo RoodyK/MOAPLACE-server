@@ -40,11 +40,20 @@ public class AdminQnaController {
 	private AnswerService answerService;
 	
 	// 답변만 삭제
+	@Transactional(rollbackFor = Exception.class)
 	@PostMapping(value = "/answer/delete/{qna_num}")
 	public String delete(@PathVariable int qna_num){
 		try {
 			log.info(qna_num);
+			
 			answerService.delete(qna_num);
+			
+			// 문의글 상태 변경
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("qna_state", "대기중");
+			map.put("qna_num", qna_num);			
+			qnaService.changeState(map);
+			
 			return "success";
 			
 		} catch (Exception e) {
@@ -69,7 +78,7 @@ public class AdminQnaController {
 	}
 	
 	// 답변 등록 
-	@Transactional(rollbackFor = Exception.class)
+	
 	@PostMapping(value = "/answer/insert",
 				 consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String insert(@RequestBody AnswerVO vo){
