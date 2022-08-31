@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.GradeMapper">
+<update id="gradeInsert" parameterType="hashmap">
+
+	<!-- 해시맵 안의 arraylist개수만큼 반복하면서 insert all into로 데이터 삽입  -->
+	
+	<foreach collection="list" item="item" open="INSERT ALL" close="SELECT * FROM DUAL">
+		into grade values(#{item.grade_seat},#{item.show_num},#{item.grade_price})
+	</foreach>
+
+</update>
+
+	<!-- 좌석 가격 -->
+   <select id="grade" resultType="com.moaplace.dto.GradeDTO" parameterType="int">
+   		select grade_seat, grade_price
+        from grade
+        where show_num = #{show_num}
+        order by grade_price desc
+   </select>
+   
+</mapper>
