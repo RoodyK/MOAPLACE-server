@@ -38,7 +38,7 @@ public class ShowService {
 	public int showInsert(ShowInsertRequestDTO dto) {
 		
 		//base64 스트링 인코딩된 썸네일 이미지 데이터 byte로 변환
-		byte[] thumb = dto.getShow_thumbnail().getBytes();
+		String thumb = dto.getShow_thumbnail();
 		
 		//ShowVO에 생성자로 insert요청으로 들어온 DTO에서 뽑아온 정보 삽입 
 		ShowVO showVO=new ShowVO(

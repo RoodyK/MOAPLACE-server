@@ -95,8 +95,12 @@ public class BookingService {
 			return possible;
 		}
 	}
-	
-	
+
+	// booking_num으로 member_num 조회
+	public int cancleInfoCheck(int booking_num) {
+		return mapper.cancleInfoCheck(booking_num);
+	}
+  
 	//좌석 선택 페이지  상연일정(스케줄)번호로 이미 예매된 좌석 불러오기
 	public List<String> getBookingSeat(int schedule_num)
 	{

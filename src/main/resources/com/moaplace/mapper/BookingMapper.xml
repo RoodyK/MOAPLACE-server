@@ -82,4 +82,9 @@
 		where booking_num = #{booking_num}
 	</select>
 	
+	<!-- booking_num으로 member_num 조회 -->
+	<select id="cancleInfoCheck" resultType="int" parameterType="int">
+		select member_num from booking where booking_num = #{booking_num}
+	</select>
+	
 </mapper>

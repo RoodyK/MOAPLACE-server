@@ -66,6 +66,30 @@
 		SELECT * FROM member WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 	
+
+	<!-- 회원 정보 수정 -->
+	<update id="myInfoEdit" parameterType="com.moaplace.dto.MyInfoEditDTO">
+		update member
+		<set>
+			<if test="member_name != null and member_name != ''">
+				member_name = #{member_name},
+			</if>
+			<if test="member_pwd != null and member_pwd != ''">
+				member_pwd = #{member_pwd},
+			</if>
+			<if test="member_gender != null and member_gender != ''">
+				member_gender = #{member_gender},
+			</if>
+			<if test="member_phone != null and member_phone != ''">
+				member_phone = #{member_phone},
+			</if>
+			<if test="member_address != null and member_address != ''">
+				member_address = #{member_address},
+			</if>
+		</set>
+		where member_num = #{member_num}
+	</update>
+
 	<update id="newPassword">
 		UPDATE member SET member_pwd = #{member_pwd}
 		WHERE member_id = #{member_id} AND enabled = 1		
@@ -89,4 +113,5 @@
 		ON m.member_email = a.member_email 
 		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND m.member_id = #{member_id} AND a.api_name = 'kakao'
 	</select>
+
 </mapper>

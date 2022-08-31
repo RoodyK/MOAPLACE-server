@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
+import com.moaplace.vo.BookingVO;
 
 @Mapper
 public interface BookingMapper {
@@ -29,4 +30,6 @@ public interface BookingMapper {
 	// booking_num으로 공연일 조회(예매취소여부 조회용)
 	String getScheduleDate(int booking_num);
 	
+	// booking_num으로 member_num 조회
+	int cancleInfoCheck(int booking_num);
 }

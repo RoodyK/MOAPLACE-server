@@ -4,6 +4,7 @@ package com.moaplace.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.moaplace.dto.MyInfoEditDTO;
 import com.moaplace.dto.QnaMemberDTO;
 import com.moaplace.dto.member.ApiLoginDTO;
 import com.moaplace.dto.member.MemberInfoResponseDTO;
@@ -33,6 +34,9 @@ public interface MemberMapper {
 	
 	public int join(MemberJoinRequestDTO dto);
 	
+	// 회원 정보 수정
+	public int myInfoEdit(MyInfoEditDTO dto);
+
 	public int newPassword(MemberLoginRequestDTO dto);
 	
 	public int withdrawal(String member_id);
