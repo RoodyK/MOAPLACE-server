@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.moaplace.dto.ShowDTO;
+import com.moaplace.dto.ShowDetailDTO;
 import com.moaplace.dto.admin.show.MapperDetailDTO;
 import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
@@ -157,6 +158,11 @@ public class ShowService {
 	public int count(HashMap<String, Object> map) {
 		
 		return showMapper.count(map);
+	}
+	
+	public List<ShowDetailDTO> detail(int show_num) {
+		
+		return showMapper.detail(show_num);
 	}
 	
 }

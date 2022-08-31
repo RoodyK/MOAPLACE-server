@@ -131,5 +131,11 @@
 			and show_name like '%'||#{keyword}||'%'
 		</if>	
    </select>
-
+	
+	<!-- 공연 상세페이지 -->
+	<select id="detail" resultType="com.moaplace.dto.ShowDetailDTO" parameterType="int">
+   		select show_num, show_thumbnail, show_name, show_start, show_end, hall_num, show_age, show_check
+        from show
+        where show_num = #{show_num}
+   </select>
 </mapper>
