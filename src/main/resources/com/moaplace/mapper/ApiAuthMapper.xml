@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.moaplace.mapper.ApiAuthMapper">
+	<insert id="apiJoin">
+		insert into	api_auth
+		values(api_seq.nextval, #{member_num}, #{member_email}, #{api_name})
+	</insert>
+</mapper>
