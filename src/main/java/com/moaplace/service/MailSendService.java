@@ -53,7 +53,7 @@ public class MailSendService {
 		mailSend(setFrom, toMail, title, content);
 		
 		return Integer.toString(n);
-	}
+	} 
 
 	// 메일 보내기
 	private void mailSend(
