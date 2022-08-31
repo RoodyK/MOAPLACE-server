@@ -8,6 +8,7 @@ public class AdminScheduleDetailDTO {
 	private int num;
 	private String title;
 	private String showDate;
+	private int scheduleNum;
 	private String dateTime;
 	private String dateStatus;
 	private int timeRow;

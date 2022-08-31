@@ -174,7 +174,7 @@
 
 	SELECT a.*,ROWNUM timeRow
 		FROM(
-		    SELECT w.show_num num, show_name title, 
+		    SELECT w.show_num num, show_name title, schedule_num scheduleNum,
 		        schedule_date showDate, schedule_time dateTime, schedule_YN dateStatus
 		    FROM show w RIGHT JOIN schedule d
 		    ON w.show_num = d.show_num 
@@ -189,13 +189,13 @@
 
 </delete>
 
-<!-- <update id="scheduleUpdate" parameterType="com.moaplace.vo.ScheduleVO">
+<update id="scheduleUpdate" parameterType="com.moaplace.vo.ScheduleVO">
 
-	UPDATE schedule SET schedule_time = #{schedule_time} schedule_YN = #{schedule_YN} where 
+	UPDATE schedule SET schedule_time = #{schedule_time}, schedule_YN = #{schedule_YN} where schedule_num = #{schedule_num}
 
-</update> -->
+</update>
 
-<select id="bookingSeatCheck" resultType="int" parameterType="hashmap">
+<!-- <select id="bookingSeatCheck" resultType="int" parameterType="hashmap">
 
 	SELECT NVL(COUNT(*),0) 
 	
@@ -205,7 +205,7 @@
 	WHERE show_num = #{showNum} AND schedule_date =#{showDate} 
 
 
-</select>
+</select> -->
 	
 	<!-- 공연 시간 -->
    <select id="schedule" resultType="com.moaplace.dto.ScheduleDTO" parameterType="int">
