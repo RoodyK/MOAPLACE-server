@@ -100,6 +100,12 @@ public class ShowService {
 		return list;
 	}
 	
+	public int currentCnt(HashMap<String, Object> map) {
+		
+		return showMapper.currentCount(map);
+	}
+	
+	
 	public ShowDetailViewDTO showDetail(int num) {
 
 		List<MapperDetailDTO> list = showMapper.showDetail(num);
