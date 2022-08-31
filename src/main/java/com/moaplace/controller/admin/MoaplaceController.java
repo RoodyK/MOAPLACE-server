@@ -1,8 +1,11 @@
 package com.moaplace.controller.admin;
 
-import java.io.File;  
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,20 +28,23 @@ import com.moaplace.dto.AdminDetailDTO;
 import com.moaplace.dto.AdminListDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;
 import com.moaplace.service.AdminNoticeService;
+import com.moaplace.util.FileUtil;
 import com.moaplace.util.PageUtil;
+import com.moaplace.vo.AdminNoticeDetailVO;
 import com.moaplace.vo.AdminNoticeVO;
+
+import lombok.extern.log4j.Log4j;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/admin/news")
+@Log4j
 public class MoaplaceController {
-	@Value("${oracle.download}")
-	private String realPath; 
-	
 	@Autowired
 	private AdminNoticeService service;
-	
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private FileUtil fileutil;
+
 
 	//링크 접속 테스트 용
 //	@GetMapping("/test")
@@ -63,10 +70,6 @@ public class MoaplaceController {
 	  
 	  AdminNoticeVO vo = new AdminNoticeVO(0, 1, Integer.parseInt(sort_num) , title, content, null , 0);
 	  int n = service.insert(multipartFile, vo);
-//	  log.info("========================컨트롤러==========================");
-//	  log.info(" service.insert값 확인 :  " + service.insert(multipartFile, vo));
-//	  log.info("========================================================");
-//	  log.info("n값 : " + n);
 	  if(n==0 || n==1) {
 		  return "success";
 	  }else {
@@ -104,16 +107,6 @@ public class MoaplaceController {
 		int startPageNum = pu.getStartPageNum(); //시작 페이지 번호
 		int endPageNum = pu.getEndPageNum(); //끝 페이지 번호
 		int totalPageCount = pu.getTotalPageCount(); //전체 글 개수
-
-		log.info("===============================================");
-		log.info("pageNum : " + pageNum);
-		log.info("totalRowCount : " + totalRowCount);
-		log.info("startPageNum : " + startPageNum);
-		log.info("endPageNum : " + endPageNum);
-		log.info("endRow : " + endRow);
-		log.info("startRow : " + startRow);
-		log.info("totalPageCount: " + totalPageCount);
-		log.info("===============================================");
 	    
 		map.put("startPageNum" , startPageNum);
 		map.put("endPageNum" , endPageNum);
@@ -122,10 +115,6 @@ public class MoaplaceController {
 		map.put("startRow" , startRow);
 		map.put("endRow", endRow);
 		List<AdminListDTO> list= service.listAll(map);
-		
-		log.info("===============================================");
-		log.info("list: " + list);
-		log.info("===============================================");
 		
         map.put("list",list);
 //        map.put("pu",pu);// resp.data.pu.startPageNum 
@@ -141,40 +130,20 @@ public class MoaplaceController {
 			@PathVariable(required = false) String member_num){
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put("notice_num", Integer.parseInt(notice_num));
-		
-	    //notice_num 대신 map 이용	
-//		List<AdminNoticeDetailDTO> filelist = service.filelist(map);
-//		List<AdminDetailDTO> list =  service.detail(map);
-//		List<AdminListDTO> detaillist =  service.detaillist(map);
 		
 		List<AdminNoticeDetailDTO> filelist = service.filelist(Integer.parseInt(notice_num));
-		List<AdminDetailDTO> list =  service.detail(Integer.parseInt(notice_num));
-		List<AdminListDTO> detaillist =  service.detaillist(Integer.parseInt(notice_num));
+		AdminListDTO detaillist =  service.selectdetail(Integer.parseInt(notice_num));
 		
+		map.put("sort_num",detaillist.getSort_num());
+		map.put("sort_name",detaillist.getSort_name());
+		map.put("notice_title",detaillist.getNotice_title());
+		map.put("notice_content",detaillist.getNotice_content());
+
 		//list는 size로 확인, 배열은 length
 		if(filelist.size() >0) { 
 		   map.put("filelist",filelist);
-		   map.put("list",list);
-		}else {
-			map.put("list", detaillist);
 		}
 		
-		
-//		AdminNoticeDetailDTO filelist1 = service.deletefile(Integer.parseInt(notice_num));
-//		List<MultipartFile> f=filelist1.getFiles();
-//		
-//		log.info("========================== 파일 삭제 체험  log=================================");
-//		log.info("detaillsit 정보 :" +service.selectnum(Integer.parseInt(notice_num)));
-//		log.info("==========================================================================");
-
-		
-//		log.info("==========================새소식 상세보기 log=================================");
-//		log.info("notice_num: " + notice_num);
-//		log.info("detail 정보 :" + service.detail(map));
-//		log.info("detaillsit 정보 :" + service.detaillist(map));
-//		log.info("==========================================================================");
-//		
 		return map;
 
 	}
@@ -186,9 +155,9 @@ public class MoaplaceController {
 		
 		 List<AdminNoticeDetailDTO> filelist = service.filelist(Integer.parseInt(notice_num));
 		 
-			log.info("========================== 파일 삭제 체험  log=================================");
-			log.info("delete 정보 filelist:" + filelist);
-			log.info("==========================================================================");
+//			log.info("========================== 파일 삭제 체험  log=================================");
+//			log.info("delete 정보 filelist:" + filelist);
+//			log.info("==========================================================================");
 
 		try {
 			if (filelist == null || filelist.size() == 0) {
@@ -197,15 +166,12 @@ public class MoaplaceController {
 			} else {
 				List<Integer> list = service.selectnum(Integer.parseInt(notice_num));
 				int[] flist = list.stream().mapToInt(i -> i).toArray();
-				log.info("========================== 파일 삭제 체험  log=================================");
-				log.info("delete 정보 :" + flist);
-				log.info("==========================================================================");
+//				log.info("========================== 파일 삭제 체험  log=================================");
+//				log.info("delete 정보 :" + flist);
+//				log.info("==========================================================================");
 				for (int i = 0; i < flist.length; i++) {
 					String fileName = service.selectfile(flist[i]).getNotice_savefile();
-					File f = new File("C://2203//MoaPlace//upload" + File.separator + fileName);
-					if (f.exists()) {
-						f.delete();
-					}
+					fileutil.delete(fileName, "notice");
 				}
 				service.alldelete(Integer.parseInt(notice_num));
 				service.delete(Integer.parseInt(notice_num));
@@ -218,6 +184,35 @@ public class MoaplaceController {
 		}
 	}
 	 
+	 //수정 , 파일 있으면 기존 파일 삭제 후 업뎃
+	 @PostMapping(value = "/udpate/{notice_num}",
+				consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	    public String update(@PathVariable(required = false) String notice_num,
+	    		@RequestPart("files") List<MultipartFile> multipartFile, 
+				@RequestParam String title, @RequestParam String content, @RequestParam String sort_num
+				) {
+
+		//받아온 값 확인
+		  System.out.println("title="+title);
+		  System.out.println("content="+content);
+		  System.out.println("file="+multipartFile);
+		  System.out.println("sort_num="+sort_num);
+		  
+		  log.info("========================컨트롤러==========================");
+		  log.info("sort_num : " + sort_num);
+		  log.info("========================================================");
+		  
+		  AdminNoticeVO vo = new AdminNoticeVO(Integer.parseInt(notice_num), 1, Integer.parseInt(sort_num) , title, content, null , 0);
+		  int n = service.update(multipartFile, vo);
+		  if(n==0 || n==1) {
+			  return "success";
+		  }else {
+			  return "fail";
+		  }  
+	 
+	 }
+	 
+	 
 	//파일 개별 삭제(update 글 수정용)
 	 @GetMapping(value= {"/filedelete/{notice_detail_num}"}
 		, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -226,11 +221,10 @@ public class MoaplaceController {
 
 		try {
 			String fileName = service.selectfile(Integer.parseInt(notice_detail_num)).getNotice_savefile();
-			File f = new File("C://2203//MoaPlace//upload" + File.separator + fileName);
-			if (f.exists()) {
-				f.delete();
-			}
-			service.deletefile(Integer.parseInt(notice_detail_num));
+			boolean fileResult = fileutil.delete(fileName, "notice");
+			int dbResult = service.deletefile(Integer.parseInt(notice_detail_num));
+			//Exception 던지기
+			if(!fileResult || dbResult <= 0) throw new Exception();
 			return 1;
 		} catch (Exception e) {
 			e.getMessage();
@@ -248,14 +242,12 @@ public class MoaplaceController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		List<AdminNoticeDetailDTO> filelist = service.filelist(Integer.parseInt(notice_num));
-		List<AdminDetailDTO> list =  service.detail(Integer.parseInt(notice_num));
-		List<AdminListDTO> detaillist =  service.detaillist(Integer.parseInt(notice_num));
 		AdminListDTO updatelist =  service.selectdetail(Integer.parseInt(notice_num));
 		
-		log.info("============================== 글 수정  log=================================");
-		log.info("notice_num: " + notice_num);
-		log.info("updatelist: " + updatelist);
-		log.info("=========================================================================");
+//		log.info("============================== 글 수정  log=================================");
+//		log.info("notice_num: " + notice_num);
+//		log.info("updatelist: " + updatelist);
+//		log.info("=========================================================================");
 
 		map.put("sort_num",updatelist.getSort_num());
 		map.put("sort_name",updatelist.getSort_name());

@@ -60,5 +60,10 @@ public class MoaplaceService {
 		return mapper.getPrev(notice_num);
 	}
 	
+	//상세보기
+	public AdminListDTO selectdetail(int notice_num) {
+		return mapper.selectdetail(notice_num);
+	}
+	
 	
 }

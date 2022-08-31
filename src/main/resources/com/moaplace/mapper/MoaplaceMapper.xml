@@ -6,6 +6,7 @@
 <mapper namespace="com.moaplace.mapper.MoaplaceMapper">
 
 	<sql id="search">
+	 <trim prefix="where">
 		<if test="field!=null and field!=''"> 
 		  <choose>
 		     <when test="field=='total'">
@@ -20,6 +21,7 @@
 		     </when>
 		  </choose>
 		  </if>
+		  </trim>
 	</sql>
 
 	<select parameterType="hashmap" id="listAll" resultType="com.moaplace.dto.AdminNoticeDTO">
@@ -102,6 +104,16 @@
 		           and notice_num < #{notice_num}
 		          order by n.notice_num desc
 	           ) where rownum=1 ]]>
+	</select>
+	
+	<!-- 상세보기  -->
+		<select id="selectdetail" parameterType="int" resultType="com.moaplace.dto.AdminListDTO">
+	   select a.* from ( 
+		   select n.notice_title, n.notice_content, n.notice_num, n.notice_regdate, n.notice_hit, s.sort_name
+		     from notice n, sort s
+		        where n.sort_num = s.sort_num
+		   ) a
+		where notice_num = #{notice_num}
 	</select>
 	
 	
