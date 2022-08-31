@@ -1,6 +1,5 @@
 package com.moaplace.controller.admin;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.admin.show.ScheduleInsertRequestDTO;
 import com.moaplace.dto.admin.show.ScheduleListDTO;
+import com.moaplace.dto.admin.show.ScheduleUpdateRequestDTO;
 import com.moaplace.service.AdminTicketService;
 import com.moaplace.util.PageUtil;
 import lombok.extern.log4j.Log4j;
@@ -54,6 +54,7 @@ public class AdminScheduleController {
 	@GetMapping(
 			value = {"/list",
 					"/list/{pageNum}",
+					"/list//{status}",
 					"/list/{pageNum}/{status}",
 					"/list/{pageNum}/{status}//{field}",
 					"/list/{pageNum}/{status}/{selectDate}/{field}",
@@ -66,7 +67,7 @@ public class AdminScheduleController {
 			@PathVariable ( required = false ) String selectDate,
 			@PathVariable ( required = false ) String field,
 			@PathVariable ( required = false ) String search){		
-		log.info("선택날짜값:" + selectDate);
+
 		//페이지번호, 공연상태, 필드가 null값일 때(페이지에 처음 가거나 새로고침했을때) 기본값으로 넣기
 		if(pageNum==null)pageNum=1;
 		if(status==null)status="all";
@@ -74,7 +75,6 @@ public class AdminScheduleController {
 		
 		// 페이징처리하는 클래스 유틸 받아서 페이징 데이터 생성
 		PageUtil pu = new PageUtil(pageNum,5,5,service.sheduleCount());
-		log.info("보낸 파라미터 정보-------------------"+field);
 		
 		 //db로 조회할 정보를 해시맵에 담기 (시작/끝행,검색조건)
 		HashMap<String, Object> sList = new HashMap<String, Object>();
@@ -84,19 +84,17 @@ public class AdminScheduleController {
 		sList.put("selectDate", selectDate);
 		sList.put( "field", field);
 		sList.put( "search", search);
-
-
-		log.info("보낸 파라미터 정보-------------------"+sList);
 		
 		// 공연일정 조회해서 받아올 DTO 새로 만들어서 매퍼 리턴 정보 리스트에 담기
 		List<ScheduleListDTO> list=service.sheduleList(sList);
-		log.info(list.size());
+				
 		// 검색조건이나 모아보기가 선택됐을 때 다시 조회된 행 번호 카운트해서 페이징처리 유틸에 새로 덮어씌우기 
 		if(search!=null || !status.equals("all") || selectDate!=null) {
 			pu = new PageUtil(
-					pageNum,5,5,list.size());
+					pageNum,5,5,service.currentCount(sList));
 		};
 		
+		log.info("검색후 총 행수"+service.currentCount(sList));
 		// 해시맵에 조회된 공연목록, 페이지번호, 페이징유틸 정보 담아서 클라이언트로 보내기
 		// 해시맵을 produces = MediaType.APPLICATION_JSON_VALUE 으로 제이슨형태로 변환해서 전송
 		if(search==null)search="";
@@ -109,7 +107,55 @@ public class AdminScheduleController {
 		map.put( "selectDate", selectDate);
 		map.put( "selectField", field);
 		map.put( "search", search);
-		log.info("최종페이지넘버"+pu.getTotalPageCount());
 		return map;
 	}
+	
+	//공연상세페이지 조회 - 공연번호 받아옴
+	
+		@GetMapping( 
+				value = {"/detail", 
+						"/detail/{showNum}",
+						"/detail/{showNum}/{showDate}"}, 
+				produces = MediaType.APPLICATION_JSON_VALUE)
+
+		public HashMap<String, Object> showDetail(
+				@PathVariable ( required = false ) int showNum,
+				@PathVariable ( required = false ) String showDate){
+			
+			HashMap<String, Object> sList = new HashMap<String, Object>();
+			sList.put("showNum",showNum);
+			sList.put("showDate",showDate);
+			
+			HashMap<String, Object> map=service.showDetail(sList);
+			
+			return map;
+			
+		}
+		//공연일정 업데이트 데이터 보여주기
+		@GetMapping( 
+				value = {"/updateView", 
+						"/updateView/{showNum}",
+						"/updateView/{showNum}/{showDate}"}, 
+				produces = MediaType.APPLICATION_JSON_VALUE)
+		
+		public HashMap<String, Object> viewSchedule(
+				@PathVariable ( required = false ) int showNum,
+				@PathVariable ( required = false ) String showDate){
+			
+			HashMap<String, Object> map=service.selectUpdate(showNum, showDate);
+			
+			return map;
+			
+		}
+		
+		//공연일정 수정
+		@PostMapping(
+				value = "/update", 
+				consumes= {MediaType.APPLICATION_JSON_VALUE})
+		public int showUpdate(@RequestBody ScheduleUpdateRequestDTO dto) {
+			
+			int result = service.scheduleUpdate(dto);
+			
+			return result;
+		}
 }

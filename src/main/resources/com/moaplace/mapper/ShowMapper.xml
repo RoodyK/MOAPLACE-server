@@ -40,26 +40,26 @@
 						<when test="search == null or search == ''">							
 							show_check = #{showCheck} 						
 						</when>
-						<when test="field == 'title' and search != null and search != ''">
+						<when test="field == 'title' and search != null">
 							show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
 						</when>
-						<when test="field == 'hall' and search != null and search != ''">
+						<when test="field == 'hall' and search != null">
 							show_check = #{showCheck} AND hall_name LIKE '%'||#{search}||'%'
 						</when>
-						<when test="field == 'showNum' and search != null and search != ''">
+						<when test="field == 'showNum' and search != null">
 							show_check = #{showCheck} AND s.show_num LIKE '%'||#{search}||'%'
 						</when>
 					</choose>
 				</if>
-				<if test="showCheck == 'all' and search != null and search != ''">
+				<if test="showCheck == 'all'">
 					<choose>
-						<when test="field == 'title' and search != null and search != ''">
+						<when test="field == 'title' and search != null">
 							show_name LIKE '%'||#{search}||'%'
 						</when>
-						<when test="field == 'hall' and search != null and search != ''">
+						<when test="field == 'hall' and search != null">
 							hall_name LIKE '%'||#{search}||'%'
 						</when>
-						<when test="field == 'showNum' and (search != null and search != '')">
+						<when test="field == 'showNum' and search != null">
 							s.show_num = #{search}
 						</when>
 					</choose>
@@ -70,6 +70,55 @@
 			
 	WHERE rn BETWEEN #{startRow} AND #{endRow}
 </select>
+
+<select id="currentCount" resultType="int" parameterType="hashmap">
+
+SELECT NVL(COUNT(*),0)
+		
+		FROM(
+		
+			SELECT s.show_num num, h.hall_name hall, s.show_name title, 
+			
+			TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
+				
+			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
+			
+			<trim prefix="WHERE">
+				<if test="showCheck != 'all'">
+					<choose>
+						<when test="search == null or search == ''">							
+							show_check = #{showCheck} 						
+						</when>
+						<when test="field == 'title'">
+							show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall'">
+							show_check = #{showCheck} AND hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum'">
+							show_check = #{showCheck} AND s.show_num LIKE '%'||#{search}||'%'
+						</when>
+					</choose>
+				</if>
+				<if test="showCheck == 'all'">
+					<choose>
+						<when test="field == 'title' and search != null">
+							show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null">
+							hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and search != null">
+							s.show_num = #{search}
+						</when>
+					</choose>
+				</if>
+			</trim>
+			
+			ORDER BY show_num DESC)
+			
+</select>
+
 
 <select id="showDetail" parameterType="int" resultType="com.moaplace.dto.admin.show.MapperDetailDTO">
 	<![CDATA[
@@ -107,11 +156,13 @@
 	]]>
 </select>
 
-<select id="searchShow" parameterType="String" resultType="com.moaplace.dto.admin.show.ShowPartInfo">
+<select id="searchShow" parameterType="String" resultType="com.moaplace.dto.admin.show.ShowPartInfoDTO">
 	
 			SELECT 
 				show_num num, 
 				show_name title, 
+				running_time runningTime,
+				intermission intermission,
 				show_check status, 
 				show_age age, 
 				TO_CHAR(show_start, 'YYYY-MM-DD') startDate, 
@@ -121,7 +172,24 @@
 				show_thumbnail thumbnail
 			FROM show	
 			WHERE show_name like '%'||#{title}||'%'
+</select>
 
+<select id="searchShowNumber" parameterType="int" resultType="com.moaplace.dto.admin.show.ShowPartInfoDTO">
+	
+			SELECT 
+				show_num num, 
+				show_name title, 
+				running_time runningTime,
+				intermission intermission,
+				show_check status, 
+				show_age age, 
+				TO_CHAR(show_start, 'YYYY-MM-DD') startDate, 
+				TO_CHAR(show_end, 'YYYY-MM-DD') endDate, 
+				TO_CHAR(stop_start, 'YYYY-MM-DD') blockStartDate, 
+				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate, 
+				show_thumbnail thumbnail
+			FROM show	
+			WHERE show_num = #{num}
 </select>
 
 

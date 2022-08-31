@@ -39,7 +39,7 @@
 			<if test="showCheck != 'all' and selectDate != null">
 				<choose>
 					<!-- 검색어 있는지 없는지에 따른 경우 분류 -->
-					<when test="search == null and search == ''">							
+					<when test="search == null or search == ''">							
 						show_check = #{showCheck} AND schedule_date = #{selectDate}		
 					</when>
 					<when test="field == 'title' and search != null">
@@ -54,7 +54,7 @@
 			<if test="showCheck == 'all' and selectDate != null">
 				<choose>
 					<!-- 검색어 있는지 없는지에 따른 경우 분류 -->
-					<when test="search == null and search == ''">							
+					<when test="search == null or search == ''">							
 						schedule_date = #{selectDate}
 					</when>
 					<when test="field == 'title' and search != null">
@@ -68,7 +68,7 @@
 			<!-- status 선택, 날짜 미선택인 경우 -->
 			<if test="showCheck != 'all' and selectDate == null ">
 				<choose>
-					<when test="search == null and search == ''">							
+					<when test="search == null or search == ''">							
 						show_check = #{showCheck} 						
 					</when>
 					<when test="field == 'title' and search != null">
@@ -95,6 +95,115 @@
 		
 		ORDER BY schedule_date desc ) a) 
 	WHERE rn BETWEEN #{startRow} AND #{endRow}
+
+</select>
+
+<select id="currentCount" parameterType="hashmap" resultType="int">
+
+
+		SELECT NVL(COUNT(*),0) FROM(
+			SELECT s.show_num num, s.show_name title, 
+				schedule_date showDate, t.cntDate cntDate, s.show_check status 
+			FROM show s RIGHT JOIN (
+				SELECT show_num, schedule_date, nvl(count(*),0)cntDate 
+				FROM schedule GROUP BY schedule_date, show_num)t
+		ON s.show_num = t.show_num 
+		<where>
+			<!-- status 선택, 날짜 선택된 경우 --> 
+			<if test="showCheck != 'all' and selectDate != null">
+				<choose>
+					<!-- 검색어 있는지 없는지에 따른 경우 분류 -->
+					<when test="search == null or search == ''">							
+						show_check = #{showCheck} AND schedule_date = #{selectDate}		
+					</when>
+					<when test="field == 'title' and search != null">
+						show_check = #{showCheck} AND schedule_date = #{selectDate} AND show_name LIKE '%'||#{search}||'%'
+					</when>
+					<when test="field == 'showNum' and search != null">
+						show_check = #{showCheck} AND schedule_date = #{selectDate} AND s.show_num = #{search}
+					</when>
+				</choose>
+			</if>
+			<!-- status 미선택, 날짜선택인 경우 -->
+			<if test="showCheck == 'all' and selectDate != null">
+				<choose>
+					<!-- 검색어 있는지 없는지에 따른 경우 분류 -->
+					<when test="search == null or search == ''">							
+						schedule_date = #{selectDate}
+					</when>
+					<when test="field == 'title' and search != null">
+						show_name LIKE '%'||#{search}||'%' AND schedule_date = #{selectDate}
+					</when>
+					<when test="field == 'showNum' and search != null">
+						s.show_num = #{search} AND schedule_date = #{selectDate}
+					</when>
+				</choose>
+			</if>
+			<!-- status 선택, 날짜 미선택인 경우 -->
+			<if test="showCheck != 'all' and selectDate == null">
+				<choose>
+					<when test="search == null or search == ''">							
+						show_check = #{showCheck} 						
+					</when>
+					<when test="field == 'title' and search != null">
+						show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
+					</when>
+					<when test="field == 'showNum' and search != null">
+						show_check = #{showCheck} AND s.show_num = #{search}
+					</when>
+				</choose>
+			</if>
+			<!-- status 미선택, 날짜 미선택인 경우 -->
+			<if test="showCheck == 'all' and selectDate == null">
+				<choose>
+					<when test="field == 'title' and search != null">
+						show_name LIKE '%'||#{search}||'%'
+					</when>
+					<when test="field == 'showNum' and search != null">
+						s.show_num = #{search}
+					</when>
+				</choose>
+			</if>
+		</where>
+		)
+		
+
+</select>
+
+<select id="scheduleDetail" parameterType="hashmap" resultType="com.moaplace.dto.admin.show.AdminScheduleDetailDTO">
+
+	SELECT a.*,ROWNUM timeRow
+		FROM(
+		    SELECT w.show_num num, show_name title, 
+		        schedule_date showDate, schedule_time dateTime, schedule_YN dateStatus
+		    FROM show w RIGHT JOIN schedule d
+		    ON w.show_num = d.show_num 
+		    WHERE w.show_num=#{showNum} and schedule_date=#{showDate}
+		    ORDER BY schedule_time)a
+
+</select>
+
+<delete id="deleteSchedule" parameterType="hashmap">
+
+	DELETE FROM schedule WHERE show_num = #{showNum} AND schedule_date = #{showDate}
+
+</delete>
+
+<!-- <update id="scheduleUpdate" parameterType="com.moaplace.vo.ScheduleVO">
+
+	UPDATE schedule SET schedule_time = #{schedule_time} schedule_YN = #{schedule_YN} where 
+
+</update> -->
+
+<select id="bookingSeatCheck" resultType="int" parameterType="hashmap">
+
+	SELECT NVL(COUNT(*),0) 
+	
+		FROM schedule s INNER JOIN all_seat a 
+		ON s.schedule_num = a.schedule_num 
+		
+	WHERE show_num = #{showNum} AND schedule_date =#{showDate} 
+
 
 </select>
 
