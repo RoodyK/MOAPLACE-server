@@ -72,4 +72,35 @@ public class FileUtil {
 		return fileinfo;
 	}
 	
+	public HashMap<String, Object> download(
+			String folder,
+			String saveFilename)
+	{
+		String path = realPath;
+		log.info("저장경로: "+ path);
+		
+		File f = new File(path + File.separator + folder + File.separator + saveFilename); // 파일 객체 생성 	
+		
+		HashMap<String, Object> fileinfo = new HashMap<String, Object>();
+		fileinfo.put("file", f);
+		return fileinfo;
+	}
+	
+	//폴더 안 파일 삭제
+	/**
+	 * @param fileName(저장된 파일이름), folder명
+	 * 폴더명은 해당 게시판명을 영어로 써야합니다. ex) 대관신청 - rental
+	 * @return boolean형 반환
+	 **/
+	public boolean delete(String fileName, String folder) {
+		String path = realPath;
+		log.info("저장경로: "+ path);
+		boolean result = false;
+		File f = new File(path + File.separator + folder + File.separator + fileName);
+		if (f.exists()) {
+			result = f.delete();
+		}
+		return result;
+	}
+	
 }

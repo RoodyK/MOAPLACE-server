@@ -138,8 +138,12 @@
 	<delete id="deletefile" parameterType="int">
 	  delete from notice_detail where notice_detail_num = #{notice_detail_num}
 	</delete>
+	
+	<delete id="deleteone" parameterType="int">
+	  delete from notice_detail where notice_num = #{notice_num}
+	</delete>
 
-	<!--  update용 select, 나중에 파일 정리 -->
+	<!--  update,detail용 select, 나중에 파일 정리 -->
 	<select id="selectdetail" parameterType="int" resultType="com.moaplace.dto.AdminListDTO">
 	   select a.* from ( 
 		   select n.notice_title, n.notice_content,n.notice_num,s.sort_name
@@ -148,6 +152,12 @@
 		   ) a
 		where notice_num = #{notice_num}
 	</select>
+	
+	<!-- 수정용 업데이트 -->
+	<update id="update" parameterType="com.moaplace.vo.AdminNoticeVO" >
+	   update notice set sort_num=#{sort_num},notice_title=#{notice_title},notice_content=#{notice_content}
+        where notice_num=#{notice_num}
+	</update>
 	
 
 

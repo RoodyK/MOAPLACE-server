@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.moaplace.dto.AdminDetailDTO;
 import com.moaplace.dto.AdminListDTO;
+import com.moaplace.dto.AdminNoticeDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;
 
 import com.moaplace.dto.MainNoticeDTO;
@@ -39,6 +40,8 @@ public interface AdminNoticeMapper {
 	public int deletefile(int notice_detail_num);
   
 	public AdminListDTO selectdetail(int notice_num); 
+	public int update(AdminNoticeVO vo);
+	public int deleteone(int notice_num);
 	
 	//메인페이지 새소식 조회
 	List<MainNoticeDTO> getNotice();

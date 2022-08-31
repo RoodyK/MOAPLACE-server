@@ -18,5 +18,6 @@ public interface MoaplaceMapper {
 	public int addHit(int notice_num);
 	public AdminNoticeDTO getNext(int notice_num);
 	public AdminNoticeDTO getPrev(int notice_num);
+	public AdminListDTO selectdetail(int notice_num); 
 	
 }
