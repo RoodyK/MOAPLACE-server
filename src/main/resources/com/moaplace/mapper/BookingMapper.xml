@@ -82,4 +82,16 @@
 		where booking_num = #{booking_num}
 	</select>
 	
+	<select id="bookingChart" resultType="com.moaplace.dto.AdminChartDTO">
+	<![CDATA[
+		SELECT TO_CHAR(regdate, 'YYYY-MM') as day, sum(booking_price) as price FROM (
+		    SELECT b.booking_price, b.regdate
+		    FROM booking b JOIN payment p
+		    ON b.booking_num = p.booking_num
+		    WHERE p.payment_status = '결제완료' )
+		WHERE regdate >= #{startDate} AND regdate <= #{endDate}
+		GROUP BY TO_CHAR(regdate, 'YYYY-MM')
+    ORDER BY TO_CHAR(regdate, 'YYYY-MM')
+	]]>
+	</select>
 </mapper>

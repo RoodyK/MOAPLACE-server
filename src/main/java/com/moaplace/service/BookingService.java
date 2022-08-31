@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.mapper.BookingMapper;
@@ -82,6 +84,11 @@ public class BookingService {
 			e.printStackTrace();
 			return possible;
 		}
+	}
+	
+	// 결제 차트용
+	public List<AdminChartDTO> bookingChart(Map<String, Object> map) {
+		return mapper.bookingChart(map);
 	}
 	
 }

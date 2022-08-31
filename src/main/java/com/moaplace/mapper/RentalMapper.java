@@ -3,12 +3,14 @@ package com.moaplace.mapper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.moaplace.dto.RentalCalendarDTO;
 import com.moaplace.vo.RentalVO;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyRentalDTO;
 import com.moaplace.dto.MyRentalDetailDTO;
 
@@ -39,5 +41,7 @@ public interface RentalMapper {
 	
 	// rental_num으로 대관상세내역 조회
 	MyRentalDetailDTO myDetail(int rental_num);
+	
+	public List<AdminChartDTO> rentalChart(Map<String, Object> map);
 
 }
