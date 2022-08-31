@@ -9,18 +9,26 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.moaplace.dto.GradePriceDTO;
+import com.moaplace.dto.HallSeatDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
+import com.moaplace.dto.TicketGradeDTO;
 import com.moaplace.mapper.AllSeatMapper;
 import com.moaplace.mapper.BookingMapper;
+import com.moaplace.mapper.HallMapper;
 
 @Service
 public class BookingService {
 
-	@Autowired private BookingMapper mapper;
+	@Autowired 
+	private BookingMapper mapper;
 	
 	@Autowired
 	private AllSeatMapper allSeatMapper;
+	
+	@Autowired
+	private HallMapper hallMapper;
 	
 	// member_num으로 회원의 예매내역 존재여부 확인
 	public boolean bookingExist(int member_num) {
@@ -94,4 +102,23 @@ public class BookingService {
 	{
 		return allSeatMapper.getBookingSeat(schedule_num);
 	}
+	
+	//좌석 선택 페이지  공연장 좌석수 불러오기
+	public HallSeatDTO getHallSeats(int hall_num) 
+	{
+		return hallMapper.getHallSeats(hall_num);
+	}
+	
+	//좌석 선택 페이지 좌석 등급별 행수 조회
+	public List<TicketGradeDTO> getTicketGrade(int hall_num)
+	{
+		return hallMapper.getTicketGrade(hall_num);
+	}
+	
+	//좌석 선택 페이지 좌석 등급별 가격 조회
+	public List<GradePriceDTO> getGradePrice(int show_num)
+	{
+		return hallMapper.getGradePrice(show_num);
+	}
+	
 }
