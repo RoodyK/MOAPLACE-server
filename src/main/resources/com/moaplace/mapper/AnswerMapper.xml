@@ -27,7 +27,7 @@
   	</update>
   	
 	<!-- 답변 등록 -->
-	<insert id="insert" parameterType="com.moaplace.vo.AnswerVO">
+	<insert id="insert" parameterType="com.moaplace.dto.AnswerInsertDTO">
 		insert into answer
 		values(ANSWER_SEQ.nextval,#{qna_num},#{answer_title},#{answer_content},sysdate)
   	</insert>
