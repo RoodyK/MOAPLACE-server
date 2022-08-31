@@ -9,4 +9,11 @@
 	INSERT INTO show_img VALUES(show_img_seq.nextval, #{show_num}, #{show_detail_img})
 </insert>
 
+	<!-- 공연 상세이미지 -->
+   <select id="detailimg" resultType="com.moaplace.dto.ShowImgDTO" parameterType="int">
+   		select show_detail_img
+        from show_img
+        where show_num = #{show_num}
+        order by show_img_num
+   </select>
 </mapper>

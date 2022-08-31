@@ -1,4 +1,4 @@
-package com.moaplace.dto;
+package com.moaplace.dto.member;
 
 import lombok.Data;
 

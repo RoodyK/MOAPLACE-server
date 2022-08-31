@@ -10,9 +10,17 @@
     	from member where member_num=#{member_num}
   	</select>
 
+	<!-- 일치하는 회원 찾기 -->
 	<select id="findById" resultType="string">
 		SELECT member_id FROM member
-		WHERE member_name = #{member_name} AND member_email = #{member_email} AND enabled = 1
+		<if test="name != null and name != ''">
+			WHERE member_name = #{name} 
+		</if>
+		<if test="id != null and id != ''">
+			WHERE member_id = #{id} 
+		</if>
+		AND member_email = #{email} 
+		AND enabled = 1
 	</select>
 	
 	<select id="findByPassword" resultType="string">
@@ -20,7 +28,7 @@
 		WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 
-	<select id="memberInfo" resultType="com.moaplace.dto.MemberInfoResponseDTO">
+	<select id="memberInfo" resultType="com.moaplace.dto.member.MemberInfoResponseDTO">
 		SELECT
 			member_num, member_id, member_email, member_name, member_gender,
 			member_birth, member_phone, member_address, regDate, member_point
@@ -28,7 +36,7 @@
 		WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 	
-	<select id="login" resultType="com.moaplace.dto.MemberLoginResponseDTO">
+	<select id="login" resultType="com.moaplace.dto.member.MemberLoginResponseDTO">
 		SELECT member_id, authority FROM member
 		WHERE member_id = #{member_id} AND member_pwd = #{member_pwd} AND enabled = 1
 	</select>
@@ -39,10 +47,14 @@
 	</select>
 
 	<insert id="join">
+		<!-- 결과값인 bnum이 자동으로 파라미터로 받은 VO에 주입됨 -->
+		<selectKey keyProperty="member_num" order="BEFORE" resultType="int">
+			SELECT member_seq.nextval FROM dual
+		</selectKey>
 		INSERT INTO 
 		member(member_num, member_id, member_pwd, member_email, member_name,
 			member_gender, member_birth, member_phone, member_address, member_point)
-		VALUES(member_seq.nextval, #{member_id}, #{member_pwd}, #{member_email}, #{member_name},
+		VALUES(#{member_num}, #{member_id}, #{member_pwd}, #{member_email}, #{member_name},
 			#{member_gender}, #{member_birth}, #{member_phone}, #{member_address}, 2000)
 	</insert>
 	
@@ -54,6 +66,7 @@
 		SELECT * FROM member WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 	
+
 	<!-- 회원 정보 수정 -->
 	<update id="myInfoEdit" parameterType="com.moaplace.dto.MyInfoEditDTO">
 		update member
@@ -76,5 +89,29 @@
 		</set>
 		where member_num = #{member_num}
 	</update>
+
+	<update id="newPassword">
+		UPDATE member SET member_pwd = #{member_pwd}
+		WHERE member_id = #{member_id} AND enabled = 1		
+	</update>
 	
+	<update id="withdrawal">
+		UPDATE member SET enabled = 0
+		WHERE member_id = #{member_id} AND enabled = 1
+	</update>
+	
+	<select id="apiCheck" resultType="com.moaplace.dto.member.ApiLoginDTO">
+		select m.member_id, m.authority, a.member_email 
+		FROM member m JOIN api_auth a
+		ON m.member_email = a.member_email 
+		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND a.api_name = 'kakao'
+	</select>
+	
+	<select id="apiLogin" resultType="com.moaplace.dto.member.MemberLoginResponseDTO">
+		select m.member_id, m.authority
+		FROM member m JOIN api_auth a
+		ON m.member_email = a.member_email 
+		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND m.member_id = #{member_id} AND a.api_name = 'kakao'
+	</select>
+
 </mapper>

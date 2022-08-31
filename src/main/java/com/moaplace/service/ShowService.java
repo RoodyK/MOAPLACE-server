@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.moaplace.dto.ShowDTO;
+import com.moaplace.dto.ShowDetailDTO;
 import com.moaplace.dto.admin.show.MapperDetailDTO;
 import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowInsertRequestDTO;
@@ -150,22 +151,18 @@ public class ShowService {
 	
 	public List<ShowDTO> list(HashMap<String, Object> map) {
 
+		return showMapper.list(map);
+	}
+
+	
+	public int count(HashMap<String, Object> map) {
 		
-		List<ShowVO> list = showMapper.list(map);
-		
-		List<ShowDTO> list2 = new ArrayList<>();
-		
-		for(ShowVO vo : list) {
-			log.info(vo.getShow_thumbnail());
-			list2.add(new ShowDTO(vo.getShow_num(), vo.getGenre_num(), vo.getHall_num(), vo.getShow_name(), vo.getShow_start(), vo.getShow_end(), vo.getShow_check(), new String(vo.getShow_thumbnail())));
-		}
-		
-		return list2;
+		return showMapper.count(map);
 	}
 	
-	public int count() {
-		return showMapper.count();
-
+	public List<ShowDetailDTO> detail(int show_num) {
+		
+		return showMapper.detail(show_num);
 	}
 	
 }
