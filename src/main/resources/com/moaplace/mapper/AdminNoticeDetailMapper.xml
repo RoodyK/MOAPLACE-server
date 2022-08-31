@@ -7,4 +7,9 @@
   <insert parameterType="com.moaplace.vo.AdminNoticeDetailVO" id="detailinsert">
    insert into notice_detail values(notice_detail_seq.nextval, #{notice_num}, #{notice_orgfile}, #{notice_savefile}, #{notice_filesize})
  </insert>
+ 
+<update parameterType="com.moaplace.vo.AdminNoticeDetailVO" id="detailupdate" >
+	   update notice set notice_orgfile=#{notice_orgfile}, notice_savefile=#{notice_savefile}, #{notice_filesize}=#{notice_filesize} 
+        where notice_num=#{notice_num}
+	</update>
 </mapper>

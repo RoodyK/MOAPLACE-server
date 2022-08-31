@@ -103,32 +103,31 @@ public class MoaNewsController {
 			map.put("notice_num", Integer.parseInt(notice_num));
 			
 			List<AdminNoticeDetailDTO> filelist = service.filelist(Integer.parseInt(notice_num));
-			List<AdminDetailDTO> list =  service.detail(Integer.parseInt(notice_num));
-			List<AdminListDTO> detaillist =  service.detaillist(Integer.parseInt(notice_num));
+			AdminListDTO detaillist =  service.selectdetail(Integer.parseInt(notice_num));
 			AdminNoticeDTO next = service.getNext(Integer.parseInt(notice_num));
 			AdminNoticeDTO prev = service.getPrev(Integer.parseInt(notice_num));
+			
+			map.put("sort_num",detaillist.getSort_num());
+			map.put("sort_name",detaillist.getSort_name());
+			map.put("notice_title",detaillist.getNotice_title());
+			map.put("notice_content",detaillist.getNotice_content());
+			map.put("notice_regdate",detaillist.getNotice_regdate());
+			map.put("notice_hit",detaillist.getNotice_hit());
 			
 			//list는 size로 확인, 배열은 length
 			if(filelist.size() >0) { 
 			   map.put("filelist",filelist);
-			   map.put("list",list);
-			}else {
-				map.put("list", detaillist);
 			}
 			
-			
-				map.put("next", next);
-				map.put("prev", prev);
-			
-			
-	
-			
+			map.put("next", next);
+			map.put("prev", prev);
 			
 			//VO,DTO 로 받으면 {} Object 
 			//List 받으면 [] array
 			
 			log.info("=======================================새소식 상세보기 log==============================================");
 //			log.info("notice_num: " + notice_num);
+			log.info("상세글 :" + service.selectdetail(Integer.parseInt(notice_num)));
 			log.info("다음글 정보 :" + service.getNext(Integer.parseInt(notice_num)));
 			log.info("이전글 정보 :" + service.getPrev(Integer.parseInt(notice_num)));
 			log.info("====================================================================================================");

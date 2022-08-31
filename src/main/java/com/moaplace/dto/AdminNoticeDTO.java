@@ -13,7 +13,6 @@ public class AdminNoticeDTO {
 	private int notice_num;
 	private int member_num;
 	private int sort_num;
-	private String sort_name;
 	private String notice_title;
 	private String notice_content;
 	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
