@@ -122,11 +122,7 @@ public class AdminScheduleController {
 				@PathVariable ( required = false ) int showNum,
 				@PathVariable ( required = false ) String showDate){
 			
-			HashMap<String, Object> sList = new HashMap<String, Object>();
-			sList.put("showNum",showNum);
-			sList.put("showDate",showDate);
-			
-			HashMap<String, Object> map=service.showDetail(sList);
+			HashMap<String, Object> map=service.showDetail(showNum, showDate);
 			
 			return map;
 			

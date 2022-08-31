@@ -24,7 +24,7 @@ public interface ScheduleMapper {
 	
 	int scheduleUpdate (ScheduleVO vo);
 	
-	int bookingSeatCheck(HashMap<String, Object> map);
+//	int bookingSeatCheck(HashMap<String, Object> map);
   
   List<ScheduleDTO> schedule(int show_num);
 	

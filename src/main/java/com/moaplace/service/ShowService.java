@@ -226,11 +226,8 @@ public class ShowService {
 		
 		return showMapper.firstCntRow();
 	}
-	
-	
-	
-		////////////////////////연희 끝/////////////////////////
-	
+
+	////////////////////////연희 끝/////////////////////////
 	
 	public List<ShowDTO> list(HashMap<String, Object> map) {
 

@@ -7,5 +7,6 @@ public class AdminScheduleDetailTimeDTO {
 	private String dateTime;
 	private String dateStatus;
 	private int timeRow;
+	private int scheduleNum;
 
 }
