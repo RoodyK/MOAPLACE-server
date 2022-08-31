@@ -132,4 +132,17 @@
 		</if>	
    </select>
 
+
+	<!-- 메인페이지 진행중인 공연 시작 ========================= -->
+	
+	<select id="getRunningShow" resultType="com.moaplace.dto.MainShowDTO">
+		select show_num, show_name, show_thumbnail
+		from show
+		where 
+			show_check = 'Y'
+			and show_end >= sysdate
+		order by show_start asc
+	</select>
+	
+	<!-- 메인페이지 진행중인 공연 끝 =========================-->
 </mapper>

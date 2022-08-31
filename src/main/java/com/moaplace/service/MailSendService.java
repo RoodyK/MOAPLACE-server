@@ -54,6 +54,34 @@ public class MailSendService {
 		
 		return Integer.toString(n);
 	}
+	
+	// 아이디 찾기 메일 보내기
+	public void findById(String email, String id) {
+		String setFrom = myMail;
+		String toMail = email;
+		String title = "회원님의 아이디를 알려드립니다.";
+		String content = 
+				"<h1>MOA PLACE를 방문해주셔서 감사합니다.</h1>" + 
+				"<br/><br/>" + 
+				"아이디는 " + id + " 입니다.";
+		
+		mailSend(setFrom, toMail, title, content);
+	}
+	
+	// 비밀번호 재설정 이메일 보내기
+	public void resetPassword(String email, String id) {
+		String setFrom = myMail;
+		String toMail = email;
+		String title = "회원님의 비밀번호 재설정 메일입니다.";
+		String content = 
+				"<h1>MOA PLACE를 방문해주셔서 감사합니다.</h1>" + 
+				"<br/><br/>" + 
+				"아래의 링크를 통해서 이동해주세요." + 
+				"<br/>" + 
+				"<a href='http://localhost:8080/moaplace.com/users/login/newpassword/"+id+"' target='_blank'>비밀번호 재설정 링크<a/>";
+		
+		mailSend(setFrom, toMail, title, content);
+	}
 
 	// 메일 보내기
 	private void mailSend(
