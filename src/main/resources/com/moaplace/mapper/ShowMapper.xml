@@ -5,6 +5,8 @@
  
 <mapper namespace="com.moaplace.mapper.ShowMapper">
 
+<!-- ////////////// 연희 시작 ////////////// -->
+
 <insert id="showInsert" parameterType="com.moaplace.vo.ShowVO">
 	<!-- 셀렉트키로 인서트 전에 시퀀스번호 받아옴(셀렉트로 불러오면서 nextval로 넘어감) -->
 	<selectKey keyProperty="show_num" order="BEFORE" resultType="int">
@@ -32,18 +34,35 @@
 				
 			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
 			
-			<trim prefix="WHERE" prefixOverrides="AND">
-				<if test="showCheck != all">
-					show_check = #{showCheck}
+			<trim prefix="WHERE">
+				<if test="showCheck != 'all'">
+					<choose>
+						<when test="search == null or search == ''">							
+							show_check = #{showCheck} 						
+						</when>
+						<when test="field == 'title' and search != null">
+							show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null">
+							show_check = #{showCheck} AND hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and search != null">
+							show_check = #{showCheck} AND s.show_num LIKE '%'||#{search}||'%'
+						</when>
+					</choose>
 				</if>
-				<if test="search = title">
-					AND show_name = #{search}
-				</if>
-				<if test="search = hall">
-					AND ${field} = #{search}
-				</if>
-				<if test="search = showNum">
-					AND ${field} = #{search}
+				<if test="showCheck == 'all'">
+					<choose>
+						<when test="field == 'title' and search != null">
+							show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null">
+							hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and search != null">
+							s.show_num = #{search}
+						</when>
+					</choose>
 				</if>
 			</trim>
 			
@@ -51,6 +70,55 @@
 			
 	WHERE rn BETWEEN #{startRow} AND #{endRow}
 </select>
+
+<select id="currentCount" resultType="int" parameterType="hashmap">
+
+SELECT NVL(COUNT(*),0)
+		
+		FROM(
+		
+			SELECT s.show_num num, h.hall_name hall, s.show_name title, 
+			
+			TO_CHAR(s.show_start, 'YYYY-MM-DD') startDate, TO_CHAR(s.show_end, 'YYYY-MM-DD') endDate, s.show_check status 
+				
+			FROM show s INNER JOIN hall h ON s.hall_num=h.hall_num
+			
+			<trim prefix="WHERE">
+				<if test="showCheck != 'all'">
+					<choose>
+						<when test="search == null or search == ''">							
+							show_check = #{showCheck} 						
+						</when>
+						<when test="field == 'title'">
+							show_check = #{showCheck} AND show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall'">
+							show_check = #{showCheck} AND hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum'">
+							show_check = #{showCheck} AND s.show_num LIKE '%'||#{search}||'%'
+						</when>
+					</choose>
+				</if>
+				<if test="showCheck == 'all'">
+					<choose>
+						<when test="field == 'title' and search != null">
+							show_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'hall' and search != null">
+							hall_name LIKE '%'||#{search}||'%'
+						</when>
+						<when test="field == 'showNum' and search != null">
+							s.show_num = #{search}
+						</when>
+					</choose>
+				</if>
+			</trim>
+			
+			ORDER BY show_num DESC)
+			
+</select>
+
 
 <select id="showDetail" parameterType="int" resultType="com.moaplace.dto.admin.show.MapperDetailDTO">
 	<![CDATA[
@@ -88,13 +156,92 @@
 	]]>
 </select>
 
-  <select id="cntRow" resultType="int">
+<select id="searchShow" parameterType="String" resultType="com.moaplace.dto.admin.show.ShowPartInfoDTO">
+	
+			SELECT 
+				show_num num, 
+				show_name title, 
+				running_time runningTime,
+				intermission intermission,
+				show_check status, 
+				show_age age, 
+				TO_CHAR(show_start, 'YYYY-MM-DD') startDate, 
+				TO_CHAR(show_end, 'YYYY-MM-DD') endDate, 
+				TO_CHAR(stop_start, 'YYYY-MM-DD') blockStartDate, 
+				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate, 
+				show_thumbnail thumbnail
+			FROM show	
+			WHERE show_name like '%'||#{title}||'%'
+</select>
+
+<select id="searchShowNumber" parameterType="int" resultType="com.moaplace.dto.admin.show.ShowPartInfoDTO">
+	
+			SELECT 
+				show_num num, 
+				show_name title, 
+				running_time runningTime,
+				intermission intermission,
+				show_check status, 
+				show_age age, 
+				TO_CHAR(show_start, 'YYYY-MM-DD') startDate, 
+				TO_CHAR(show_end, 'YYYY-MM-DD') endDate, 
+				TO_CHAR(stop_start, 'YYYY-MM-DD') blockStartDate, 
+				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate, 
+				show_thumbnail thumbnail
+			FROM show	
+			WHERE show_num = #{num}
+</select>
+
+
+  <select id="firstCntRow" resultType="int">
 
   SELECT NVL(COUNT(*),0) FROM show
 
   </select>
 
+<update id="showUpdate" parameterType="com.moaplace.vo.ShowVO">
+ 	update show set genre_num = #{genre_num}, hall_num = #{hall_num}, show_name = #{show_name},
+	
+		show_start = #{show_start}, show_end = #{show_end},
+		<if test="stop_start != null">
+		stop_start = #{stop_start},
+		</if>
+		<if test="stop_end != null">
+		stop_end = #{stop_end},
+		</if>
+		show_check = #{show_check}, show_age = #{show_age},
+		
+		intermission = #{intermission}, running_time = #{running_time},
+		
+		show_thumbnail = #{show_thumbnail} 
+		
+		WHERE show_num = #{show_num}
+</update>
+
+<select id="monthSelect" parameterType="int" resultType="com.moaplace.dto.CalendarDateDTO">
+
+	SELECT w.show_num showNum, hall_num hallNum, show_name showName, 
+			TO_CHAR(show_start, 'YYYY-MM-DD') showStart, 
+			TO_CHAR(show_end, 'YYYY-MM-DD') showEnd, 
+			schedule_date scheduleDate, schedule_YN scheduleYN
+		FROM show w RIGHT JOIN schedule d
+		ON w.show_num = d.show_num 
+		WHERE schedule_YN = 'Y' and TO_CHAR(TO_DATE(schedule_date), 'MM') = #{month}
+		GROUP BY w.show_num, hall_num,show_name,show_start,show_end,schedule_date,schedule_YN
+		ORDER BY showStart
+</select>
+
+<select id="returnThumb" parameterType="int" resultType="String">
+
+	SELECT show_thumbnail thumbnail FROM show WHERE show_num=#{num}
+
+</select>
+
+
+<!-- ////////////// 연희 끝 ////////////// -->
+
 	<select id="list" resultType="com.moaplace.dto.ShowDTO" parameterType="hashmap">
+
 		select * from (
 		    select rownum rnum, s.show_num, s.genre_num, s.hall_num, s.show_name, s.show_start, s.show_end, s.show_check, s.show_thumbnail from (
 		        select * from show
@@ -131,7 +278,13 @@
 			and show_name like '%'||#{keyword}||'%'
 		</if>	
    </select>
-
+	
+	<!-- 공연 상세페이지 -->
+	<select id="detail" resultType="com.moaplace.dto.ShowDetailDTO" parameterType="int">
+   		select show_num, show_thumbnail, show_name, show_start, show_end, hall_num, show_age, show_check
+        from show
+        where show_num = #{show_num}
+   </select>
 
 	<!-- 메인페이지 진행중인 공연 시작 ========================= -->
 	
@@ -145,4 +298,5 @@
 	</select>
 	
 	<!-- 메인페이지 진행중인 공연 끝 =========================-->
+
 </mapper>

@@ -1,5 +1,6 @@
 package com.moaplace.vo;
 
+import java.sql.Clob;
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;
@@ -23,5 +24,5 @@ public class ShowVO {
 	private String show_age;
 	private int intermission;
 	private int running_time;
-	private byte[] show_thumbnail;
+	private String show_thumbnail;
 }

@@ -9,6 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
+import com.moaplace.dto.MyBookingCancleRequestDTO;
+import com.moaplace.dto.MyInfoEditDTO;
 import com.moaplace.dto.member.ApiLoginDTO;
 import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
@@ -19,7 +22,6 @@ import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.ApiAuthMapper;
 import com.moaplace.mapper.MemberMapper;
 import com.moaplace.vo.ApiAuthVO;
-import com.moaplace.vo.MemberVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -34,8 +36,12 @@ public class MemberService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	public List<MemberVO> selectAll() {
-		return mapper.selectAll();
+	public List<AdminMemberInfoResponseDTO> selectAll(Map<String, Object> map) {
+		return mapper.selectAll(map);
+	}
+	
+	public int getCount(Map<String, Object> map) {
+		return mapper.getCount(map);
 	}
 	
 	public boolean checkId(String reqId) {
@@ -96,6 +102,29 @@ public class MemberService {
 		return mapper.memberInfo(id);
 	}
 	
+	/* (예매취소용)입력값과 비밀번호 일치 체크하기 */
+	public boolean pwdCheck(MyBookingCancleRequestDTO dto) {
+		
+		String memberPwd = mapper.findByPassword(dto.getMember_id());
+		boolean isPassword = passwordEncoder.matches(dto.getMember_pwd(), memberPwd);
+		
+		return isPassword;
+	}
+	
+	/* 회원 정보 수정 */
+	public int myInfoEdit(MyInfoEditDTO dto) {
+		// 비밀번호 암호화
+		String password = passwordEncoder.encode(dto.getMember_pwd());
+		log.info(password);
+		
+		dto.setMember_pwd(password);
+		
+		int n = mapper.myInfoEdit(dto);
+		
+		if(n > 0) return n;
+		return -1;
+	}
+	
 	// 아이디 찾기/비밀번호 재설정
 	public String findById(Map<String, Object> map) {
 		String id = mapper.findById(map);
@@ -128,5 +157,7 @@ public class MemberService {
 	// 카카오 로그인
 	public MemberLoginResponseDTO apiLogin(ApiLoginDTO dto) {
 		return mapper.apiLogin(dto);
+
 	}
+	
 }
