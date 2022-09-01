@@ -280,5 +280,12 @@ SELECT NVL(COUNT(*),0)
 	</select>
 	
 	<!-- 메인페이지 진행중인 공연 끝 =========================-->
-
+	
+	
+	<!-- 예매페이지 공연장, 공연명 조회 -->
+	<select id="getBookingShow" resultType="com.moaplace.dto.BookingShowDTO">
+		select hall_num, show_name
+		from show
+		where show_num = #{show_num}
+	</select>
 </mapper>
