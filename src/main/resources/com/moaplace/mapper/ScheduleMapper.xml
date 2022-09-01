@@ -98,6 +98,7 @@
 
 </select>
 
+<!-- 검색된 후의 총 행수 구하기  -->
 <select id="currentCount" parameterType="hashmap" resultType="int">
 
 
@@ -170,6 +171,7 @@
 
 </select>
 
+<!-- 일정 상세보기 구현 위한 데이터 가져오기  -->
 <select id="scheduleDetail" parameterType="hashmap" resultType="com.moaplace.dto.admin.show.AdminScheduleDetailDTO">
 
 	SELECT a.*,ROWNUM timeRow
@@ -183,11 +185,6 @@
 
 </select>
 
-<delete id="deleteSchedule" parameterType="hashmap">
-
-	DELETE FROM schedule WHERE show_num = #{showNum} AND schedule_date = #{showDate}
-
-</delete>
 
 <!-- <update id="scheduleUpdate" parameterType="com.moaplace.vo.ScheduleVO">
 
