@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import com.moaplace.service.MemberService;
 import com.moaplace.service.PaymentService;
 import com.moaplace.service.RentalService;
 import com.moaplace.service.ReviewService;
+import com.moaplace.util.FileUtil;
 import com.moaplace.util.PageUtil;
 
 import lombok.extern.log4j.Log4j;
@@ -392,4 +394,5 @@ public class MypageController {
 		if(n > 0) return "success";
 		return "fail";
 	}
+	
 }
