@@ -27,4 +27,10 @@
 		where show_num = #{show_num}
 	</select>
 	
+	<select id="getHallname" resultType="string">
+		select hall_name
+		from hall
+		where hall_num = #{hall_num}
+	</select>
+	
 </mapper>

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.vo.MemberVO;
 
@@ -42,8 +43,12 @@ public class MemberServiceTest {
 	// 회원정보 테스트
 	@Test
 	public void selectListTest() {
-		List<MemberVO> vo = memberService.selectAll();
-		for( MemberVO m : vo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startRow", 1);
+		map.put("endRow", 5);
+		map.put("sorted", "all");
+		List<AdminMemberInfoResponseDTO> vo = memberService.selectAll(map);
+		for( AdminMemberInfoResponseDTO m : vo) {
 			System.out.println(m);
 		}
 

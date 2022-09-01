@@ -83,6 +83,29 @@ public class MailSendService {
 		mailSend(setFrom, toMail, title, content);
 	}
 
+	// QNA문의 답변완료 이메일 전송
+	public String qnaEmail(String email) {
+
+		// 보낼 이메일
+		String setFrom = myMail;
+		// 받는 이메일
+		String toMail = email;
+		// 메일 제목
+		String title ="[MOAPLACE] 문의사항에 대한 답변이 완료되었습니다.";
+		// 이메일 내용 삽입
+		String content = 
+				"<h1>MOA PLACE</h1>" + 
+				"<br/>" + 
+				"고객님의 문의사항에 대한 답변이 완료되었습니다." + 
+				"<br/>" + 
+				"문의하신 내용과 답변은 <strong>MOAPLACE > 나의 문의내역</strong>에서 확인하실 수 있습니다." +
+				"<br/><br/>"+
+				"<a href='http://localhost:8080/moaplace.com/board/qna/list'> [MOAPLACE] 나의 문의내역 바로가기 </a>";
+		mailSend(setFrom, toMail, title, content);
+
+		return "success";
+	}
+
 	// 메일 보내기
 	private void mailSend(
 			String setFrom, String toMail, String title, String content) {

@@ -108,15 +108,23 @@
 	
 	<update id="updateState">
 		update rental
-		set rental_state = #{rental_state}
+		<set>
+			<if test="column == 'rental_date'">
+				rental_date = To_date('${state} 09:00:00', 'YYYY-MM-DD HH24:MI:SS')
+			</if>
+			<if test="column != 'rental_date'">
+				${column} = #{state}
+			</if>
+		</set>
 		where rental_num = #{rental_num}
 	</update>
 	
 	
 	<select id="getSchedules" resultType="com.moaplace.dto.RentalCalendarDTO">
-		SELECT rental_num, hall_num, rental_date, rental_time,rental_title
+		SELECT rental_num, hall_num, rental_date, rental_time, rental_title
 		FROM rental
 		WHERE rental_date between #{startDate} and #{endDate}
+			AND rental_state in ('입금완료','사용완료')
 		ORDER BY rental_date asc, rental_time asc
 	</select>
 	
@@ -129,5 +137,16 @@
 		select * from rental	
 	</select>
 
-	
+	<select id="rentalChart" resultType="com.moaplace.dto.AdminChartDTO">
+	<![CDATA[
+		SELECT TO_CHAR(rental_date, 'YYYY-MM') as day, sum(hall_price) as price FROM(
+		    select h.hall_num, n.rental_date, h.hall_price
+		    FROM hall h join rental n
+		    ON h.hall_num = n.hall_num
+		    WHERE n.rental_state = '사용완료' )
+		WHERE rental_date >= #{startDate} AND rental_date <= #{endDate}
+		GROUP BY TO_CHAR(rental_date, 'YYYY-MM')
+		ORDER BY TO_CHAR(rental_date, 'YYYY-MM')
+	]]>
+	</select>
 </mapper>

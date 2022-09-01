@@ -58,14 +58,69 @@
 			#{member_gender}, #{member_birth}, #{member_phone}, #{member_address}, 2000)
 	</insert>
 	
-	<select id="selectAll" resultType="com.moaplace.vo.MemberVO">
-		SELECT * FROM member
+	<sql id="search">
+	<!-- <![CDATA[]]> -->
+			<trim prefix="WHERE">
+	      <if test="sorted == 'all'">
+	      	enabled LIKE '%%'
+	      </if>
+	      <if test="sorted != 'all'">
+	      	enabled LIKE '%'||#{sorted}||'%'
+	      </if>
+	      <trim prefix="AND">
+		      <if test="field != null and field != '' and word != null">
+		      	${field} LIKE '%'||#{word}||'%'
+		      </if>
+		    </trim>
+			</trim>
+	    ORDER BY member_num desc
+	</sql>
+	
+	<select id="selectAll" resultType="com.moaplace.dto.member.AdminMemberInfoResponseDTO">
+		SELECT * FROM (
+	    SELECT ROWNUM rn, member_num, member_id, member_email, member_name, 
+	        member_phone, regdate, member_point, enabled
+	    from (
+	        SELECT * FROM member 
+	        <include refid="search" />
+	        ) m
+	    ) mm
+		<![CDATA[ WHERE RN >= #{startRow} AND RN <= #{endRow} ]]>
+	</select>
+	
+	<select id="getCount" resultType="int">
+		SELECT NVL(COUNT(member_num), 0) FROM member
+		<include refid="search" />
 	</select>
 	
 	<select id="findOne" resultType="com.moaplace.vo.MemberVO">
 		SELECT * FROM member WHERE member_id = #{member_id} AND enabled = 1
 	</select>
 	
+
+	<!-- 회원 정보 수정 -->
+	<update id="myInfoEdit" parameterType="com.moaplace.dto.MyInfoEditDTO">
+		update member
+		<set>
+			<if test="member_name != null and member_name != ''">
+				member_name = #{member_name},
+			</if>
+			<if test="member_pwd != null and member_pwd != ''">
+				member_pwd = #{member_pwd},
+			</if>
+			<if test="member_gender != null and member_gender != ''">
+				member_gender = #{member_gender},
+			</if>
+			<if test="member_phone != null and member_phone != ''">
+				member_phone = #{member_phone},
+			</if>
+			<if test="member_address != null and member_address != ''">
+				member_address = #{member_address},
+			</if>
+		</set>
+		where member_num = #{member_num}
+	</update>
+
 	<update id="newPassword">
 		UPDATE member SET member_pwd = #{member_pwd}
 		WHERE member_id = #{member_id} AND enabled = 1		

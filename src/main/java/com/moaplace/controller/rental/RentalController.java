@@ -1,5 +1,6 @@
 package com.moaplace.controller.rental;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class RentalController {
 		else {
 			map.put("result","fail");
 		}
-		
+		log.info("map" + map);
 		return map;
 	}
 	
@@ -81,18 +82,25 @@ public class RentalController {
 		return data;
 	}
 	
+	// 진행상태, 대관희망시간, 대관일자 수정
 	@GetMapping
-	(value = "/update/{num}/{state}")
+	(value = "/update/{column}/{num}/{state}")
 	public String updateState(
+			@PathVariable String column, //업데이트할 컬럼명
 			@PathVariable Integer num,//대관신청번호
 			@PathVariable String state)//진행상태
 	{
-		log.info("num:" + num);
-		log.info("state:" + state);
+		
+		switch (column) {
+			case "state" : column = "rental_state"; break;
+			case "date" : column = "rental_date"; break;
+			case "time" : column = "rental_time"; break;
+		}
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("column", column);
 		map.put("rental_num", num);
-		map.put("rental_state", state);
+		map.put("state", state);
 		
 		int n = service.updateState(map);
 		
