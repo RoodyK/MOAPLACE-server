@@ -12,5 +12,5 @@ public class ScheduleVO {
 	private int show_num;
 	private String schedule_time;
 	private String schedule_date;
-	private char schedule_YN;
+	private String schedule_YN;
 }

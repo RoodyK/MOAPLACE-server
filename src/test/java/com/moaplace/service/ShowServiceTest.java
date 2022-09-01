@@ -1,8 +1,6 @@
 package com.moaplace.service;
 
 
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,13 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.dto.GradeDTO;
-import com.moaplace.dto.ScheduleDTO;
-import com.moaplace.dto.ShowDTO;
-import com.moaplace.dto.ShowDetailDTO;
 import com.moaplace.dto.ShowImgDTO;
-import com.moaplace.util.PageUtil;
-import com.moaplace.vo.ShowImgVO;
+import com.moaplace.dto.admin.show.ShowListDTO;
+import com.moaplace.mapper.ShowMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -32,7 +26,11 @@ import lombok.extern.log4j.Log4j;
 public class ShowServiceTest {
 
 	@Autowired
-	private ShowService service;
+  private ShowService service;
+	
+	@Autowired
+	private ShowMapper mapper;
+
 	@Autowired
 	private ShowImgService show_img_service;
 	
@@ -41,6 +39,17 @@ public class ShowServiceTest {
 	
 	@Test
 	public void test() {
+		
+		HashMap<String, Object> sList = new HashMap<String, Object>();
+		
+		sList.put( "startRow", 1);
+		sList.put( "endRow", 5);
+		sList.put( "showCheck", "Y");
+		sList.put( "field", "hall");
+		sList.put( "search", "모던홀");
+		
+		List<ShowListDTO> list=mapper.showList(sList);
+		log.info(list);
 //		List<ShowVO> list=service.selectName();
 //		log.info(list);
 //		log.info(savePath);

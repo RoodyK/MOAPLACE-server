@@ -2,9 +2,11 @@ package com.moaplace.mapper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.vo.BookingVO;
@@ -30,6 +32,10 @@ public interface BookingMapper {
 	// booking_num으로 공연일 조회(예매취소여부 조회용)
 	String getScheduleDate(int booking_num);
 	
+  // 관리자 공연 매출 
+	public List<AdminChartDTO> bookingChart(Map<String, Object> map);
+
 	// booking_num으로 member_num 조회
 	int cancleInfoCheck(int booking_num);
+
 }

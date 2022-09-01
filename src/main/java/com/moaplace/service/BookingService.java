@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.GradePriceDTO;
 import com.moaplace.dto.HallSeatDTO;
 import com.moaplace.dto.MyBookingDTO;
@@ -123,6 +125,11 @@ public class BookingService {
 	public List<GradePriceDTO> getGradePrice(int show_num)
 	{
 		return hallMapper.getGradePrice(show_num);
+	}
+	
+	// 결제 차트용
+	public List<AdminChartDTO> bookingChart(Map<String, Object> map) {
+		return mapper.bookingChart(map);
 	}
 	
 }

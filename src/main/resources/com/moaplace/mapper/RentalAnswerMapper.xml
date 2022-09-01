@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.RentalAnswerMapper">
+	
+	<insert id="insert">
+		insert into rental_answer
+		(answer_num, member_num, rental_num, answer_content, regdate)
+		values (rental_answer_seq.nextval, #{member_num}, #{rental_num}, #{answer_content}, sysdate)
+	</insert>
+	
+	<select id="getAnswer" resultType="com.moaplace.vo.RentalAnswerVO">
+		select answer_num, answer_content, regdate
+		from rental_answer
+		where rental_num = #{rental_num}
+	</select>
+	
+	<update id="update">
+		update rental_answer
+		set answer_content = #{answer_content}
+		where rental_num = #{rental_num}
+	</update>
+	
+	<delete id="delete">
+		delete from rental_answer
+		where rental_num = #{rental_num}
+	</delete>
+	
+</mapper>
