@@ -1,6 +1,6 @@
 package com.moaplace.controller.board;
 
-import java.util.HashMap; 
+import java.util.HashMap;  
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -79,10 +79,10 @@ public class MoaNewsController {
 			map.put("totalRowCount" , totalRowCount);
 			map.put("startRow" , startRow);
 			map.put("endRow", endRow);
-			List<AdminNoticeDTO> list= service.listAll(map);
+			List<AdminListDTO> list= service.listAll(map);
 			
 			log.info("===============================================");
-			log.info("list: " + list);
+			log.info("새소식 list: " + list);
 			log.info("===============================================");
 			
 	        map.put("list",list);
@@ -126,10 +126,10 @@ public class MoaNewsController {
 			//List 받으면 [] array
 			
 			log.info("=======================================새소식 상세보기 log==============================================");
-//			log.info("notice_num: " + notice_num);
-			log.info("상세글 :" + service.selectdetail(Integer.parseInt(notice_num)));
-			log.info("다음글 정보 :" + service.getNext(Integer.parseInt(notice_num)));
-			log.info("이전글 정보 :" + service.getPrev(Integer.parseInt(notice_num)));
+			log.info("sort_name: " +detaillist.getSort_name());
+//			log.info("상세글 :" + service.selectdetail(Integer.parseInt(notice_num)));
+//			log.info("다음글 정보 :" + service.getNext(Integer.parseInt(notice_num)));
+//			log.info("이전글 정보 :" + service.getPrev(Integer.parseInt(notice_num)));
 			log.info("====================================================================================================");
 			
 			return map;

@@ -1,19 +1,10 @@
 package com.moaplace.controller.admin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +15,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.moaplace.dto.AdminDetailDTO;
 import com.moaplace.dto.AdminListDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;
 import com.moaplace.service.AdminNoticeService;
 import com.moaplace.util.FileUtil;
 import com.moaplace.util.PageUtil;
-import com.moaplace.vo.AdminNoticeDetailVO;
 import com.moaplace.vo.AdminNoticeVO;
 
 import lombok.extern.log4j.Log4j;
@@ -80,7 +69,7 @@ public class MoaplaceController {
 	//공지사항 리스트 - 리스트 및 검색
 	@GetMapping(value= {
 			"/list/{pageNum}",
-			"/list/{sort_num}/{member_num}/{pageNum}",
+			"/list/{sort_num}/{member_num}/{pageNum}","/list/{sort_num}/{field}/{member_num}/{pageNum}",
 			"/list/{sort_num}/{field}/{keyword}/{member_num}/{pageNum}"}, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HashMap<String, Object> list(
 			@PathVariable(required = false) String pageNum,
@@ -88,10 +77,6 @@ public class MoaplaceController {
 			@PathVariable(required = false) String field,
 			@PathVariable(required = false) String keyword,
 			@PathVariable(required = false) String member_num) {
-		log.info("sort_num : " + sort_num);
-		log.info("field : " + field);
-		log.info("keyword : " + keyword);
-		log.info("member_num : " + member_num);
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("member_num", Integer.parseInt(member_num));
@@ -155,9 +140,6 @@ public class MoaplaceController {
 		
 		 List<AdminNoticeDetailDTO> filelist = service.filelist(Integer.parseInt(notice_num));
 		 
-//			log.info("========================== 파일 삭제 체험  log=================================");
-//			log.info("delete 정보 filelist:" + filelist);
-//			log.info("==========================================================================");
 
 		try {
 			if (filelist == null || filelist.size() == 0) {
@@ -166,9 +148,6 @@ public class MoaplaceController {
 			} else {
 				List<Integer> list = service.selectnum(Integer.parseInt(notice_num));
 				int[] flist = list.stream().mapToInt(i -> i).toArray();
-//				log.info("========================== 파일 삭제 체험  log=================================");
-//				log.info("delete 정보 :" + flist);
-//				log.info("==========================================================================");
 				for (int i = 0; i < flist.length; i++) {
 					String fileName = service.selectfile(flist[i]).getNotice_savefile();
 					fileutil.delete(fileName, "notice");
@@ -184,33 +163,62 @@ public class MoaplaceController {
 		}
 	}
 	 
-	 //수정 , 파일 있으면 기존 파일 삭제 후 업뎃
-	 @PostMapping(value = "/udpate/{notice_num}",
-				consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	    public String update(@PathVariable(required = false) String notice_num,
-	    		@RequestPart("files") List<MultipartFile> multipartFile, 
-				@RequestParam String title, @RequestParam String content, @RequestParam String sort_num
-				) {
-
-		//받아온 값 확인
-		  System.out.println("title="+title);
-		  System.out.println("content="+content);
-		  System.out.println("file="+multipartFile);
-		  System.out.println("sort_num="+sort_num);
-		  
-		  log.info("========================컨트롤러==========================");
-		  log.info("sort_num : " + sort_num);
-		  log.info("========================================================");
-		  
-		  AdminNoticeVO vo = new AdminNoticeVO(Integer.parseInt(notice_num), 1, Integer.parseInt(sort_num) , title, content, null , 0);
-		  int n = service.update(multipartFile, vo);
-		  if(n==0 || n==1) {
-			  return "success";
-		  }else {
-			  return "fail";
-		  }  
+//	 //수정 , 파일 있으면 기존 파일 삭제 후 업뎃
+//	 @PostMapping(value = "/update/{notice_num}",
+//				consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+//	    public String update(@PathVariable(required = false) String notice_num,
+//	    		@RequestPart("files") List<MultipartFile> multipartFile, 
+//				@RequestParam String title, @RequestParam String content, @RequestParam String sort_num
+//				) {
+//
+//		//받아온 값 확인
+//		  System.out.println("title="+title);
+//		  System.out.println("content="+content);
+//		  System.out.println("file="+multipartFile);
+//		  System.out.println("sort_num="+sort_num);
+//		  
+//		  log.info("========================컨트롤러==========================");
+//		  log.info("sort_num : " + sort_num);
+//		  log.info("========================================================");
+//		  
+//		  AdminNoticeVO vo = new AdminNoticeVO(Integer.parseInt(notice_num), 1, Integer.parseInt(sort_num) , title, content, null , 0);
+//		  int n = service.update(multipartFile, vo);
+//		  if(n==0 || n==1) {
+//			  return "success";
+//		  }else {
+//			  return "fail";
+//		  }  
+//	 
+//	 }
 	 
-	 }
+	 @PostMapping(value = "/update/{notice_num}",
+				consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	 public String update(@PathVariable(required = false) String notice_num,
+	    		@RequestPart(required = false,value="newfiles") List<MultipartFile> multipartFile, 
+				@RequestParam String title, @RequestParam String content, @RequestParam String sort_num,
+				@RequestParam(required = false,value="deletefiles") List<Integer> deletefiles) {    
+		 
+		log.info("============================ 수정확인  log=================================");
+		log.info("deletefiles 정보 :" + deletefiles);
+		log.info("========================================================================");
+		if (deletefiles != null) {
+			for (var i = 0; i < deletefiles.size(); i++) {
+				String fileName = service.selectfile(deletefiles.get(i)).getNotice_savefile();
+				fileutil.delete(fileName, "notice");
+				
+				service.deletefile(deletefiles.get(i));
+				
+			}
+		}
+		AdminNoticeVO vo = new AdminNoticeVO(Integer.parseInt(notice_num), 1, Integer.parseInt(sort_num), title,
+				content, null, 0);
+		int n = service.update(multipartFile, vo);
+		if (n == 0 || n == 1) {
+			return "success";
+		} else {
+			return "fail";
+		}
+	}
 	 
 	 
 	//파일 개별 삭제(update 글 수정용)
@@ -233,7 +241,7 @@ public class MoaplaceController {
 
 	}
 	
-	//글 수정 
+	//글 수정 리스트 보이는 용
 	@GetMapping(value= {"/update/{notice_num}"}
 	, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HashMap<String, Object> detail(
