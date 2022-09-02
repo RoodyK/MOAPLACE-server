@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.moaplace.dto.BookingShowDTO;
 import com.moaplace.dto.GradePriceDTO;
 import com.moaplace.dto.HallSeatDTO;
 import com.moaplace.dto.TicketGradeDTO;
@@ -39,25 +40,33 @@ public class BookingController {
 	}
 	
 	@GetMapping
-	(value = "/getHallInfo/{hall_num}/{show_num}",
+	(value = "/getHallInfo/{show_num}",
 	produces = {MediaType.APPLICATION_JSON_VALUE})
 	public HashMap<String, Object> getHallInfo(
-			@PathVariable Integer hall_num,
 			@PathVariable Integer show_num)
 	{
+		BookingShowDTO dto = service.getBookingShow(show_num);
+		
 		HashMap<String, Object> hallInfo = new HashMap<String, Object>();
 		
-		//좌석 수 
-		HallSeatDTO seats = service.getHallSeats(hall_num);
+		//공연명
+		hallInfo.put("show_name", dto.getShow_name());
+		
+		//공연장명
+		String hall_name = service.getHallName(dto.getHall_num());
+		hallInfo.put("hall_name", hall_name);
+		
+		//좌석 수 (cols, rows)
+		HallSeatDTO seats = service.getHallSeats(dto.getHall_num());
 		hallInfo.put("seats", seats);
 		
-		//등급
-		List<TicketGradeDTO> grades = service.getTicketGrade(hall_num);
-		hallInfo.put("grades", grades);
+		//등급별 행수
+		List<TicketGradeDTO> gradeSeats = service.getTicketGrade(dto.getHall_num());
+		hallInfo.put("gradeSeats", gradeSeats);
 		
 		//가격
-		List<GradePriceDTO> prices = service.getGradePrice(show_num);
-		hallInfo.put("prices", prices);
+		List<GradePriceDTO> gradePrice = service.getGradePrice(show_num);
+		hallInfo.put("gradePrice", gradePrice);
 		
 		return hallInfo;
 	}

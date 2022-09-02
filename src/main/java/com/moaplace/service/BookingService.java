@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.moaplace.dto.AdminChartDTO;
+import com.moaplace.dto.BookingShowDTO;
 import com.moaplace.dto.GradePriceDTO;
 import com.moaplace.dto.HallSeatDTO;
 import com.moaplace.dto.MyBookingDTO;
@@ -19,6 +20,7 @@ import com.moaplace.dto.TicketGradeDTO;
 import com.moaplace.mapper.AllSeatMapper;
 import com.moaplace.mapper.BookingMapper;
 import com.moaplace.mapper.HallMapper;
+import com.moaplace.mapper.ShowMapper;
 
 @Service
 public class BookingService {
@@ -31,6 +33,9 @@ public class BookingService {
 	
 	@Autowired
 	private HallMapper hallMapper;
+	
+	@Autowired
+	private ShowMapper showMapper;
 	
 	// member_num으로 회원의 예매내역 존재여부 확인
 	public boolean bookingExist(int member_num) {
@@ -130,6 +135,18 @@ public class BookingService {
 	// 결제 차트용
 	public List<AdminChartDTO> bookingChart(Map<String, Object> map) {
 		return mapper.bookingChart(map);
+	}
+	
+	//예매 페이지 공연장번호, 공연제목 조회
+	public BookingShowDTO getBookingShow(int show_num)
+	{
+		return showMapper.getBookingShow(show_num);
+	}
+	
+	//공연장명 조회
+	public String getHallName(int hall_num)
+	{
+		return hallMapper.getHallname(hall_num);
 	}
 	
 }
