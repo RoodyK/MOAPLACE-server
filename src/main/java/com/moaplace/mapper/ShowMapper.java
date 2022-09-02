@@ -3,6 +3,7 @@ package com.moaplace.mapper;
 import java.util.HashMap;
 import java.util.List;
 
+import com.moaplace.dto.BookingSelectViewDto;
 import com.moaplace.dto.MainShowDTO;
 import com.moaplace.dto.ShowDTO;
 import com.moaplace.dto.ShowDetailDTO;
@@ -36,8 +37,12 @@ public interface ShowMapper {
 	List<ShowDetailDTO> detail(int show_num);
 	
 	int count();
-
+	
+	List<BookingSelectViewDto> ShowbookingSelect(int num);
+	
 	ShowVO showSelect(int num);
+	
+	String returnThumb(int num);
 
 	//메인페이지 진행중인 공연
 	List<MainShowDTO> getRunningShow();
