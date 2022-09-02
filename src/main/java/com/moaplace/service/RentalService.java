@@ -1,11 +1,21 @@
 package com.moaplace.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyRentalDTO;
@@ -13,6 +23,7 @@ import com.moaplace.dto.MyRentalDetailDTO;
 import com.moaplace.dto.RentalCalendarDTO;
 import com.moaplace.mapper.RentalAnswerMapper;
 import com.moaplace.mapper.RentalMapper;
+import com.moaplace.util.FileUtil;
 import com.moaplace.vo.RentalAnswerVO;
 import com.moaplace.vo.RentalVO;
 
@@ -23,6 +34,12 @@ public class RentalService {
 	private RentalMapper mapper;
 	@Autowired
 	private RentalAnswerMapper answer_mapper;
+	@Autowired
+	private FileUtil fileUtil;
+	@Value("${oracle.download}") 
+    private String realPath;
+	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	// member_num으로 회원의 대관내역 존재여부 확인
 	public boolean rentalExist(int member_num) {
@@ -51,7 +68,49 @@ public class RentalService {
 	// rental_num으로 대관상세내역 조회
 	public MyRentalDetailDTO myDetail(int rental_num) {
 		return mapper.myDetail(rental_num);
-	};
+	}
+	
+	// RentalVO로 대관상세내역 수정(트랜잭션처리해야함)
+	@Transactional(rollbackFor = Exception.class)
+	public int myUpdate(MultipartFile file, RentalVO vo) {
+		
+		try {
+			if(file == null) {
+				// 1. 파일 첨부 X : db수정
+				log.info("multipartFile이 null임");
+				
+				mapper.myUpdate(vo);
+				
+			}else {
+				// 2. 파일 첨부 O : 원본파일삭제 -> 새파일업로드 -> db수정
+				log.info("multipartFile이 null이 아님");
+				
+				String path = realPath;
+				
+				// 원본파일 삭제
+				String fileName = vo.getRental_savefilename();
+				fileUtil.delete(fileName, "rental");
+				
+				// 새 파일 업로드
+				String originFileName = file.getOriginalFilename();
+				String saveFileName = UUID.randomUUID() + "_" + originFileName;
+				InputStream is = file.getInputStream();
+				File f = new File(path + File.separator + "rental" + File.separator + saveFileName);
+				FileOutputStream fos = new FileOutputStream(f);
+				FileCopyUtils.copy(is, fos);
+				is.close();
+				fos.close();
+				long fileSize = file.getSize();
+				mapper.myUpdate(new RentalVO(vo.getRental_num(), 0, vo.getHall_num(), vo.getRental_name(), vo.getRental_phone(), vo.getRental_email(), vo.getRental_title(), vo.getRental_genre(), vo.getRental_date(), vo.getRental_time(), originFileName, saveFileName, fileSize, vo.getRental_ownsname(), vo.getRental_ownsphone(), vo.getRental_ownemail(), vo.getRental_content(), null, null));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+		return 1;
+	}
   
 	public int insert(RentalVO vo) {
 		return mapper.insert(vo);

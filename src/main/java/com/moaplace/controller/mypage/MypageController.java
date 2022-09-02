@@ -17,8 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moaplace.dto.MyBookingCancleRequestDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
@@ -35,6 +40,7 @@ import com.moaplace.service.RentalService;
 import com.moaplace.service.ReviewService;
 import com.moaplace.util.FileUtil;
 import com.moaplace.util.PageUtil;
+import com.moaplace.vo.RentalVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -56,6 +62,8 @@ public class MypageController {
 	private FavoriteService favoriteService;
 	@Autowired
 	private ReviewService reviewService;
+	@Autowired
+	private FileUtil fileUtil;
 	
 	/* 로그인한 회원의 최근 예매내역 1건 + 최근 대관내역 1건 조회 */
 	@GetMapping(value = "/{member_num}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -392,6 +400,30 @@ public class MypageController {
 		int n = memberService.myInfoEdit(dto);
 		
 		if(n > 0) return "success";
+		return "fail";
+	}
+	
+	/* 대관신청정보 수정 */
+	@PostMapping(value = "/rental/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public String rentalDetailUpdate(@RequestParam String data, @RequestPart(required = false) MultipartFile file) {
+		
+		log.info("data:"+data);
+		log.info("file:"+file);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		RentalVO vo = new RentalVO();
+			
+		try {
+			log.info("mapper.readValue : " + mapper.readValue(data, RentalVO.class));
+			vo = mapper.readValue(data, RentalVO.class);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		// 파일관리는 service에서 처리
+		int n = rentalService.myUpdate(file, vo);
+			
+		if(n == 1) return "success";
 		return "fail";
 	}
 	
