@@ -227,7 +227,7 @@ SELECT NVL(COUNT(*),0)
 		select * from (
 		    select rownum rnum, s.show_num, s.genre_num, s.hall_num, s.show_name, s.show_start, s.show_end, s.show_check, s.show_thumbnail from (
 		        select * from show
-		        where show_start between #{start_date} and #{end_date} 
+		        <![CDATA[ where show_start <= #{end_date} and show_end >= #{start_date} ]]> 
 		        and hall_num in
 		        <foreach collection="hall_chk" item="hall_chk" separator="," open="(" close=")">
 		        	#{hall_chk}
@@ -247,8 +247,9 @@ SELECT NVL(COUNT(*),0)
 	
 	<!-- 전체 공연 갯수 -->
    <select id="count" resultType="int" parameterType="hashmap">
-   		select NVL(count(*),0) cnt from show where show_start between #{start_date} 
-   		and #{end_date} and hall_num in
+   		select NVL(count(*),0) cnt from show 
+   		<![CDATA[ where show_start <= #{end_date} and show_end >= #{start_date} ]]>
+   		and hall_num in
         <foreach collection="hall_chk" item="hall_chk" separator="," open="(" close=")">
 			#{hall_chk}
 		</foreach>
