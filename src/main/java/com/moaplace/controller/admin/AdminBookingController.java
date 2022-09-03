@@ -39,10 +39,10 @@ public class AdminBookingController {
 			@PathVariable ( required = false ) String search){
 		
 		//null값으로 들어왔을 때 기본값 설정
-		if(pageNum==0 ||pageNum==null)pageNum=1;
-		if(status==null)status="전체";
-		if(field==null)field="bookingNum";
 		log.info(pageNum);
+		if(pageNum==null)pageNum=1;
+		if(status==null)status="전체";
+		if(field==null)field="b.booking_num";
 		// 페이징처리하는 클래스 유틸 받아서 페이징 데이터 생성
 		PageUtil pu = new PageUtil(pageNum,5,5,service.adminAllBookingCnt());
 		

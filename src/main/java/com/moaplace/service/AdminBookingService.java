@@ -20,7 +20,7 @@ public class AdminBookingService {
 	
 	public List<AdminBookingListDTO> adminBookingList(HashMap<String, Object> map){
 		
-
+		log.info(map);
 		return mapper.adminBookingList(map);
 	}
 	
