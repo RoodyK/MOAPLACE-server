@@ -94,7 +94,6 @@ public class AdminScheduleController {
 					pageNum,5,5,service.currentCount(sList));
 		};
 		
-		log.info("검색후 총 행수"+service.currentCount(sList));
 		// 해시맵에 조회된 공연목록, 페이지번호, 페이징유틸 정보 담아서 클라이언트로 보내기
 		// 해시맵을 produces = MediaType.APPLICATION_JSON_VALUE 으로 제이슨형태로 변환해서 전송
 		if(search==null)search="";

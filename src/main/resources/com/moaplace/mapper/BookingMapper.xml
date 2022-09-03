@@ -100,4 +100,80 @@
 		select member_num from booking where booking_num = #{booking_num}
 	</select>
 
+	<!-- 연희 시작 -->
+	
+<!-- 	<resultMap type="com.moaplace.dto.AdminBookingListDTO" id="serchAdminBooking">
+	
+	<result column="booking_num" property="bookingNum" jdbcType="number" javaType="int" />
+	<result column="memberId" property="memberId" jdbcType="varchar2" javaType="String" />
+	<result column="showName" property="showName" jdbcType="varchar2" javaType="String" />
+	<result column="regdate" property="bookingDate" jdbcType="varchar2" javaType="String" />
+	<result column="schedule_date" property="scheduleDate" jdbcType="Date" javaType="String" />
+	
+	
+	</resultMap> -->
+	
+	<select id="adminBookingList" resultType="com.moaplace.dto.AdminBookingListDTO" parameterType="hashmap">
+	
+	SELECT * FROM       
+	    (SELECT a.*, ROWNUM rn 
+	    FROM (
+	        SELECT 
+	            b.booking_num bookingNum, member_id memberId, sh.show_name showName, 
+	            sc.schedule_date scheduleDate, sc.schedule_time scheduleTime, 
+                b.booking_price bookingPrice, TO_CHAR(b.regdate, 'YYYY-MM-DD') bookingDate, p.payment_status status
+	        FROM booking b
+	        INNER JOIN payment p ON (b.booking_num = p.booking_num)
+	        INNER JOIN member m ON b.member_num = m.member_num
+	        INNER JOIN schedule sc ON (b.schedule_num = sc.schedule_num)
+	        INNER JOIN show sh ON (sc.show_num = sh.show_num)
+	       	<where>
+	       		<if test="status =='전체'">
+	       			<if test="search != NULL">
+	       				${field} LIKE '%'||#{search}||'%'
+	       			</if>
+	       		</if>
+	       		<if test="status != '전체'">
+	       			p.payment_status = #{status}
+	       			<if test="search != NULL">
+	       				AND ${field} LIKE '%'||#{search}||'%'
+	       			</if>
+	       		</if>
+	       	</where>
+	    	)a
+	   	) 
+	WHERE rn BETWEEN #{startRow} AND #{endRow}
+	
+	</select>
+	
+	<select id="adminAllBookingCnt" resultType="int">
+	
+	SELECT NVL(COUNT(*),0) FROM booking	    
+	
+	</select>
+	
+	<select id="currentAdminBookingCnt" resultType="int" parameterType="hashmap">
+	
+	   SELECT 
+	        NVL(COUNT(*),0)
+	   FROM booking b
+	   INNER JOIN payment p ON b.booking_num = p.booking_num
+	   INNER JOIN member m ON b.member_num = m.member_num
+	   INNER JOIN schedule sc ON b.schedule_num = sc.schedule_num
+	   INNER JOIN show sh ON sc.show_num = sh.show_num
+	  	<where>
+	  		<if test="status =='전체'">
+	  			<if test="search != NULL">
+	  				${field} LIKE '%'||#{search}||'%'
+	  			</if>
+	  		</if>
+	  		<if test="status != '전체'">
+	  			p.payment_status = #{status}
+	  			<if test="search != NULL">
+	  				AND ${field} LIKE '%'||#{search}||'%'
+	  			</if>
+	  		</if>
+	  	</where>
+	</select>
+
 </mapper>
