@@ -27,10 +27,6 @@ public class BearerTokenAuthenticationFilter implements HandlerInterceptor {
 		log.info("======================================");
 		log.info("토큰 : " + token);
 		log.info("======================================");
-		
-//		if(token == null) {
-//			throw new AuthenticationException();
-//		}
 
 //		// 토큰 만료되었는지 확인 true 아직 만료시간 남음 false 만료
 		if(token != null) {
