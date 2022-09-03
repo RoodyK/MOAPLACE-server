@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.ShowDTO;
+import com.moaplace.service.ScheduleService;
 import com.moaplace.service.ShowService;
 import com.moaplace.util.PageUtil;
-
-import lombok.extern.log4j.Log4j;
 
 @RestController
 @RequestMapping("/preview")
@@ -63,13 +62,11 @@ public class ShowListController {
 		map1.put("keyword", keyword);
 		
 		int totalRowCount=service.count(map1);
-		
-		HashMap<String, Object> map2=new HashMap<String, Object>();
-		
 		PageUtil pu=new PageUtil(pagenum,8, 5, totalRowCount);
 		int startRow=pu.getStartRow();//시작행번호
 		int endRow=pu.getEndRow();//끝행번호
 		
+		HashMap<String, Object> map2=new HashMap<String, Object>();
 		map2.put("start_date", start_date);
 		map2.put("end_date", end_date);
 		map2.put("startRow", startRow);

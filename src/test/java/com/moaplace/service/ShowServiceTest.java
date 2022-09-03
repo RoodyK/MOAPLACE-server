@@ -1,8 +1,6 @@
 package com.moaplace.service;
 
 
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,13 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.dto.GradeDTO;
-import com.moaplace.dto.ScheduleDTO;
-import com.moaplace.dto.ShowDTO;
-import com.moaplace.dto.ShowDetailDTO;
 import com.moaplace.dto.ShowImgDTO;
-import com.moaplace.util.PageUtil;
-import com.moaplace.vo.ShowImgVO;
+import com.moaplace.dto.admin.show.ShowListDTO;
+import com.moaplace.mapper.FavoriteMapper;
+import com.moaplace.mapper.ShowMapper;
+import com.moaplace.vo.FavoriteVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -33,14 +29,35 @@ public class ShowServiceTest {
 
 	@Autowired
 	private ShowService service;
+	
+	@Autowired
+	private ShowMapper mapper;
+
 	@Autowired
 	private ShowImgService show_img_service;
+	
+	@Autowired
+	private FavoriteService favorite_service;
+	
+	@Autowired
+	private ScheduleService schedule_service;
 	
 	@Value("${oracle.download}")
 	private String savePath;
 	
 	@Test
 	public void test() {
+		
+		HashMap<String, Object> sList = new HashMap<String, Object>();
+		
+		sList.put( "startRow", 1);
+		sList.put( "endRow", 5);
+		sList.put( "showCheck", "Y");
+		sList.put( "field", "hall");
+		sList.put( "search", "모던홀");
+		
+		List<ShowListDTO> list=mapper.showList(sList);
+		log.info(list);
 //		List<ShowVO> list=service.selectName();
 //		log.info(list);
 //		log.info(savePath);
@@ -131,10 +148,60 @@ public class ShowServiceTest {
 //
 //	}
 	
+//	@Test
+//	public void test5() {
+//		int show_num=1;
+//		List<ShowImgDTO> list = show_img_service.detailimg(show_num);
+//		log.info(list);
+//	}
+	
+//	@Test
+//	public void test6() {
+//		int show_num=2;
+//		int member_num=2;
+//		FavoriteVO vo = new FavoriteVO(show_num, member_num);
+//		log.info(favorite_service.insert(vo));
+//	}
+//	
+//	@Test
+//	public void test7() {
+//		int show_num=2;
+//		int member_num=2;
+//		FavoriteVO vo = new FavoriteVO(show_num, member_num);
+//		log.info(favorite_mapper.insert(vo));
+//	}
+	
 	@Test
-	public void test5() {
+	public void test8() {
 		int show_num=1;
-		List<ShowImgDTO> list = show_img_service.detailimg(show_num);
-		log.info(list);
+		log.info(schedule_service.selectlist(show_num));
 	}
+	
+//	@Test
+//	public void test9() {
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//		map.put("show_num", 1);
+//		map.put("schedule_num", 3);
+////		int show_num=1;
+////		int schedule_num=1;
+//		log.info(all_seat_service.seatcount(map));
+//	}
+	
+	@Test
+	public void test10() {
+		int show_num=1;
+		log.info(schedule_service.rowinfo(show_num));
+	}
+	
+//	@Test
+//	public void test11() {
+//		int show_num=1;
+//		int schedule_num=1;
+//		
+//		HashMap<String, Object> map=new HashMap<String, Object>();
+//		map.put("show_num", show_num);
+//		map.put("schedule_num", schedule_num);
+//		
+//		log.info(schedule_service.seatcnt(map));
+//	}
 }

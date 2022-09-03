@@ -22,4 +22,8 @@ public class ShowDetailViewDTO {
 	private String blockEndDate;		//공연중단종료일
 	private String thumbnail;			//섬네일
 	private List<String> detailImgs;	//상세이미지
+	private int rprice;					//R석 가격
+	private int sprice;					//S석 가격
+	private int aprice;					//A석 가격
+
 }

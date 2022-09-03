@@ -2,20 +2,27 @@ package com.moaplace.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyRentalDTO;
 import com.moaplace.dto.MyRentalDetailDTO;
 import com.moaplace.dto.RentalCalendarDTO;
+import com.moaplace.mapper.RentalAnswerMapper;
 import com.moaplace.mapper.RentalMapper;
+import com.moaplace.vo.RentalAnswerVO;
 import com.moaplace.vo.RentalVO;
 
 @Service
 public class RentalService {
 
-	@Autowired private RentalMapper mapper;
+	@Autowired 
+	private RentalMapper mapper;
+	@Autowired
+	private RentalAnswerMapper answer_mapper;
 	
 	// member_num으로 회원의 대관내역 존재여부 확인
 	public boolean rentalExist(int member_num) {
@@ -69,5 +76,26 @@ public class RentalService {
 	public RentalVO detail(int rental_num) {
 		return mapper.detail(rental_num);
 	}
-
+	
+	//대관신청 답변-----------------------------------------
+	
+	public int answerInsert(RentalAnswerVO vo) {
+		return answer_mapper.insert(vo);
+	}
+	
+	public RentalAnswerVO getAnswer(int rental_num) {
+		return answer_mapper.getAnswer(rental_num);
+	}
+	
+	public int answerUpdate(RentalAnswerVO vo) {
+		return answer_mapper.update(vo);
+	}
+	
+	public int answerDelete(int rental_num) {
+		return answer_mapper.delete(rental_num);
+	}
+	
+	public List<AdminChartDTO> rentalChart(Map<String, Object> map) {
+		return mapper.rentalChart(map);
+	}
 }

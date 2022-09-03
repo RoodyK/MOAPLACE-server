@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.AllSeatMapper">
+	
+	<!-- 좌석 선택 페이지  상연일정(스케줄)번호로 이미 예매된 좌석 불러오기 =========-->
+	<select id="getBookingSeat" resultType="string">
+		select booking_seat 
+		from all_seat
+		where schedule_num = #{schedule_num}
+		order by booking_seat asc
+	</select>
+</mapper>

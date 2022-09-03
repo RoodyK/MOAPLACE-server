@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class ShowImgVO {
+
 	private int show_img_num;
 	private int show_num;
-	private byte[] show_detail_img;
+	private String show_detail_img;
+
 }

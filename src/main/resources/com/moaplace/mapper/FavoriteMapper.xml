@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.FavoriteMapper">
+	
+	<!-- member_num으로 관심공연 조회 + 인덱스 + 페이징 -->
+	<select id="myList" resultType="com.moaplace.dto.MyFavoriteDTO" parameterType="hashmap">
+		select * from (
+		    select rownum rnum,r.* from (
+		        select f.member_num,f.show_num,s.show_name,s.show_start,s.show_end,g.genre_category,s.show_thumbnail
+		        from favorite f
+		        join show s on (f.show_num = s.show_num)
+		        join genre g on (s.genre_num = g.genre_num)
+		        where member_num = #{member_num}
+		    )r
+		    order by rnum desc
+		)where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- member_num으로 관심공연 개수 조회 -->
+	<select id="listCount" resultType="int" parameterType="int">
+		select NVL(count(*),0) cnt from (
+		    select rownum rnum,r.* from (
+		        select *
+		        from favorite f
+		        join show s on (f.show_num = s.show_num)
+		        join genre g on (s.genre_num = g.genre_num)
+		        where member_num = #{member_num}
+		    )r
+		)
+	</select>
+	
+	<!-- 등록한 관심공연 삭제 -->
+	<delete id="delete" parameterType="hashmap">
+		DELETE FROM favorite 
+		WHERE member_num = #{member_num} and show_num = #{show_num}
+	</delete>
+	
+	<!-- 관심공연 등록 -->
+	<insert id="insert" parameterType="com.moaplace.vo.FavoriteVO">
+		insert into favorite values(#{show_num}, #{member_num})
+	</insert>
+</mapper>

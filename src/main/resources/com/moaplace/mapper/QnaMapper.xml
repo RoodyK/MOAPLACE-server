@@ -37,15 +37,17 @@
 	<select id="list" parameterType="hashmap" resultType="com.moaplace.dto.QnaListDTO">		
 		select * from
 		(
-		    select b.*, rownum rnum from (
-		        select a.* from (
-		            select q.* 
+		    select b.*, rownum rnum from 
+		    (
+		        select a.* from 
+		        (
+		            select q.*, s.sort_name
                     from qna q
 		            join sort s
 					on s.sort_num = q.sort_num
-		            where q.member_num=1
+		            where q.member_num=#{member_num}
 		            order by q.qna_num desc
-		        ) a
+		    	) a
 			<include refid="search"/>
 		    ) b
 		)
@@ -71,11 +73,11 @@
                     select q.*, an.answer_regdate, s.sort_name, m.member_id, m.member_name 
                     from qna q
                     left join answer an
-                        on an.qna_num = q.qna_num
+                    on an.qna_num = q.qna_num
                     left join sort s
-    					on q.sort_num = s.sort_num
+    				on q.sort_num = s.sort_num
 					left join member m
-    					on m.member_num = q.member_num
+    				on m.member_num = q.member_num
 					order by q.qna_num desc
 		        ) a
 			<include refid="search"/>
@@ -90,11 +92,11 @@
         	select q.*, an.answer_regdate, s.sort_name, m.member_id, m.member_name 
             from qna q
             left join answer an
-            	on an.qna_num = q.qna_num
+            on an.qna_num = q.qna_num
             left join sort s
-    			on q.sort_num = s.sort_num
+    		on q.sort_num = s.sort_num
 			left join member m
-    			on m.member_num = q.member_num
+    		on m.member_num = q.member_num
 			order by q.qna_num desc
 		) a
 	    <include refid="search"/>
