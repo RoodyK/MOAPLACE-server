@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.moaplace.dto.AdminBookingDetailDTO;
 import com.moaplace.dto.AdminBookingListDTO;
 import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyBookingDTO;
@@ -39,6 +40,7 @@ public interface BookingMapper {
 	// booking_num으로 member_num 조회
 	int cancleInfoCheck(int booking_num);
 	
+	//------연희 시작----------
 	//관리자 예매리스트
 	List<AdminBookingListDTO> adminBookingList(HashMap<String, Object> map);
 	
@@ -47,5 +49,9 @@ public interface BookingMapper {
 	
 	//검색 후의 관리자 예매리스트 행 수 조회
 	int currentAdminBookingCnt(HashMap<String, Object> map);
+	
+	//관리자 예매상세 조회
+	List<AdminBookingDetailDTO>  selectAdminBookingDetail(int bookingNum);
+	//------연희 끝----------
 
 }
