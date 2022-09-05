@@ -174,4 +174,12 @@ public class AdminShowController {
 		return map;
 	}
 	
+	@GetMapping
+	( value = "/delete/{showNum}" )
+	public int deleteShow(
+			@PathVariable Integer showNum) {		
+		
+		return service.deleteShow(showNum);
+	}
+	
 }
