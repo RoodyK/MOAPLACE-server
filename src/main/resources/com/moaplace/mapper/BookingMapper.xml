@@ -66,7 +66,7 @@
 	<select id="detail" resultType="com.moaplace.dto.MyBookingDetailDTO" parameterType="int">
 		select b.booking_num,b.regdate,sh.show_name,sc.schedule_date,sc.schedule_time,
 		b.booking_seat,h.hall_name,p.payment_date,b.booking_price,b.use_point,
-		p.payment_method,p.payment_status,sh.show_num
+		p.payment_method,p.payment_status,sh.show_num,p.imp_uid
 		from booking b
 		join payment p on (b.booking_num = p.booking_num)
 		join schedule sc on (b.schedule_num = sc.schedule_num)

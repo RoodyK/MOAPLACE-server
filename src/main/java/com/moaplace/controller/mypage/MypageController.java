@@ -28,6 +28,7 @@ import com.moaplace.dto.MyRentalDetailDTO;
 import com.moaplace.dto.MyReviewDTO;
 import com.moaplace.service.BookingService;
 import com.moaplace.service.FavoriteService;
+import com.moaplace.service.ImportService;
 import com.moaplace.service.MemberService;
 import com.moaplace.service.PaymentService;
 import com.moaplace.service.RentalService;
@@ -54,6 +55,8 @@ public class MypageController {
 	private FavoriteService favoriteService;
 	@Autowired
 	private ReviewService reviewService;
+	@Autowired
+	private ImportService importService;
 	
 	/* 로그인한 회원의 최근 예매내역 1건 + 최근 대관내역 1건 조회 */
 	@GetMapping(value = "/{member_num}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -209,13 +212,28 @@ public class MypageController {
 		
 		// 비밀번호 일치할 경우 예매취소로 업데이트하고 업데이트 성공시 success
 		if(pwdCheck) {
-			int n = paymentService.ticketCancle(dto.getBooking_num());
-			if( n > 0 ) return "success";
+			// 아임포트 환불요청
+			String token = importService.getToken();
+			String imp_uid = dto.getImp_uid();
+			String reason = dto.getReason();
+			int amount = dto.getAmount();
+			boolean importCancle = importService.cancle(token,imp_uid,reason,amount);
+			
+			if(importCancle) {
+				// payment 테이블 결제상태 변경
+				int n = paymentService.ticketCancle(dto.getBooking_num());
+				// all_seat 테이블 삭제
+				int n2 = bookingService.cancleSeat(dto.getBooking_num());
+				
+				if( n > 0 && n2 > 0 ) return "success";
+				
+			}
 			return "failA";
+			
 		} else {
 			// 비밀번호 불일치시 fail
 			return "failB";
-		}		
+		}
 	}
 	
 	/* 대관내역 5행 5페이지 조회 + 페이징 */

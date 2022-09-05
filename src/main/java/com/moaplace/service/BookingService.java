@@ -132,4 +132,8 @@ public class BookingService {
 		return mapper.bookingChart(map);
 	}
 	
+	// 예매취소 좌석 삭제
+	public int cancleSeat(int booking_num) {
+		return allSeatMapper.cancleSeat(booking_num);
+	}
 }

@@ -24,4 +24,6 @@ public class MyBookingDetailDTO {
 	private String payment_method;
 	private String payment_status;
 	private int show_num;
+	private String imp_uid;
+	
 }
