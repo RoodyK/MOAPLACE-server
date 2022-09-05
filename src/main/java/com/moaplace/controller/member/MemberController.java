@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +23,6 @@ import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
-import com.moaplace.exception.MemberNotJoinException;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.service.JWTService;
 import com.moaplace.service.MailSendService;
@@ -73,19 +70,14 @@ public class MemberController {
 	@PostMapping(value = "/join/result",
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> joinMember(
-			@RequestBody MemberJoinRequestDTO dto, @RequestHeader HttpHeaders headers) {
+			@RequestBody MemberJoinRequestDTO dto) {
+
+		log.info(dto);
+		int n = memberService.join(dto);
 		
-		try {
-			log.info(dto);
-			int n = memberService.join(dto);
-			
-			return n == 1 
-					? new ResponseEntity<>("success", HttpStatus.OK)
-					: new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
-		}catch(MemberNotJoinException e) {
-			return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
-		}
-		
+		return n == 1 
+				? new ResponseEntity<>("success", HttpStatus.OK)
+				: new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
 	}
 	
 	// 로그인
@@ -93,7 +85,6 @@ public class MemberController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> login(
 			@RequestBody MemberLoginRequestDTO dto) {
-		log.info("controller dto : " + dto);
 		Map<String, Object> responseToken = new HashMap<>();
 		
 		try {
