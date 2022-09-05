@@ -17,6 +17,7 @@ import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
+import com.moaplace.exception.DuplicateMemberException;
 import com.moaplace.exception.MemberNotJoinException;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.ApiAuthMapper;
@@ -36,14 +37,17 @@ public class MemberService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	// 회원 목록
 	public List<AdminMemberInfoResponseDTO> selectAll(Map<String, Object> map) {
 		return mapper.selectAll(map);
 	}
 	
+	// 회원수 카운트
 	public int getCount(Map<String, Object> map) {
 		return mapper.getCount(map);
 	}
 	
+	// 아이디 확인
 	public boolean checkId(String reqId) {
 		String id = mapper.checkId(reqId); // 아이디 중복 검사
 		
@@ -51,8 +55,13 @@ public class MemberService {
 		return false;
 	}
 	
+	// 회원가입
 	@Transactional(rollbackFor = Exception.class)
 	public int join(MemberJoinRequestDTO dto) {
+		String id = mapper.checkId(dto.getMember_id());
+		
+		if(id == null) throw new DuplicateMemberException();
+		
 		// 비밀번호 암호화
 		String password = passwordEncoder.encode(dto.getMember_pwd());
 		log.info(password);
@@ -72,6 +81,7 @@ public class MemberService {
 		return -1;
 	}
 	
+	// 로그인
 	public MemberLoginResponseDTO login(MemberLoginRequestDTO dto) {
 		// 비밀번호 꺼내오기
 		String memberPwd = mapper.findByPassword(dto.getMember_id());
@@ -102,7 +112,7 @@ public class MemberService {
 		return mapper.memberInfo(id);
 	}
 	
-	/* (예매취소용)입력값과 비밀번호 일치 체크하기 */
+	// (예매취소용)입력값과 비밀번호 일치 체크하기 
 	public boolean pwdCheck(MyBookingCancleRequestDTO dto) {
 		
 		String memberPwd = mapper.findByPassword(dto.getMember_id());
@@ -111,11 +121,10 @@ public class MemberService {
 		return isPassword;
 	}
 	
-	/* 회원 정보 수정 */
+	// 회원 정보 수정
 	public int myInfoEdit(MyInfoEditDTO dto) {
 		// 비밀번호 암호화
 		String password = passwordEncoder.encode(dto.getMember_pwd());
-		log.info(password);
 		
 		dto.setMember_pwd(password);
 		
@@ -125,7 +134,7 @@ public class MemberService {
 		return -1;
 	}
 	
-	// 아이디 찾기/비밀번호 재설정
+	// 아이디 찾기
 	public String findById(Map<String, Object> map) {
 		String id = mapper.findById(map);
 		
