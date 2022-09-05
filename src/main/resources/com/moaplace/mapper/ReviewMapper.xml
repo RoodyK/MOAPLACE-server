@@ -32,4 +32,46 @@
 		)
 	</select>
 	
+	<!-- show_num으로 관람후기 내역 개수 조회 -->
+	<select id="reviewCount" resultType="int" parameterType="int">
+		select count(*)
+		from review
+		where show_num = #{show_num}
+	</select>
+	
+	<!-- show_num으로 관람후기 내역 조회 -->
+	<select id="reviewList" resultType="com.moaplace.dto.ReviewDTO" parameterType="hashmap">
+		select * from(
+			select rownum rnum, r.* from (
+			    select review_num, show_num, r.member_num, review_content, review_grade, review_regdate, member_id
+			    from review r, member m
+			    where r.member_num = m.member_num(+) and show_num = #{show_num}
+			    order by review_num desc
+			)r
+		)re
+		where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 관람후기 등록 -->
+	<insert id="reviewInsert" parameterType="com.moaplace.vo.ReviewVO">
+		insert into review values(REVIEW_SEQ.nextval, #{show_num}, #{member_num}, #{review_content}, #{review_grade}, sysdate)
+	</insert>
+	
+	<!-- 후기 삭제 -->
+	<delete id="reviewDelete" parameterType="int">
+		delete from review where review_num = #{review_num}
+	</delete>
+	
+	<!-- rivew_num으로 관람후기 조회 -->
+	<select id="reviewSelect" resultType="com.moaplace.vo.ReviewVO" parameterType="int">
+		select *
+		from review
+		where review_num = #{review_num}
+	</select>
+	
+	<!-- 후기 수정 -->	
+	<update id="reviewUpdate" parameterType="com.moaplace.vo.ReviewVO">
+		update review set review_content = #{review_content}, review_grade = #{review_grade} 
+		where review_num = #{review_num}
+	</update>
 </mapper>
