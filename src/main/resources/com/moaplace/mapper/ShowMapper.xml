@@ -226,7 +226,7 @@ SELECT NVL(COUNT(*),0)
 			schedule_date scheduleDate, schedule_YN scheduleYN
 		FROM show w RIGHT JOIN schedule d
 		ON w.show_num = d.show_num 
-		WHERE schedule_YN = 'Y' and TO_CHAR(TO_DATE(schedule_date), 'MM') = #{month}
+		WHERE schedule_YN = 'Y' and TO_CHAR(TO_DATE(schedule_date), 'YYMM') = #{month}
 		GROUP BY w.show_num, hall_num,show_name,show_start,show_end,schedule_date,schedule_YN
 		ORDER BY showStart
 </select>
