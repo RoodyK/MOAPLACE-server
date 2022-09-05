@@ -218,6 +218,11 @@ SELECT NVL(COUNT(*),0)
 		WHERE show_num = #{show_num}
 </update>
 
+	<delete id="deleteShow" parameterType="int">
+	
+		DELETE FROM show WHERE show_num = #{num}
+	
+	</delete>
 
 
 <!-- ////////////// 연희 끝 ////////////// -->

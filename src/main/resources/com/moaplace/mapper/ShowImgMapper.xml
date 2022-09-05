@@ -5,14 +5,17 @@
  
 <mapper namespace="com.moaplace.mapper.ShowImgMapper">
 
-<insert id="showImgInsert" parameterType="com.moaplace.vo.ShowImgVO">
-	INSERT INTO show_img VALUES(show_img_seq.nextval, #{show_num}, #{show_detail_img})
-</insert>
+	<insert id="showImgInsert" parameterType="com.moaplace.vo.ShowImgVO">
+	
+		INSERT INTO show_img VALUES(show_img_seq.nextval, #{show_num}, #{show_detail_img})
+		
+	</insert>
 
-<delete id="showImgUpDel" parameterType="com.moaplace.vo.ShowImgVO">
-	DELETE FROM show_img
-	WHERE show_num = #{show_num}
-</delete>
+	<delete id="deleteShowImg" parameterType="int">
+	
+		DELETE FROM show_img WHERE show_num = #{num}
+		
+	</delete>
 
 	<!-- 공연 상세이미지 -->
    <select id="detailimg" resultType="com.moaplace.dto.ShowImgDTO" parameterType="int">

@@ -12,5 +12,8 @@ public interface ShowImgMapper {
 	int showImgUpDel(int showNum);
 
 	List<ShowImgDTO> detailimg(int show_num);
+	
+	//공연 삭제될때 같이 삭제
+	int deleteShowImg(int num);
 
 }

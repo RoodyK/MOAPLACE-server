@@ -226,6 +226,17 @@ public class ShowService {
 		
 		return showMapper.firstCntRow();
 	}
+	
+	@Transactional( rollbackFor = {Exception.class})
+	public int deleteShow(int num) {
+		
+	int n = 0;
+		n += gradeMapper.deleteGrade(num);
+		n += showImgMapper.deleteShowImg(num);
+		n += showMapper.deleteShow(num);	
+		
+		return n;
+	}
 
 	////////////////////////연희 끝/////////////////////////
 	

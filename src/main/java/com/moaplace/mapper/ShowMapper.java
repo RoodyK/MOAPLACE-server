@@ -38,8 +38,13 @@ public interface ShowMapper {
 	int count();
 
 	ShowVO showSelect(int num);
+	
+	//공연 삭제
+	int deleteShow(int num);
 
 	//메인페이지 진행중인 공연
 	List<MainShowDTO> getRunningShow();
+	
+	
 
 }
