@@ -13,5 +13,9 @@
 		order by booking_seat asc
 	</select>
 	
+	<!-- 예매취소 좌석 삭제 -->
+	<delete id="cancleSeat" parameterType="int">
+		delete from all_seat where booking_num=#{booking_num}
+	</delete>
 	
 </mapper>

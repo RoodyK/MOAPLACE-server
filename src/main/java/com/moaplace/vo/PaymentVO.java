@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class PaymentVO {
 	private int payment_num;
 	private int booking_num;
-	private int merchant_uid;
-	private int imp_uid;
+	private String merchant_uid;
+	private String imp_uid;
 	private int booking_price;
 	private String payment_method;
 	private String payment_status;
