@@ -14,7 +14,6 @@ import com.moaplace.service.ShowCalendarService;
 import com.moaplace.service.ShowService;
 
 import lombok.extern.log4j.Log4j;
-@Log4j
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/show")
@@ -22,6 +21,7 @@ public class CalendarController {
 	
 	@Autowired private ShowCalendarService service;
 	
+	//연, 월 데이터로 일정정보 가져오기
 	@GetMapping(
 			value = {
 				"/calendar",
@@ -34,10 +34,10 @@ public class CalendarController {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("list",service.viewCalendar(month));
 			
-			log.info(service.viewCalendar(month));
 		return map;
 	}
 	
+	//미리보기 클릭 시 호출하여 보여줄 썸네일 가져오기
 	@GetMapping( 
 			value = {
 				"/calendar/thumbnail",
