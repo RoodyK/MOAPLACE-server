@@ -61,7 +61,7 @@ public class MemberController {
 	@PostMapping(value = "/join/email/auth", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> emailAuth(
-			@RequestBody Map<String, Object> data, @RequestHeader HttpHeaders headers) {
+			@RequestBody Map<String, Object> data) {
 		
 		String email = (String) data.get("email");
 		String authNumber = mailService.joinEmail(email);
@@ -115,7 +115,6 @@ public class MemberController {
 			HttpServletRequest request) {
 		
 		String token = request.getHeader("Authorization");
-		log.info("Authorization" + token);
 		String jwtToken = token.split(" ")[1];
 		String id = tokenService.getUserId(jwtToken);
 		
@@ -132,7 +131,6 @@ public class MemberController {
 		
 		Map<String, Object> map = new HashMap<>();
 		String token = request.getHeader("Authorization");
-		log.info("Authorization" + token);
 		String jwtToken = token.split(" ")[1];
 		String roles = (String) tokenService.getClaims(jwtToken).get("roles");
 		
@@ -153,7 +151,6 @@ public class MemberController {
 			mailService.findById(email, id);
 		}
 		
-		log.info(reqInfo);
 		return id != null
 				? ResponseEntity.ok().body("success")
 				: ResponseEntity.badRequest().body("fail");
@@ -171,7 +168,6 @@ public class MemberController {
 			mailService.resetPassword(email, id);
 		}
 		
-		log.info(reqInfo);
 		return id != null
 				? ResponseEntity.ok().body("success")
 				: ResponseEntity.badRequest().body("fail");
@@ -228,7 +224,6 @@ public class MemberController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Map<String, Object>> login(
 			@RequestBody ApiLoginDTO dto) {
-		log.info("controller dto : " + dto);
 		Map<String, Object> responseToken = new HashMap<>();
 		
 		try {
