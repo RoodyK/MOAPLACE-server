@@ -18,7 +18,6 @@ import lombok.extern.log4j.Log4j;
 @RestController
 @RequestMapping("/booking")
 @CrossOrigin("*")
-@Log4j
 public class GetBookingShowController {
 	
 	@Autowired
@@ -35,7 +34,6 @@ public class GetBookingShowController {
 		map.put("list",service.ShowbookingSelect(num));
 		
 		map.put("thumb",service.returnThumbnail(num));
-		log.info(service.ShowbookingSelect(num));
 		return map;
 	}
 }

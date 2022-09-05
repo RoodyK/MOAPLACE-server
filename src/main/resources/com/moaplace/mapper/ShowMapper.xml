@@ -247,7 +247,7 @@ SELECT NVL(COUNT(*),0)
 	        schedule_num,NVL(COUNT(*),0)bookingCnt 
 	    FROM all_seat GROUP BY schedule_num)a
 	ON a.schedule_num = t.schedule_num
-	WHERE show_check = 'Y' AND schedule_YN = 'Y' AND s.show_num = 1 AND schedule_date >= SYSDATE
+	WHERE show_check = 'Y' AND schedule_YN = 'Y' AND s.show_num = {showNum} AND schedule_date >= SYSDATE
 
 </select>
 
