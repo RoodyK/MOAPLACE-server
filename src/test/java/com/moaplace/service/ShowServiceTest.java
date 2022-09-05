@@ -42,6 +42,9 @@ public class ShowServiceTest {
 	@Autowired
 	private ScheduleService schedule_service;
 	
+	@Autowired
+	private ReviewService review_service;
+	
 	@Value("${oracle.download}")
 	private String savePath;
 	
@@ -204,4 +207,11 @@ public class ShowServiceTest {
 //		
 //		log.info(schedule_service.seatcnt(map));
 //	}
+	
+	
+	@Test
+	public void test12() {
+		int show_num=1;
+		log.info(review_service.reviewCount(show_num));
+	}
 }

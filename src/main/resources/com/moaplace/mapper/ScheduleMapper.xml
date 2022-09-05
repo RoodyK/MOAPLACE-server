@@ -212,6 +212,7 @@
    		select schedule_time, schedule_date, schedule_yn
         from schedule
         where show_num = #{show_num}
+        order by schedule_date desc, schedule_time
    </select>
 
 	<!-- 공연번호로 스케쥴 조회 -->
