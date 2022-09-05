@@ -23,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moaplace.authentication.AuthorizationType;
+import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.service.JWTService;
 
@@ -88,6 +89,31 @@ public class MemberControllerTest {
 		mockMvc.perform(post("/users/join/email/auth")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(email))
+				.andExpect(status().isOk())
+				.andDo(print());
+	}
+	
+	// 회원가입
+	@Test
+	public void joinMemberTest() throws Exception {
+		MemberJoinRequestDTO dto = new MemberJoinRequestDTO();
+		dto.setMember_num(0);
+		dto.setMember_id("pppp1234");
+		dto.setMember_pwd("!pppp1234");
+		dto.setMember_email("pppp@pppp.com");
+		dto.setMember_name("피삼이");
+		dto.setMember_gender("female");
+		dto.setMember_birth("900101");
+		dto.setMember_phone("010-0101-0101");
+		dto.setMember_address("사랑시 고백구 행복동 151");
+		dto.setApi("none");
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String info = mapper.writeValueAsString(dto);
+		
+		mockMvc.perform(post("/users/join/result")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(info))
 				.andExpect(status().isOk())
 				.andDo(print());
 	}
