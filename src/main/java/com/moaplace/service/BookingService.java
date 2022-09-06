@@ -207,8 +207,9 @@ public class BookingService {
 				if (tt.getCount() != 0) {
 					if (tt.getCountA() != 0) {
 						ticketmapper.ticketInsert(new TicketVO(0, vo.getBooking_num(), "성인", tt.getCountA(),
-								tt.getGrade(), tt.getCountA() * tt.getPriceY()));
-					} else if (tt.getCountY() != 0) {
+								tt.getGrade(), tt.getCountA() * tt.getPriceA()));
+					}	
+					if (tt.getCountY() != 0) {
 						ticketmapper.ticketInsert(new TicketVO(0, vo.getBooking_num(), "청소년", tt.getCountY(),
 								tt.getGrade(), tt.getCountY() * tt.getPriceY()));
 					}

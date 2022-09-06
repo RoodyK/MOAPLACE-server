@@ -45,8 +45,8 @@ public class AdminBookingService {
 		dto.setScheduleDate(reqDto.get(0).getScheduleDate());
 		dto.setScheduleTime(reqDto.get(0).getScheduleTime());
 		dto.setBookingCount(reqDto.get(0).getBookingCount());
+		
 		String ticket ="";
-		int allPrice = 0;
 		for( int i = 0; i <reqDto.size(); i++) {
 			
 			ticket +=
@@ -54,12 +54,11 @@ public class AdminBookingService {
 					reqDto.get(i).getTicketGrade() + "석 " + 
 					reqDto.get(i).getTicket_count() + "장";
 			if(i != reqDto.size()-1) ticket += ", ";
-			allPrice += reqDto.get(i).getTicketPrice();
 		}
 		dto.setTicketDetail(ticket);
 		dto.setBookingSeat(reqDto.get(0).getBookingSeat());
 		dto.setPaymentDate(reqDto.get(0).getPaymentDate());
-		dto.setAllticketPrice(allPrice);
+		dto.setAllticketPrice(reqDto.get(0).getTicketPrice());
 		dto.setUsePoint(reqDto.get(0).getUsePoint());
 		dto.setPaymentMethod(reqDto.get(0).getPaymentMethod());
 		dto.setBookingPrice(reqDto.get(0).getBookingPrice());

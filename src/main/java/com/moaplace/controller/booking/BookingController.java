@@ -103,8 +103,11 @@ public class BookingController {
 		BookingDTO booking = null;
 		List<String> allseat = (List<String>) map.get("allseat");
 		List<TicketDTO> ticket = (List<TicketDTO>) map.get("ticket");
-		int show_num = (int) map.get("show_num");
-		int member_num = (int) map.get("member_num");
+		int show_num = Integer.parseInt(String.valueOf(map.get("show_num")));
+		log.info(show_num);
+		
+		int member_num = Integer.parseInt(String.valueOf(map.get("member_num")));
+		
 
 		try {
            payment = objmapper.convertValue(map.get("payment"), PaymentDTO.class);
