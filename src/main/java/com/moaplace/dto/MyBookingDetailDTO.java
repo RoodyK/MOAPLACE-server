@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MyBookingDetailDTO {
 	
+	private int member_num;
 	private int booking_num;
 	private Date regdate;
 	private String show_name;
