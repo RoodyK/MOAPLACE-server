@@ -29,12 +29,12 @@
 	
 	<bean id="logAdvice" class="com.moaplace.aop.LogAdvice" />
 	
-	<aop:config>
+<!-- 	<aop:config>
 		<aop:aspect ref="logAdvice">
 			<aop:pointcut expression="execution(* com.moaplace.service..*(..))" id="pointcut"/>
 			<aop:around method="invokeService" pointcut-ref="pointcut"/>
 		</aop:aspect>
-	</aop:config>
+	</aop:config> -->
 	
 	<mybatis-spring:scan base-package="com.moaplace.mapper"/>
 	<context:component-scan base-package="com.moaplace.service" />
