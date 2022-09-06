@@ -17,6 +17,7 @@ public class MyRentalDetailDTO {
 	private String rental_phone;
 	private String rental_email;
 	private String rental_title;
+	private int hall_num;
 	private String hall_name;
 	private Date rental_date;
 	private String rental_time;
