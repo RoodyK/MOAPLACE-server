@@ -1,4 +1,4 @@
-package com.moaplace.controller.board;
+package com.moaplace.controller.rental;
 
 import java.util.HashMap;
 
@@ -10,34 +10,38 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.moaplace.dto.AdminNoticeDetailDTO;
-import com.moaplace.service.AdminNoticeService;
+import com.moaplace.service.RentalService;
 import com.moaplace.util.FileUtil;
+import com.moaplace.vo.RentalVO;
+
+import lombok.extern.log4j.Log4j;
 
 @CrossOrigin("*")
 @Controller
-@RequestMapping("/admin/news")
-public class FileDownloadController {
+@RequestMapping("/rental/file")
+@Log4j
+public class RentalFileDownloadController {
 	
 	@Autowired
-	private AdminNoticeService service;
+	private RentalService service;
 	@Autowired
 	private FileUtil fileutil;
 
 	
 	//파일 다운로드
-		@GetMapping(value= {"/file/download/{notice_detail_num}"}
+		@GetMapping(value= {"/download/{num}"}
 		)
 	    public String download(
-	    		@PathVariable(required = false) String notice_detail_num,
+	    		@PathVariable int num,
 	    		Model model) 
 		{
-			AdminNoticeDetailDTO dto = service.filedown(Integer.parseInt(notice_detail_num));
+			log.info(num);
+			RentalVO vo = service.detail(num);
 			
-			HashMap<String, Object> fileinfo = fileutil.download("notice", dto.getNotice_savefile());
+			HashMap<String, Object> fileinfo = fileutil.download("rental", vo.getRental_savefilename());
 						
-			String name = dto.getNotice_orgfile();
-			long filesize = dto.getNotice_filesize();
+			String name = vo.getRental_originfilename();
+			long filesize = vo.getRental_filesize();
 
 			model.addAttribute("file", fileinfo.get("file"));
 			model.addAttribute("fileName", name);

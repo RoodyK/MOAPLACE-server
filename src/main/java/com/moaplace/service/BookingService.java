@@ -1,6 +1,5 @@
 package com.moaplace.service;
 
-import java.sql.Array; 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -158,6 +157,11 @@ public class BookingService {
 		return mapper.bookingChart(map);
 	}
 	
+	// 예매취소 좌석 삭제
+	public int cancleSeat(int booking_num) {
+		return allSeatMapper.cancleSeat(booking_num);
+	}
+
 	//예매 페이지 공연장번호, 공연제목 조회
 	public BookingShowDTO getBookingShow(int show_num)
 	{
@@ -225,5 +229,5 @@ public class BookingService {
 		}
 
 	}
-	
+
 }

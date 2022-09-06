@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.moaplace.dto.BookingSelectViewDto;
+import com.moaplace.dto.BookingSelectViewDTO;
 import com.moaplace.mapper.ShowMapper;
 
 @Service
@@ -14,9 +14,9 @@ public class BookingSelectService {
 	@Autowired
 	private ShowMapper mapper;
 	
-	public List<BookingSelectViewDto> ShowbookingSelect(int num) {
+	public List<BookingSelectViewDTO> ShowbookingSelect(int num) {
 		
-		return mapper.ShowbookingSelect(num);
+		return mapper.showBookingSelect(num);
 	}
 	
 	public String returnThumbnail(int num) {

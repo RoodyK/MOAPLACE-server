@@ -14,13 +14,10 @@ import com.moaplace.dto.MainNoticeDTO;
 import com.moaplace.dto.MainShowDTO;
 import com.moaplace.service.MainService;
 
-import lombok.extern.log4j.Log4j;
-
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/main")
-@Log4j
 public class MainController {
 	
 	@Autowired

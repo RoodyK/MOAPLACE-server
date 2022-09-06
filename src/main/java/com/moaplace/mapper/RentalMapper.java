@@ -42,6 +42,9 @@ public interface RentalMapper {
 	// rental_num으로 대관상세내역 조회
 	MyRentalDetailDTO myDetail(int rental_num);
 	
+	// RentalVO로 대관상세내역 수정
+	int myUpdate(RentalVO vo);
+	
 	public List<AdminChartDTO> rentalChart(Map<String, Object> map);
 
 }

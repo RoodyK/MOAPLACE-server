@@ -221,18 +221,21 @@ SELECT NVL(COUNT(*),0)
 		WHERE show_num = #{show_num}
 </update>
 
+	<delete id="deleteShow" parameterType="int">
+		DELETE FROM show WHERE show_num = #{num}
+	</delete>
+
 <!-- 썸네일만 따로 가져오기 -->
 <select id="returnThumb" parameterType="int" resultType="String">
 	SELECT show_thumbnail thumbnail FROM show WHERE show_num=#{num}
 </select>
 
 <!-- 예매페이지 날짜 및 회차선택 뿌려주기 위한 정보 구하기 -->
-<select id="ShowbookingSelect" parameterType="int" resultType="com.moaplace.dto.BookingSelectViewDto">
-
+<select id="showBookingSelect" parameterType="int" resultType="com.moaplace.dto.BookingSelectViewDTO">
 	SELECT 
 	    s.show_num showNum, show_name title, 
 	    TO_CHAR(show_start, 'YYYY-MM-DD') showStart, TO_CHAR(show_end, 'YYYY-MM-DD') showEnd,
-	    h.hall_num hallNum, (hall_cols*hall_rows) seatCnt, NVL(((hall_cols*hall_rows)-bookingCnt),0) extraCnt,
+	    h.hall_num hallNum, (hall_cols*hall_rows) seatCnt, NVL(((hall_cols*hall_rows)-bookingCnt),(hall_cols*hall_rows)) extraCnt,
 	    t.schedule_num scheduleNum, schedule_date scheduleDate, schedule_time scheduleTime
 	FROM show s INNER JOIN hall h 
 	ON s.hall_num = h.hall_num
@@ -259,14 +262,6 @@ SELECT NVL(COUNT(*),0)
 		GROUP BY w.show_num, hall_num,show_name,show_start,show_end,schedule_date,schedule_YN
 		ORDER BY showStart
 </select>
-
-<select id="returnThumb" parameterType="int" resultType="String">
-
-	SELECT show_thumbnail thumbnail FROM show WHERE show_num=#{num}
-
-</select>
-
-<!-- ////////////// 연희 끝 ////////////// -->
 
 	<select id="list" resultType="com.moaplace.dto.ShowDTO" parameterType="hashmap">
 

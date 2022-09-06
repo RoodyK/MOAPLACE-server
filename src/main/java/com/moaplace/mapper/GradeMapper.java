@@ -17,4 +17,7 @@ public interface GradeMapper {
 	int gradeUpdate(HashMap<String, Object> map);
 
 	List<GradeDTO> grade(int show_num);
+	
+	//공연 삭제될때 같이 삭제
+	int deleteGrade(int num);
 }

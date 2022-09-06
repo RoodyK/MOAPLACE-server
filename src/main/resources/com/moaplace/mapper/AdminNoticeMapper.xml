@@ -146,7 +146,7 @@
 	<!--  update,detail용 select, 나중에 파일 정리 -->
 	<select id="selectdetail" parameterType="int" resultType="com.moaplace.dto.AdminListDTO">
 	   select a.* from ( 
-		   select n.notice_title, n.notice_content,n.notice_num,s.sort_name
+		   select n.*,s.sort_name
 		     from notice n, sort s
 		        where n.sort_num = s.sort_num
 		   ) a
