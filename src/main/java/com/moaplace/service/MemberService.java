@@ -160,4 +160,9 @@ public class MemberService {
 
 	}
 	
+	//예매 페이지 포인트 업데이트
+	public int pointupdate(Map<String, Object> map) {
+		return mapper.pointupdate(map);
+	}
+	
 }
