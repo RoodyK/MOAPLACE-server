@@ -218,6 +218,24 @@ SELECT NVL(COUNT(*),0)
 		WHERE show_num = #{show_num}
 </update>
 
+<select id="monthSelect" parameterType="int" resultType="com.moaplace.dto.CalendarDateDTO">
+
+	SELECT w.show_num showNum, hall_num hallNum, show_name showName, 
+			TO_CHAR(show_start, 'YYYY-MM-DD') showStart, 
+			TO_CHAR(show_end, 'YYYY-MM-DD') showEnd, 
+			schedule_date scheduleDate, schedule_YN scheduleYN
+		FROM show w RIGHT JOIN schedule d
+		ON w.show_num = d.show_num 
+		WHERE schedule_YN = 'Y' and TO_CHAR(TO_DATE(schedule_date), 'YYMM') = #{month}
+		GROUP BY w.show_num, hall_num,show_name,show_start,show_end,schedule_date,schedule_YN
+		ORDER BY showStart
+</select>
+
+<select id="returnThumb" parameterType="int" resultType="String">
+
+	SELECT show_thumbnail thumbnail FROM show WHERE show_num=#{num}
+
+</select>
 
 
 <!-- ////////////// 연희 끝 ////////////// -->
