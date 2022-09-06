@@ -14,31 +14,50 @@
 		#{notice_title}, #{notice_content}, sysdate, 0)
 	</insert>
 
+
 	<sql id="search">
 	<!-- field O -> where field 
 	     field O , sort_num O -> where field and sort_num
 	     field X , sort_num O -> where sort_num // overrides 단어로만 시작된다면 그 단어를 지워줌
 	                                               and를 prefixOverrides가 지워줌 -->
-	  <trim prefix="where" prefixOverrides="and">
+	 <where>
 		<!-- field(column) 포함된 keyword의 값이 포함 된 데이터를 조회한다. --> 
+		<if test="sort_num!=0">	
+		 a.sort_num = #{sort_num} 
 		<if test="field!=null and field!=''"> 
 		  <choose>
 		     <when test="field=='total'">
-		        notice_title like '%'||#{keyword}||'%' OR
-		        notice_content like '%'||#{keyword}||'%'
+		      and (a.notice_title like '%'||#{keyword}||'%' OR
+		        a.notice_content like '%'||#{keyword}||'%')
 		     </when>
 		     <when test="field=='title'">
-		       notice_title like '%'||#{keyword}||'%'
+		      and a.notice_title like '%'||#{keyword}||'%'
 		     </when>
 		     <when test="field=='content'">
-		       notice_content like '%'||#{keyword}||'%'
+		      and a.notice_content like '%'||#{keyword}||'%'
 		     </when>
 		  </choose>
-		  </if>
-	      <if test="sort_num!=0">	  
-		   and sort_num = #{sort_num}
-		  </if>
-	  </trim>
+		</if>
+		</if>
+	  
+	    <if test="sort_num == 0">	 
+	    <if test="field!=null and field!=''"> 
+		  <choose>
+		     <when test="field=='total'">
+		       a.notice_title like '%'||#{keyword}||'%' OR
+		        a.notice_content like '%'||#{keyword}||'%'
+		     </when>
+		     <when test="field=='title'">
+		      a.notice_title like '%'||#{keyword}||'%'
+		     </when>
+		     <when test="field=='content'">
+		       a.notice_content like '%'||#{keyword}||'%'
+		     </when>
+		  </choose>
+		</if>
+		</if>
+	  
+	  </where>
 	</sql>
 
 	<select parameterType="hashmap" id="listAll" resultType="com.moaplace.dto.AdminListDTO">
