@@ -24,7 +24,7 @@
 		  </trim>
 	</sql>
 
-	<select parameterType="hashmap" id="listAll" resultType="com.moaplace.dto.AdminNoticeDTO">
+	<select parameterType="hashmap" id="listAll" resultType="com.moaplace.dto.AdminListDTO">
        select * from (
           select b.*,rownum rnum from (
 		    select a.* from (
