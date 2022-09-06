@@ -20,8 +20,8 @@ public class JWTService {
 	private String secretKey = "moa-place-secret";
 	// 시크릿키 Base64인코딩
 	private String SEC_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes()); 
-	// 토큰 유효시간 ms 단위
-	private long toknValidTime = 48 * 30 * 60 * 1000L;
+	// 토큰 유효시간 ms 단위 30분
+	private long toknValidTime = 30 * 60 * 1000L;
 	
 	// 토큰 생성
 	public String createToken(String id, String roles) {

@@ -3,6 +3,7 @@ package com.moaplace.mapper;
 import java.util.HashMap;
 import java.util.List;
 
+import com.moaplace.dto.ResidualDTO;
 import com.moaplace.dto.ScheduleDTO;
 import com.moaplace.dto.admin.show.AdminScheduleDetailDTO;
 import com.moaplace.dto.admin.show.ScheduleListDTO;
@@ -29,6 +30,9 @@ public interface ScheduleMapper {
 	List<ScheduleDTO> schedule(int show_num);
 	
 	int Rounds(HashMap<String, Object> map);
+  
+	List<ResidualDTO> selectlist(int show_num);
+	
+	List<Integer> rowinfo(int show_num);
 	
 }			
-

@@ -134,7 +134,7 @@
 	<select id="apiCheck" resultType="com.moaplace.dto.member.ApiLoginDTO">
 		select m.member_id, m.authority, a.member_email 
 		FROM member m JOIN api_auth a
-		ON m.member_email = a.member_email 
+		ON m.member_email = a.member_email AND m.member_num = a.member_num
 		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND a.api_name = 'kakao'
 	</select>
 	

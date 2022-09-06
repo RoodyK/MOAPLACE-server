@@ -38,4 +38,8 @@
 		WHERE member_num = #{member_num} and show_num = #{show_num}
 	</delete>
 	
+	<!-- 관심공연 등록 -->
+	<insert id="insert" parameterType="com.moaplace.vo.FavoriteVO">
+		insert into favorite values(#{show_num}, #{member_num})
+	</insert>
 </mapper>

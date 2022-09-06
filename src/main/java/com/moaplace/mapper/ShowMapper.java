@@ -3,10 +3,9 @@ package com.moaplace.mapper;
 import java.util.HashMap;
 import java.util.List;
 
-
 import com.moaplace.dto.BookingSelectViewDto;
 import com.moaplace.dto.BookingShowDTO;
-
+import com.moaplace.dto.CalendarDateDTO;
 import com.moaplace.dto.MainShowDTO;
 import com.moaplace.dto.ShowDTO;
 import com.moaplace.dto.ShowDetailDTO;
@@ -29,6 +28,8 @@ public interface ShowMapper {
 
 	int firstCntRow();
 	
+	String returnThumb(int num);
+	
 	int currentCount(HashMap<String, Object> map);
 	
 	List<ShowDTO> list(HashMap<String, Object> map);
@@ -44,8 +45,11 @@ public interface ShowMapper {
 	List<BookingSelectViewDto> ShowbookingSelect(int num);
 	
 	ShowVO showSelect(int num);
-	
+
 	String returnThumb(int num);
+
+	// 달력에 출력할 정보 뽑아오기
+	List<CalendarDateDTO> monthSelect(int month); 
 
 	//메인페이지 진행중인 공연
 	List<MainShowDTO> getRunningShow();
