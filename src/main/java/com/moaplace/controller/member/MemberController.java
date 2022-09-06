@@ -31,7 +31,7 @@ import com.moaplace.service.MemberService;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/users")
-	public class MemberController {
+public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
