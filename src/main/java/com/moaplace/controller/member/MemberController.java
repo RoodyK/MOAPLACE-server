@@ -28,13 +28,10 @@ import com.moaplace.service.JWTService;
 import com.moaplace.service.MailSendService;
 import com.moaplace.service.MemberService;
 
-import lombok.extern.log4j.Log4j;
-
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/users")
-@Log4j
-public class MemberController {
+	public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
@@ -72,7 +69,6 @@ public class MemberController {
 	public ResponseEntity<String> joinMember(
 			@RequestBody MemberJoinRequestDTO dto) {
 
-		log.info(dto);
 		int n = memberService.join(dto);
 		
 		return n == 1 

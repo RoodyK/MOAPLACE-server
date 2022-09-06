@@ -9,25 +9,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
 import com.moaplace.dto.MyBookingCancleRequestDTO;
 import com.moaplace.dto.MyInfoEditDTO;
+import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
 import com.moaplace.dto.member.ApiLoginDTO;
 import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
 import com.moaplace.exception.DuplicateMemberException;
-import com.moaplace.exception.MemberNotJoinException;
 import com.moaplace.exception.WrongIdPasswordException;
 import com.moaplace.mapper.ApiAuthMapper;
 import com.moaplace.mapper.MemberMapper;
 import com.moaplace.vo.ApiAuthVO;
 
-import lombok.extern.log4j.Log4j;
-
 @Service
-@Log4j
 public class MemberService {
 
 	@Autowired
@@ -60,11 +56,10 @@ public class MemberService {
 	public int join(MemberJoinRequestDTO dto) {
 		String id = mapper.checkId(dto.getMember_id());
 		
-		if(id == null) throw new DuplicateMemberException();
+		if(id != null) throw new DuplicateMemberException();
 		
 		// 비밀번호 암호화
 		String password = passwordEncoder.encode(dto.getMember_pwd());
-		log.info(password);
 		dto.setMember_pwd(password);
 		
 		int n = mapper.join(dto);
@@ -73,8 +68,6 @@ public class MemberService {
 			ApiAuthVO vo = new ApiAuthVO(
 					0, dto.getMember_num(), dto.getMember_email(), "kakao");
 			n = apiMapper.apiJoin(vo);
-		}else {
-			throw new MemberNotJoinException();
 		}
 		
 		if(n > 0) return n;
@@ -114,7 +107,6 @@ public class MemberService {
 	
 	// (예매취소용)입력값과 비밀번호 일치 체크하기 
 	public boolean pwdCheck(MyBookingCancleRequestDTO dto) {
-		
 		String memberPwd = mapper.findByPassword(dto.getMember_id());
 		boolean isPassword = passwordEncoder.matches(dto.getMember_pwd(), memberPwd);
 		
@@ -125,9 +117,7 @@ public class MemberService {
 	public int myInfoEdit(MyInfoEditDTO dto) {
 		// 비밀번호 암호화
 		String password = passwordEncoder.encode(dto.getMember_pwd());
-		
 		dto.setMember_pwd(password);
-		
 		int n = mapper.myInfoEdit(dto);
 		
 		if(n > 0) return n;
@@ -143,10 +133,8 @@ public class MemberService {
 	
 	// 새비밀번호로 변경
 	public int newPassword(MemberLoginRequestDTO dto) {
-		
 		String pwd = passwordEncoder.encode(dto.getMember_pwd());
 		dto.setMember_pwd(pwd);
-		
 		int n = mapper.newPassword(dto);
 		
 		return n;
@@ -166,7 +154,5 @@ public class MemberService {
 	// 카카오 로그인
 	public MemberLoginResponseDTO apiLogin(ApiLoginDTO dto) {
 		return mapper.apiLogin(dto);
-
 	}
-	
 }
