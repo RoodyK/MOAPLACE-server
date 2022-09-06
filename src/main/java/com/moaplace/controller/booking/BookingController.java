@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.moaplace.dto.BookingShowDTO;
 import com.moaplace.dto.GradePriceDTO;
 import com.moaplace.dto.HallSeatDTO;
+import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.dto.TicketGradeDTO;
 import com.moaplace.service.BookingService;
+import com.moaplace.service.ScheduleService;
+import com.moaplace.service.ShowService;
 
 import lombok.extern.log4j.Log4j;
 
@@ -27,6 +30,10 @@ public class BookingController {
 	
 	@Autowired
 	private BookingService service;
+	@Autowired
+	private ScheduleService schedule_service;
+	@Autowired
+	private ShowService show_service;
 	
 	@GetMapping
 	(value = "/getBookingSeat/{schedule_num}",
@@ -69,6 +76,41 @@ public class BookingController {
 		hallInfo.put("gradePrice", gradePrice);
 		
 		return hallInfo;
+	}
+	
+	@GetMapping
+	(value = "/done/{booking_num}",
+	produces = {MediaType.APPLICATION_JSON_VALUE})
+	public MyBookingDetailDTO doneInfo(
+			@PathVariable Integer booking_num)
+	{
+		
+		return service.detail(booking_num);
+	}
+	
+	@GetMapping
+	(value = "/done/{show_num}/{schedule_date}/{schedule_time}",
+	produces = {MediaType.APPLICATION_JSON_VALUE})
+	public HashMap<String, Object> rounds(
+			@PathVariable Integer show_num,
+			@PathVariable String schedule_date,
+			@PathVariable String schedule_time)
+	{
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("show_num", show_num);
+		map.put("schedule_date", schedule_date);
+		map.put("schedule_time", schedule_time);
+		
+		int Rounds = schedule_service.Rounds(map);
+		
+		String returnThumb = show_service.returnThumb(show_num);
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put("Rounds", Rounds);
+		data.put("returnThumb", returnThumb);
+		
+		return data;
 	}
 	
 }

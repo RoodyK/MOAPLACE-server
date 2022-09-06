@@ -1,5 +1,6 @@
 package com.moaplace.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,10 @@ public class ScheduleService {
 	public List<ScheduleDTO> schedule(int show_num) {
 		
 		return scheduleMapper.schedule(show_num);
+	}
+	
+	public int Rounds(HashMap<String, Object> map) {
+		
+		return scheduleMapper.Rounds(map);
 	}
 }

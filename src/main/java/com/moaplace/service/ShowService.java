@@ -245,5 +245,9 @@ public class ShowService {
 		return showMapper.detail(show_num);
 	}
 	
+	public String returnThumb(int num) {
+		
+		return showMapper.returnThumb(num);
+	}
 }
 
