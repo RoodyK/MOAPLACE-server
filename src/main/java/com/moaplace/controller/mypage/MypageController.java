@@ -427,6 +427,16 @@ public class MypageController {
 		try {
 			log.info("mapper.readValue : " + mapper.readValue(data, RentalVO.class));
 			vo = mapper.readValue(data, RentalVO.class);
+			log.info("RnetalVO : " + vo);
+			
+			// rental_content가 null이면 오류 발생 -> null일 경우 공백 스트링을 set 처리
+			if(vo.getRental_content() == null) {
+//				log.info("rentalcontent가 null임");
+				vo.setRental_content("");
+//				log.info("rentalcontent 수정후 : " + vo.getRental_content());
+			}else {
+				log.info("rentalcontent : " + vo.getRental_content());
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
