@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.moaplace.dto.MyFavoriteDTO;
+import com.moaplace.vo.FavoriteVO;
 
 public interface FavoriteMapper {
 
@@ -15,4 +16,7 @@ public interface FavoriteMapper {
 	
 	// 등록한 관심공연 삭제
 	int delete(HashMap<String, Object> map);
+	
+	// 관심공연 등록
+	int insert(FavoriteVO vo);
 }

@@ -209,6 +209,29 @@
    		select schedule_time, schedule_date, schedule_yn
         from schedule
         where show_num = #{show_num}
+        order by schedule_date desc, schedule_time
    </select>
 
+	<!-- 공연번호로 스케쥴 조회 -->
+	<select id="selectlist" resultType="com.moaplace.dto.ResidualDTO" parameterType="int">
+		select s.show_num, s.schedule_time, s.schedule_date, a.cnt
+		from schedule s,
+		(
+		    select schedule_num, count(all_seat_num) cnt
+		    from all_seat
+		    group by schedule_num
+		) a
+		where s.schedule_num = a.schedule_num(+) and s.show_num = #{show_num}
+		order by schedule_date desc, schedule_time
+	</select>
+	
+	<!-- 회차정보 및 행 개수 조회 -->
+	<select id="rowinfo" resultType="int" parameterType="int">
+		select count(schedule_date)
+		from schedule
+		where show_num = 1
+		group by schedule_date
+		order by schedule_date desc
+	</select>
+	
 </mapper>

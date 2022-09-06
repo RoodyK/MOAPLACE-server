@@ -12,6 +12,4 @@
 		where schedule_num = #{schedule_num}
 		order by booking_seat asc
 	</select>
-	
-	
 </mapper>

@@ -1,6 +1,5 @@
 package com.moaplace.mapper;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface AllSeatMapper {
