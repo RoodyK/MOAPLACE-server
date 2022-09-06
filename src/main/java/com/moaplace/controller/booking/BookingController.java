@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moaplace.dto.BookingShowDTO;
 import com.moaplace.dto.GradePriceDTO;
 import com.moaplace.dto.HallSeatDTO;
+import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.dto.TicketGradeDTO;
 import com.moaplace.dto.payment.AllSeatDTO;
 import com.moaplace.dto.payment.BookingDTO;
@@ -28,6 +29,8 @@ import com.moaplace.dto.payment.TicketDTO;
 import com.moaplace.service.BookingService;
 import com.moaplace.service.MemberService;
 import com.moaplace.vo.AllSeatVO;
+import com.moaplace.service.ScheduleService;
+import com.moaplace.service.ShowService;
 
 import lombok.extern.log4j.Log4j;
 
@@ -39,6 +42,10 @@ public class BookingController {
 	
 	@Autowired
 	private BookingService service;
+	@Autowired
+	private ScheduleService schedule_service;
+	@Autowired
+	private ShowService show_service;
 	
 	@Autowired
 	private MemberService mservice;
@@ -98,41 +105,25 @@ public class BookingController {
 		ObjectMapper objmapper = new ObjectMapper();
 		PaymentDTO payment = null;
 		BookingDTO booking = null;
-//		ticket[] ticket = null;
 		List<String> allseat = (List<String>) map.get("allseat");
 		List<TicketDTO> ticket = (List<TicketDTO>) map.get("ticket");
 		int show_num = (int) map.get("show_num");
 		int member_num = (int) map.get("member_num");
-		 log.info("확인:"+ ticket);
+
 		try {
            payment = objmapper.convertValue(map.get("payment"), PaymentDTO.class);
            booking = objmapper.convertValue(map.get("booking"), BookingDTO.class);
-//           ticket = objmapper.readValue(map.get("ticket"), TicketDTO[].class);
-//           log.info(objmapper.convertValue(map.get("ticket"), TicketDTO.class));
- //          log.info(map.get("allseat"));
            
-//           allseat = objmapper.convertValue(map.get("allseat"), AllSeatDTO[].class); 
            for(int i = 0; i < ticket.size(); i++) {
-   			TicketDTO tt = objmapper.convertValue(ticket.get(i), TicketDTO.class);
-   			log.info("tt : " + tt.getCount());
-   			
-   		}
+           TicketDTO tt = objmapper.convertValue(ticket.get(i), TicketDTO.class);
+           log.info("tt : " + tt.getCount());
+
+        }
 		}catch(Exception e) {
 			e.getMessage();
 		}
 		
-		
-		
-		
 		HashMap<String,Object> resultmap = new HashMap<String,Object>();
-
-		log.info("=============================== 결제  log==================================");
-		log.info("결과:" + map);
-		log.info("payment:" + payment);
-		log.info("booking:" + booking.getBooking_seat().getClass().getName());
-//		log.info("ticket:" + ticket);
-//     	log.info("AllSeat:" + allseat);
-		log.info("=========================================================================");
 
 		try {
 			int result = service.insert(booking, payment, ticket, show_num, allseat);
@@ -152,5 +143,39 @@ public class BookingController {
 	
 	}
 	
+	@GetMapping
+	(value = "/done/{booking_num}",
+	produces = {MediaType.APPLICATION_JSON_VALUE})
+	public MyBookingDetailDTO doneInfo(
+			@PathVariable Integer booking_num)
+	{
+		
+		return service.detail(booking_num);
+	}
+	
+	@GetMapping
+	(value = "/done/{show_num}/{schedule_date}/{schedule_time}",
+	produces = {MediaType.APPLICATION_JSON_VALUE})
+	public HashMap<String, Object> rounds(
+			@PathVariable Integer show_num,
+			@PathVariable String schedule_date,
+			@PathVariable String schedule_time)
+	{
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("show_num", show_num);
+		map.put("schedule_date", schedule_date);
+		map.put("schedule_time", schedule_time);
+		
+		int Rounds = schedule_service.Rounds(map);
+		
+		String returnThumb = show_service.returnThumb(show_num);
+		
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put("Rounds", Rounds);
+		data.put("returnThumb", returnThumb);
+		
+		return data;
+	}
 
 }
