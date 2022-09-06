@@ -6,15 +6,11 @@
 <mapper namespace="com.moaplace.mapper.ShowImgMapper">
 
 	<insert id="showImgInsert" parameterType="com.moaplace.vo.ShowImgVO">
-	
 		INSERT INTO show_img VALUES(show_img_seq.nextval, #{show_num}, #{show_detail_img})
-		
 	</insert>
 
 	<delete id="deleteShowImg" parameterType="int">
-	
 		DELETE FROM show_img WHERE show_num = #{num}
-		
 	</delete>
 
 	<!-- 공연 상세이미지 -->
@@ -24,5 +20,9 @@
         where show_num = #{show_num}
         order by show_img_num
    </select>
-
+   
+   <delete id="showImgUpDel" parameterType="com.moaplace.vo.ShowImgVO">
+		DELETE FROM show_img
+		WHERE show_num = #{show_num}
+	</delete>
 </mapper>

@@ -3,7 +3,7 @@ package com.moaplace.mapper;
 import java.util.HashMap;
 import java.util.List;
 
-import com.moaplace.dto.BookingSelectViewDto;
+import com.moaplace.dto.BookingSelectViewDTO;
 import com.moaplace.dto.BookingShowDTO;
 import com.moaplace.dto.CalendarDateDTO;
 import com.moaplace.dto.MainShowDTO;
@@ -23,13 +23,13 @@ public interface ShowMapper {
 	List<MapperDetailDTO> showDetail(int num);
 	
 	List<ShowPartInfoDTO> searchShow(String title);
+	
 	ShowPartInfoDTO searchShowNumber(int num);
+	
 	int showUpdate(ShowVO vo);
 
 	int firstCntRow();
-	
-	String returnThumb(int num);
-	
+
 	int currentCount(HashMap<String, Object> map);
 	
 	List<ShowDTO> list(HashMap<String, Object> map);
@@ -42,7 +42,7 @@ public interface ShowMapper {
 	
 	int count();
 	
-	List<BookingSelectViewDto> ShowbookingSelect(int num);
+	List<BookingSelectViewDTO> showBookingSelect(int num);
 	
 	ShowVO showSelect(int num);
 	

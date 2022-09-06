@@ -11,11 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.dto.ShowImgDTO;
 import com.moaplace.dto.admin.show.ShowListDTO;
-import com.moaplace.mapper.FavoriteMapper;
 import com.moaplace.mapper.ShowMapper;
-import com.moaplace.vo.FavoriteVO;
 
 import lombok.extern.log4j.Log4j;
 

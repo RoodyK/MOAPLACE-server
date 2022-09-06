@@ -3,7 +3,7 @@ package com.moaplace.dto;
 import lombok.Data;
 
 @Data
-public class BookingSelectViewDto {
+public class BookingSelectViewDTO {
 	
 	private int showNum;
 	private String title;

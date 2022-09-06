@@ -11,7 +11,6 @@ import com.moaplace.dto.AdminBookingListDTO;
 import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
-import com.moaplace.dto.payment.BookingDTO;
 import com.moaplace.vo.BookingVO;
 
 @Mapper

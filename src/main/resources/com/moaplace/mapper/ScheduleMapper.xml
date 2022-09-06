@@ -168,17 +168,6 @@
 	
 	</insert>
 
-	<!-- 페이징처리 위해 모든 일정의 개수 구하기 -->
-	<select id="scheduleAllCount" resultType="int">
-		SELECT nvl(count(*),0) FROM(
-			SELECT s.show_num num, s.show_name title, 
-				t.schedule_date showDate, t.cntDate cntDate, s.show_check status 
-			FROM show s RIGHT JOIN (
-				SELECT show_num, schedule_date, nvl(count(*),0)cntDate 
-				FROM schedule GROUP BY schedule_date, show_num)t
-		ON s.show_num = t.show_num order by schedule_date desc )		
-	</select>
-  
   <!-- 일정 상세보기 구현 위한 데이터 가져오기  -->
   <select id="scheduleDetail" parameterType="hashmap" resultType="com.moaplace.dto.admin.show.AdminScheduleDetailDTO">
     SELECT a.*,ROWNUM timeRow

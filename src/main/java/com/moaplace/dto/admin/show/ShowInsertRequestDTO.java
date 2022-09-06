@@ -1,7 +1,6 @@
 package com.moaplace.dto.admin.show;
 
 import java.sql.Date;
-import java.util.List;
 
 import lombok.Data;
 

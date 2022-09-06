@@ -12,7 +12,6 @@ import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
-import com.moaplace.vo.ApiAuthVO;
 import com.moaplace.vo.MemberVO;
 
 public interface MemberMapper {

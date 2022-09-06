@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.moaplace.dto.ReviewDTO;
 import com.moaplace.service.ReviewService;
 import com.moaplace.util.PageUtil;
-import com.moaplace.vo.FavoriteVO;
 import com.moaplace.vo.ReviewVO;
 
 import lombok.extern.log4j.Log4j;

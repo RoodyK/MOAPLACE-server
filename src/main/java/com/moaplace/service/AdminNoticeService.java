@@ -21,7 +21,6 @@ import com.moaplace.dto.AdminListDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;
 import com.moaplace.mapper.AdminNoticeDetailMapper;
 import com.moaplace.mapper.AdminNoticeMapper;
-import com.moaplace.util.FileUtil;
 import com.moaplace.vo.AdminNoticeDetailVO;
 import com.moaplace.vo.AdminNoticeVO;
 
@@ -30,8 +29,6 @@ import com.moaplace.vo.AdminNoticeVO;
 public class AdminNoticeService {
     @Autowired private AdminNoticeMapper mapper;
     @Autowired private AdminNoticeDetailMapper detailmapper;
-    @Autowired
-	private FileUtil fileutil;
     @Value("${oracle.download}") 
     private String realPath;
     
@@ -91,6 +88,8 @@ public class AdminNoticeService {
 				String path = realPath;
 				System.out.println("경로확인" + path);
 				File dir = new File(path + File.separator + "notice" + File.separator);
+				if(!dir.exists()) dir.mkdir();
+				
 				for (MultipartFile file : multipartFile) {					
 					String originalFilename = file.getOriginalFilename(); // 원본 파일명
 					String savefilename = UUID.randomUUID() + "_" + originalFilename; // 실제 저장 될 파일명

@@ -3,7 +3,6 @@ package com.moaplace.controller.board;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,12 +14,9 @@ import com.moaplace.dto.AdminNoticeDetailDTO;
 import com.moaplace.service.AdminNoticeService;
 import com.moaplace.util.FileUtil;
 
-import lombok.extern.log4j.Log4j;
-
 @CrossOrigin("*")
 @Controller
 @RequestMapping("/admin/news")
-@Log4j
 public class FileDownloadController {
 	
 	@Autowired

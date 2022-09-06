@@ -21,8 +21,6 @@ import com.moaplace.dto.admin.show.ShowUpdateDTO;
 import com.moaplace.service.ShowService;
 import com.moaplace.util.PageUtil;
 
-import lombok.extern.log4j.Log4j;
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/admin/show")
