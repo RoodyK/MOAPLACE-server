@@ -144,4 +144,10 @@
 		ON m.member_email = a.member_email 
 		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND m.member_id = #{member_id} AND a.api_name = 'kakao'
 	</select>
+	
+	<!-- 예매페이지 회원 포인트 수정 -->
+	<update id="pointupdate">
+	  UPDATE member SET member_point  = member_point - #{use_point} 
+	  WHERE member_num = #{member_num}
+	</update>
 </mapper>

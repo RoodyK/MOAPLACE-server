@@ -212,6 +212,21 @@
         order by schedule_date desc, schedule_time
    </select>
 
+	<!-- show_num + schedule_date로 회차 정보 조회 -->
+	<select id="Rounds" resultType="int" parameterType="hashmap">
+   		select rnum 
+   		from(
+			select rownum rnum, s.schedule_time 
+			from(
+				select *
+				from schedule
+				where show_num = #{show_num} and schedule_date = #{schedule_date}
+				order by schedule_time
+			)s
+		)ss
+		where schedule_time = #{schedule_time}
+   </select>
+
 	<!-- 공연번호로 스케쥴 조회 -->
 	<select id="selectlist" resultType="com.moaplace.dto.ResidualDTO" parameterType="int">
 		select s.show_num, s.schedule_time, s.schedule_date, a.cnt
@@ -229,9 +244,9 @@
 	<select id="rowinfo" resultType="int" parameterType="int">
 		select count(schedule_date)
 		from schedule
-		where show_num = 1
+		where show_num = #{show_num}
 		group by schedule_date
 		order by schedule_date desc
 	</select>
-	
+
 </mapper>

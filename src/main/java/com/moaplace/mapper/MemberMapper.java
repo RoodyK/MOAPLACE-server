@@ -48,5 +48,8 @@ public interface MemberMapper {
 	public ApiLoginDTO apiCheck(String member_email);
 	
 	public MemberLoginResponseDTO apiLogin(ApiLoginDTO dto);
+	
+	//예매 페이지 회원 정보 수정
+	public int pointupdate(Map<String, Object> map);
 
 }

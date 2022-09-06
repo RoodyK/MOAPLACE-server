@@ -12,4 +12,10 @@
 		where schedule_num = #{schedule_num}
 		order by booking_seat asc
 	</select>
+
+	<insert id="seatInsert" >
+        INSERT INTO all_seat VALUES(all_seat_seq.nextval, #{schedule_num}, #{show_num},
+          #{booking_seat}, #{booking_num} )
+	</insert>
+
 </mapper>

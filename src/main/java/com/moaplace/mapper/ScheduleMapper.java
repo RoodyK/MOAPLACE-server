@@ -29,9 +29,10 @@ public interface ScheduleMapper {
   
 	List<ScheduleDTO> schedule(int show_num);
 	
+	int Rounds(HashMap<String, Object> map);
+  
 	List<ResidualDTO> selectlist(int show_num);
 	
 	List<Integer> rowinfo(int show_num);
 	
 }			
-
