@@ -11,27 +11,35 @@ import com.moaplace.vo.ScheduleVO;
 
 public interface ScheduleMapper {
 	
+	//공연일정 등록
 	int scheduleInsert (ScheduleVO vo);
 	
+	//공연일정 리스트 조회
 	List<ScheduleListDTO> scheduleList(HashMap<String, Object> map);
 	
+	//모든 공연일정 갯수 조회
 	int scheduleAllCount();
 	
+	//검색, 모아보기 후 공연일정 갯수 조회
 	int currentCount(HashMap<String, Object> map);
 	
+	//공연일정 상세보기
 	List<AdminScheduleDetailDTO> scheduleDetail(HashMap<String, Object> map);
 	
-	int deleteSchedule (HashMap<String, Object> map);
-	
+	//공연일정 수정
 	int scheduleUpdate (ScheduleVO vo);
 	
-	int bookingSeatCheck(HashMap<String, Object> map);
+	//공연일정 삭제
+	int deleteSchedule (HashMap<String, Object> map);
+	
+
   
 	List<ScheduleDTO> schedule(int show_num);
 	
+	int Rounds(HashMap<String, Object> map);
+  
 	List<ResidualDTO> selectlist(int show_num);
 	
 	List<Integer> rowinfo(int show_num);
 	
 }			
-

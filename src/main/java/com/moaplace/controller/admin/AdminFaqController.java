@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,13 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.moaplace.dto.AdminFaqListDTO;
-import com.moaplace.dto.QnaMemberDTO;
+import com.moaplace.dto.FaqListDTO;
 import com.moaplace.service.FaqService;
 import com.moaplace.util.PageUtil;
-import com.moaplace.vo.AnswerVO;
 import com.moaplace.vo.FaqVO;
-import com.moaplace.vo.QnaVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -39,8 +37,10 @@ public class AdminFaqController {
 				 consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String update(@RequestBody FaqVO vo){
 		try {
+			
 			log.info(vo);
 			faqService.update(vo);
+			
 			return "success";
 			
 		} catch (Exception e) {
@@ -52,17 +52,16 @@ public class AdminFaqController {
 	// faq 상세조회
 	@GetMapping(value="/detail/{faq_num}",
 				produces = MediaType.APPLICATION_JSON_VALUE)
-	public Map<String, Object> detail(@PathVariable int faq_num){
-		
+	public Map<String, Object> detail(@PathVariable int faq_num){		
 		try {			
-			log.info(faq_num);
-						
+			
+			log.info(faq_num);						
 			FaqVO detail = faqService.detail(faq_num);
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("detail", detail);
-		
+			map.put("detail", detail);		
 			log.info(map);
+			
 			return map;
 			
 		} catch (Exception e) {
@@ -73,9 +72,9 @@ public class AdminFaqController {
 	
 	// faq 삭제
 	@PostMapping(value= "/delete/{faq_num}")
-	public String delete(@PathVariable int faq_num) {
-		
+	public String delete(@PathVariable int faq_num) {		
 		try {			
+			
 			log.info(faq_num);
 			faqService.delete(faq_num);
 			
@@ -97,6 +96,11 @@ public class AdminFaqController {
 		try {
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
+			
+			// 전체 검색일 때 (검색필드 없이 키워드만 있을 때)
+			if(StringUtils.isEmpty(field) && !StringUtils.isEmpty(keyword)) {
+				field = "all";
+			}			
 					
 			// 검색 필드와 키워드, 구분번호 추가
 			map.put("field", field);
@@ -109,9 +113,8 @@ public class AdminFaqController {
 			map.put("startRow", util.getStartRow()); // 시작행 번호
 			map.put("endRow", util.getEndRow()); // 끝행 번호
 			
-			List<AdminFaqListDTO> list = faqService.list(map); // 리스트 불러오기
-			map.put("list", list); 
-			
+			List<FaqListDTO> list = faqService.list(map); // 리스트 불러오기
+			map.put("list", list); 			
 			map.put("pageNum", pageNum); // 페이지 번호
 			map.put("startPage", util.getStartPageNum()); // 페이지 시작번호
 			map.put("endPage", util.getEndPageNum()); // 페이지 마지막번호
@@ -129,8 +132,8 @@ public class AdminFaqController {
 	@PostMapping(value= "/insert",
 				 consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String insert(@RequestBody FaqVO vo) {
-		
-		try {			
+		try {	
+			
 			log.info(vo);
 			faqService.insert(vo);
 			
@@ -140,6 +143,5 @@ public class AdminFaqController {
 			log.info(e.getMessage());
 			return "fail";		
 		}
-	}	
-	
+	}		
 }

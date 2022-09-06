@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.moaplace.mapper.TicketMapper">
+
+	<insert id="ticketInsert" >
+	    INSERT INTO ticket VALUES(ticket_seq.nextval, #{booking_num}, #{ticket_rating}, #{ticket_count},
+	    #{ticket_grade}, #{ticket_price})
+	</insert>
+	
+</mapper>

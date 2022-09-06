@@ -21,7 +21,6 @@ import com.moaplace.dto.AdminListDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;
 import com.moaplace.mapper.AdminNoticeDetailMapper;
 import com.moaplace.mapper.AdminNoticeMapper;
-import com.moaplace.util.FileUtil;
 import com.moaplace.vo.AdminNoticeDetailVO;
 import com.moaplace.vo.AdminNoticeVO;
 
@@ -30,8 +29,6 @@ import com.moaplace.vo.AdminNoticeVO;
 public class AdminNoticeService {
     @Autowired private AdminNoticeMapper mapper;
     @Autowired private AdminNoticeDetailMapper detailmapper;
-    @Autowired
-	private FileUtil fileutil;
     @Value("${oracle.download}") 
     private String realPath;
     
@@ -86,34 +83,17 @@ public class AdminNoticeService {
 		
 		mapper.update(vo);
 
-		List<AdminNoticeDetailDTO> filelist = mapper.filelist(vo.getNotice_num());
-
-		log.info("========================== 파일 삭제 체험  log=================================");
-		log.info("delete 정보 :" + filelist);
-		log.info("==========================================================================");
-		
 		try {
-			if (filelist != null || filelist.size() != 0) {
-				List<Integer> list = mapper.selectnum(vo.getNotice_num());
-				int[] flist = list.stream().mapToInt(i -> i).toArray();
-				for (int i = 0; i < flist.length; i++) {
-					String fileName = mapper.selectfile(flist[i]).getNotice_savefile();
-					fileutil.delete(fileName, "notice");
-				}
-			
-				
-		//		=============================================================================================
-			
 			if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {			
 				String path = realPath;
 				System.out.println("경로확인" + path);
 				File dir = new File(path + File.separator + "notice" + File.separator);
+				if(!dir.exists()) dir.mkdir();
+				
 				for (MultipartFile file : multipartFile) {					
 					String originalFilename = file.getOriginalFilename(); // 원본 파일명
 					String savefilename = UUID.randomUUID() + "_" + originalFilename; // 실제 저장 될 파일명
-					log.info("========================== for문 파일  log=================================");
-					log.info("originalFilename 정보 :" + originalFilename);
-					log.info("========================================================================");
+				
 					InputStream is = file.getInputStream(); // 파일 읽어오기
 					File f = new File(path + File.separator + "notice" + File.separator + savefilename);
 					FileOutputStream fos = new FileOutputStream(f); // 파일 저장하기
@@ -124,11 +104,7 @@ public class AdminNoticeService {
 					detailmapper.detailinsert(
 							new AdminNoticeDetailVO(0, vo.getNotice_num(), originalFilename, savefilename, filesize));
 				}
-
-				
-
 				return 0;
-			}
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -136,6 +112,8 @@ public class AdminNoticeService {
 		}
 		return 1;
 	}
+	
+	
 	
 	//공지사항 리스트 
 	public List<AdminListDTO> listAll(HashMap<String,Object> map){

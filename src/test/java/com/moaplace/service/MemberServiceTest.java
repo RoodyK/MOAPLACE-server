@@ -15,8 +15,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.moaplace.dto.member.AdminMemberInfoResponseDTO;
+import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
-import com.moaplace.vo.MemberVO;
+import com.moaplace.dto.member.MemberLoginRequestDTO;
+import com.moaplace.dto.member.MemberLoginResponseDTO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -72,6 +74,28 @@ public class MemberServiceTest {
 		assertEquals(1, n);
 	}
 	
+	// 로그인 테스트
+	@Test
+	public void loginTest() {
+		MemberLoginRequestDTO dto = new MemberLoginRequestDTO();
+		dto.setMember_id("test");
+		dto.setMember_pwd("!test123");
+		
+		MemberLoginResponseDTO member = memberService.login(dto);
+		
+		assertNotNull(member);
+	}
+	
+	// 회원정보 얻기
+	@Test
+	public void getMemberInfoTest() {
+		String id = "test";
+		
+		MemberInfoResponseDTO info = memberService.getMemberInfo(id);
+		
+		assertNotNull(info);
+	}
+	
 	// 아이디 찾기 테스트
 	@Test
 	public void findByIdTest() {
@@ -82,5 +106,27 @@ public class MemberServiceTest {
 		String id = memberService.findById(map);
 		
 		assertNotNull(id);
+	}
+	
+	// 새 비밀번호 변경
+	@Test
+	public void newPasswordTest() {
+		MemberLoginRequestDTO dto = new MemberLoginRequestDTO();
+		dto.setMember_id("abcd1234");
+		dto.setMember_pwd("!abcd1234");
+		
+		int actual = memberService.newPassword(dto);
+		
+		assertEquals(1, actual);
+	}
+	
+	// 회원탈퇴
+	@Test
+	public void withdrawal() {
+		String id = "qweqwe123";
+		
+		int actual = memberService.withdrawal(id);
+		
+		assertEquals(1, actual);
 	}
 }

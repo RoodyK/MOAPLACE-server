@@ -1,23 +1,25 @@
 package com.moaplace.controller.mypage;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moaplace.dto.MyBookingCancleRequestDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
@@ -28,11 +30,13 @@ import com.moaplace.dto.MyRentalDetailDTO;
 import com.moaplace.dto.MyReviewDTO;
 import com.moaplace.service.BookingService;
 import com.moaplace.service.FavoriteService;
+import com.moaplace.service.ImportService;
 import com.moaplace.service.MemberService;
 import com.moaplace.service.PaymentService;
 import com.moaplace.service.RentalService;
 import com.moaplace.service.ReviewService;
 import com.moaplace.util.PageUtil;
+import com.moaplace.vo.RentalVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -54,6 +58,8 @@ public class MypageController {
 	private FavoriteService favoriteService;
 	@Autowired
 	private ReviewService reviewService;
+	@Autowired
+	private ImportService importService;
 	
 	/* 로그인한 회원의 최근 예매내역 1건 + 최근 대관내역 1건 조회 */
 	@GetMapping(value = "/{member_num}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -209,13 +215,28 @@ public class MypageController {
 		
 		// 비밀번호 일치할 경우 예매취소로 업데이트하고 업데이트 성공시 success
 		if(pwdCheck) {
-			int n = paymentService.ticketCancle(dto.getBooking_num());
-			if( n > 0 ) return "success";
+			// 아임포트 환불요청
+			String token = importService.getToken();
+			String imp_uid = dto.getImp_uid();
+			String reason = dto.getReason();
+			int amount = dto.getAmount();
+			boolean importCancle = importService.cancle(token,imp_uid,reason,amount);
+			
+			if(importCancle) {
+				// payment 테이블 결제상태 변경
+				int n = paymentService.ticketCancle(dto.getBooking_num());
+				// all_seat 테이블 삭제
+				int n2 = bookingService.cancleSeat(dto.getBooking_num());
+				
+				if( n > 0 && n2 > 0 ) return "success";
+				
+			}
 			return "failA";
+			
 		} else {
 			// 비밀번호 불일치시 fail
 			return "failB";
-		}		
+		}
 	}
 	
 	/* 대관내역 5행 5페이지 조회 + 페이징 */
@@ -392,4 +413,29 @@ public class MypageController {
 		if(n > 0) return "success";
 		return "fail";
 	}
+	
+	/* 대관신청정보 수정 */
+	@PostMapping(value = "/rental/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public String rentalDetailUpdate(@RequestParam String data, @RequestPart(required = false) MultipartFile file) {
+		
+		log.info("data:"+data);
+		log.info("file:"+file);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		RentalVO vo = new RentalVO();
+			
+		try {
+			log.info("mapper.readValue : " + mapper.readValue(data, RentalVO.class));
+			vo = mapper.readValue(data, RentalVO.class);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		// 파일관리는 service에서 처리
+		int n = rentalService.myUpdate(file, vo);
+			
+		if(n == 1) return "success";
+		return "fail";
+	}
+	
 }

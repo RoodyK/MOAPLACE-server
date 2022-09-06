@@ -66,7 +66,7 @@
 	<select id="detail" resultType="com.moaplace.dto.MyBookingDetailDTO" parameterType="int">
 		select b.booking_num,b.regdate,sh.show_name,sc.schedule_date,sc.schedule_time,
 		b.booking_seat,h.hall_name,p.payment_date,b.booking_price,b.use_point,
-		p.payment_method,p.payment_status,sh.show_num
+		p.payment_method,p.payment_status,sh.show_num,p.imp_uid
 		from booking b
 		join payment p on (b.booking_num = p.booking_num)
 		join schedule sc on (b.schedule_num = sc.schedule_num)
@@ -99,5 +99,114 @@
 	<select id="cancleInfoCheck" resultType="int" parameterType="int">
 		select member_num from booking where booking_num = #{booking_num}
 	</select>
+	
+	<!-- booking insert(예매페이지) -->
+	<insert id="payInfoInsert" >
+			<selectKey keyProperty="booking_num" order="BEFORE"
+			resultType="int">
+			select booking_seq.nextval from dual
+		</selectKey>
+	   INSERT INTO booking VALUES(#{booking_num}, #{member_num}, #{schedule_num},
+	     #{booking_count}, #{booking_price}, #{booking_seat}, #{use_point} , sysdate)
+	</insert>
+
+
+	<!-- 연희 시작 -->
+	
+	<!-- 관리자 예매리스트 조회 -->
+	<select id="adminBookingList" resultType="com.moaplace.dto.AdminBookingListDTO" parameterType="hashmap">
+	
+		SELECT * FROM       
+		    (SELECT a.*, ROWNUM rn 
+		    FROM (
+		        SELECT 
+		            b.booking_num bookingNum, member_id memberId, sh.show_name showName, 
+		            sc.schedule_date scheduleDate, sc.schedule_time scheduleTime, 
+	                b.booking_price bookingPrice, TO_CHAR(b.regdate, 'YYYY-MM-DD') bookingDate, p.payment_status status
+		        FROM booking b
+		        INNER JOIN payment p ON (b.booking_num = p.booking_num)
+		        INNER JOIN member m ON b.member_num = m.member_num
+		        INNER JOIN schedule sc ON (b.schedule_num = sc.schedule_num)
+		        INNER JOIN show sh ON (sc.show_num = sh.show_num)
+		       	<where>
+		       		<if test="status =='전체'">
+		       			<if test="search != NULL">
+		       				${field} LIKE '%'||#{search}||'%'
+		       			</if>
+		       		</if>
+		       		<if test="status != '전체'">
+		       			p.payment_status = #{status}
+		       			<if test="search != NULL">
+		       				AND ${field} LIKE '%'||#{search}||'%'
+		       			</if>
+		       		</if>
+		       	</where>
+		    	)a
+		   	) 
+		WHERE rn BETWEEN #{startRow} AND #{endRow}
+	
+	</select>
+	
+	
+	<!-- 관리자 예매리스트 총 행 수 구하기(검색,모아보기 전) -->
+	<select id="adminAllBookingCnt" resultType="int">
+	
+		SELECT NVL(COUNT(*),0) FROM booking	    
+	
+	</select>
+	
+	
+	<!-- 관리자 예매리스트 검색, 모아보기 후 행 수 구하기 -->
+	<select id="currentAdminBookingCnt" resultType="int" parameterType="hashmap">
+	
+	   SELECT 
+	        NVL(COUNT(*),0)
+	   FROM booking b
+	   INNER JOIN payment p ON b.booking_num = p.booking_num
+	   INNER JOIN member m ON b.member_num = m.member_num
+	   INNER JOIN schedule sc ON b.schedule_num = sc.schedule_num
+	   INNER JOIN show sh ON sc.show_num = sh.show_num
+	  	<where>
+	  		<if test="status =='전체'">
+	  			<if test="search != NULL">
+	  				${field} LIKE '%'||#{search}||'%'
+	  			</if>
+	  		</if>
+	  		<if test="status != '전체'">
+	  			p.payment_status = #{status}
+	  			<if test="search != NULL">
+	  				AND ${field} LIKE '%'||#{search}||'%'
+	  			</if>
+	  		</if>
+	  	</where>
+	</select>
+	
+	
+	<!-- 관리자 예매 상세조회 -->
+	<select id="selectAdminBookingDetail" parameterType="int" resultType="com.moaplace.dto.AdminBookingDetailDTO">
+	
+		SELECT 
+		    s.schedule_date scheduleDate, s.schedule_time scheduleTime, 
+		    booking_count bookingCount, booking_seat bookingSeat,
+		    ticket_rating ticketAge, ticket_grade ticketGrade, ticket_count,
+		    TO_CHAR(payment_date, 'YYYY-MM-DD') paymentDate,
+		    ticket_price ticketPrice, use_point usePoint, 
+		    payment_method paymentMethod, b.booking_price bookingPrice, payment_status paymentStatus,
+		    merchant_uid merchantUid, imp_uid impUid
+		FROM booking b 
+		INNER JOIN schedule s
+		ON b.schedule_num = s.schedule_num 
+		INNER JOIN payment p
+		ON b.booking_num = p.booking_num 
+		INNER JOIN (
+		    SELECT 
+		        booking_num, ticket_rating, ticket_grade, ticket_count, ticket_price 
+		    FROM ticket ) t
+		ON b.booking_num = t.booking_num 
+		where b.booking_num = #{bookingNum}
+	
+	</select>
+	
+	<!-- 연희 끝 -->
 
 </mapper>

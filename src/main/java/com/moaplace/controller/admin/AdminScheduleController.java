@@ -18,17 +18,17 @@ import com.moaplace.dto.admin.show.ScheduleListDTO;
 import com.moaplace.dto.admin.show.ScheduleUpdateRequestDTO;
 import com.moaplace.service.AdminTicketService;
 import com.moaplace.util.PageUtil;
-import lombok.extern.log4j.Log4j;
 
 
 @CrossOrigin("*")
 @RequestMapping("/admin/show/schedule")
-@Log4j
 @RestController
+
 public class AdminScheduleController {
 	@Autowired
 	private AdminTicketService service;
-
+	
+	//일정 등록할 때 일정을 등록할 공연을 검색해서 리스트 받아오기
 	@GetMapping( 
 			value = {"/viewshow", "/viewshow/{showTitle}"},
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,15 +42,18 @@ public class AdminScheduleController {
 		return map;
 	}
 	
+	//일정 등록
 	@PostMapping(
 			value = "/insert", 
 			consumes= {MediaType.APPLICATION_JSON_VALUE})
+	
 	public int insertSchedule(
 			@RequestBody ScheduleInsertRequestDTO dto) {
 		
 		return service.insertSchedule(dto);
 	}
 	
+	//일정 리스트 데이터 전송
 	@GetMapping(
 			value = {"/list",
 					"/list/{pageNum}",
@@ -61,6 +64,7 @@ public class AdminScheduleController {
 					"/list/{pageNum}/{status}/{selectDate}/{field}/{search}",
 					"/list/{pageNum}/{status}//{field}/{search}"},
 			produces = MediaType.APPLICATION_JSON_VALUE)
+	
 	public HashMap<String, Object> list(
 			@PathVariable ( required = false ) Integer pageNum,
 			@PathVariable ( required = false ) String status,
@@ -94,7 +98,6 @@ public class AdminScheduleController {
 					pageNum,5,5,service.currentCount(sList));
 		};
 		
-		log.info("검색후 총 행수"+service.currentCount(sList));
 		// 해시맵에 조회된 공연목록, 페이지번호, 페이징유틸 정보 담아서 클라이언트로 보내기
 		// 해시맵을 produces = MediaType.APPLICATION_JSON_VALUE 으로 제이슨형태로 변환해서 전송
 		if(search==null)search="";
@@ -110,52 +113,58 @@ public class AdminScheduleController {
 		return map;
 	}
 	
-	//공연상세페이지 조회 - 공연번호 받아옴
-	
-		@GetMapping( 
-				value = {"/detail", 
-						"/detail/{showNum}",
-						"/detail/{showNum}/{showDate}"}, 
-				produces = MediaType.APPLICATION_JSON_VALUE)
+	//공연일정상세페이지 조회 - 해당 일자 데이터 전부 뿌려주기
+	@GetMapping( 
+			value = {"/detail", 
+					"/detail/{showNum}",
+					"/detail/{showNum}/{showDate}"}, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
 
-		public HashMap<String, Object> showDetail(
-				@PathVariable ( required = false ) int showNum,
-				@PathVariable ( required = false ) String showDate){
-			
-			HashMap<String, Object> sList = new HashMap<String, Object>();
-			sList.put("showNum",showNum);
-			sList.put("showDate",showDate);
-			
-			HashMap<String, Object> map=service.showDetail(sList);
-			
-			return map;
-			
-		}
-		//공연일정 업데이트 데이터 보여주기
-		@GetMapping( 
-				value = {"/updateView", 
-						"/updateView/{showNum}",
-						"/updateView/{showNum}/{showDate}"}, 
-				produces = MediaType.APPLICATION_JSON_VALUE)
+	public HashMap<String, Object> showDetail(
+			@PathVariable ( required = false ) int showNum,
+			@PathVariable ( required = false ) String showDate){
 		
-		public HashMap<String, Object> viewSchedule(
-				@PathVariable ( required = false ) int showNum,
-				@PathVariable ( required = false ) String showDate){
-			
-			HashMap<String, Object> map=service.selectUpdate(showNum, showDate);
-			
-			return map;
-			
-		}
+		HashMap<String, Object> map=service.showDetail(showNum, showDate);
 		
-		//공연일정 수정
-		@PostMapping(
-				value = "/update", 
-				consumes= {MediaType.APPLICATION_JSON_VALUE})
-		public int showUpdate(@RequestBody ScheduleUpdateRequestDTO dto) {
-			
-			int result = service.scheduleUpdate(dto);
-			
-			return result;
-		}
+		return map;
+		
+	}
+		
+	//공연일정 수정전 데이터 보여주기
+	@GetMapping( 
+			value = {"/updateView", 
+					"/updateView/{showNum}",
+					"/updateView/{showNum}/{showDate}"}, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	public HashMap<String, Object> viewSchedule(
+			@PathVariable ( required = false ) int showNum,
+			@PathVariable ( required = false ) String showDate){
+		
+		HashMap<String, Object> map=service.selectUpdate(showNum, showDate);
+		
+		return map;
+	}
+		
+	//공연일정 수정
+	@PostMapping(
+			value = "/update", 
+			consumes= {MediaType.APPLICATION_JSON_VALUE})
+	
+	public int showUpdate(@RequestBody ScheduleUpdateRequestDTO dto) {
+		
+		int result = service.scheduleUpdate(dto);
+		
+		return result;
+	}
+	
+	//공연일정 삭제	
+	@GetMapping
+		( value = "/delete/{showNum}/{scheduleDate}")
+	public int deleteSchedule(
+			@PathVariable int showNum,
+			@PathVariable String scheduleDate) {
+		
+		return service.deleteSchedule(showNum, scheduleDate);
+	}
 }

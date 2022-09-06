@@ -1,5 +1,6 @@
 package com.moaplace.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,7 @@ import com.moaplace.dto.ResidualDTO;
 import com.moaplace.dto.ScheduleDTO;
 import com.moaplace.mapper.ScheduleMapper;
 
-import lombok.extern.log4j.Log4j;
-
 @Service
-@Log4j
 public class ScheduleService {
 
 	@Autowired 
@@ -23,6 +21,11 @@ public class ScheduleService {
 		return scheduleMapper.schedule(show_num);
 	}
 	
+	public int Rounds(HashMap<String, Object> map) {
+		
+		return scheduleMapper.Rounds(map);
+	}
+  
 	public List<ResidualDTO> selectlist(int show_num) {
 		
 		return scheduleMapper.selectlist(show_num);
@@ -32,5 +35,5 @@ public class ScheduleService {
 		
 		return scheduleMapper.rowinfo(show_num);
 	}
-	
+
 }

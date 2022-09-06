@@ -12,7 +12,6 @@ import com.moaplace.dto.member.MemberInfoResponseDTO;
 import com.moaplace.dto.member.MemberJoinRequestDTO;
 import com.moaplace.dto.member.MemberLoginRequestDTO;
 import com.moaplace.dto.member.MemberLoginResponseDTO;
-import com.moaplace.vo.ApiAuthVO;
 import com.moaplace.vo.MemberVO;
 
 public interface MemberMapper {
@@ -48,5 +47,8 @@ public interface MemberMapper {
 	public ApiLoginDTO apiCheck(String member_email);
 	
 	public MemberLoginResponseDTO apiLogin(ApiLoginDTO dto);
+	
+	//예매 페이지 회원 정보 수정
+	public int pointupdate(Map<String, Object> map);
 
 }

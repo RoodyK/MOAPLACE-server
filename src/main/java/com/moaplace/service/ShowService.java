@@ -22,10 +22,7 @@ import com.moaplace.vo.GradeVO;
 import com.moaplace.vo.ShowImgVO;
 import com.moaplace.vo.ShowVO;
 
-import lombok.extern.log4j.Log4j;
-
 @Service
-@Log4j
 public class ShowService {
 	
 	@Autowired 
@@ -37,12 +34,10 @@ public class ShowService {
 	
 	////////////////////////연희 시작/////////////////////////
 	
+	//공연정보 등록
 	@Transactional(rollbackFor = {Exception.class})
 	public int showInsert(ShowInsertRequestDTO dto) {
-		
-		//base64 스트링 인코딩된 썸네일 이미지 데이터 byte로 변환
-		String thumb = dto.getShow_thumbnail();
-		
+				
 		//ShowVO에 생성자로 insert요청으로 들어온 DTO에서 뽑아온 정보 삽입 
 		ShowVO showVO=new ShowVO(
 				0,
@@ -58,19 +53,15 @@ public class ShowService {
 				dto.getRunning_time(),
 				dto.getShow_thumbnail());
 		
-		
 		//공연정보 인서트
 		int showResult = showMapper.showInsert(showVO);
 		
-		
 		//상세이미지 개수만큼 반복하면서 상세이미지 테이블에 데이터 입력 
-		
 		int showImgResult = 0;
 		
 		for(int i=0; i < dto.getShow_detail_img().length; i++) {
 			
 			ShowImgVO imgVO = new ShowImgVO(
-					
 				0, 
 				showVO.getShow_num(),
 				dto.getShow_detail_img()[i]
@@ -96,7 +87,7 @@ public class ShowService {
 		return showResult+showImgResult+gradeResult;
 	}
 	
-	
+	//공연목록 불러오기
 	public List<ShowListDTO> showList(HashMap<String, Object> map){
 	
 		List<ShowListDTO> list = showMapper.showList(map);
@@ -104,12 +95,13 @@ public class ShowService {
 		return list;
 	}
 	
+	//모아보기,검색 후의 총 공연목록 수 계산
 	public int currentCnt(HashMap<String, Object> map) {
 		
 		return showMapper.currentCount(map);
 	}
 	
-	
+	//공연상세정보 불러오기
 	public ShowDetailViewDTO showDetail(int num) {
 
 		List<MapperDetailDTO> list = showMapper.showDetail(num);
@@ -131,7 +123,6 @@ public class ShowService {
 		dto.setBlockEndDate(list.get(0).getBlockEndDate());
 		dto.setThumbnail(list.get(0).getThumbnail());
 		
-		
 		ArrayList<String> arrList = new ArrayList<>();
 		for(int i=0; i < list.size(); i++) {
 			MapperDetailDTO reqDto =list.get(i);
@@ -148,6 +139,7 @@ public class ShowService {
 		return dto;
 	}
 	
+	//공연정보 수정하기
 	@Transactional(rollbackFor = {Exception.class})
 	public int showUpdate(ShowUpdateDTO dto){
 		
@@ -221,10 +213,22 @@ public class ShowService {
 
 	}
 	
-	
+	//총 공연 개수 가져오기
 	public int countRow() {
 		
 		return showMapper.firstCntRow();
+	}
+	
+	//공연 삭제하기
+	@Transactional( rollbackFor = {Exception.class})
+	public int deleteShow(int num) {
+		
+	int n = 0;
+		n += gradeMapper.deleteGrade(num);
+		n += showImgMapper.deleteShowImg(num);
+		n += showMapper.deleteShow(num);	
+		
+		return n;
 	}
 
 	////////////////////////연희 끝/////////////////////////
@@ -245,5 +249,9 @@ public class ShowService {
 		return showMapper.detail(show_num);
 	}
 	
+	public String returnThumb(int num) {
+		
+		return showMapper.returnThumb(num);
+	}
 }
 

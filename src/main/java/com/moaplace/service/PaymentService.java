@@ -14,5 +14,7 @@ public class PaymentService {
 	public int ticketCancle(int booking_num) {
 		return mapper.ticketCancle(booking_num);
 	}
+	
+	
 
 }

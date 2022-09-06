@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.dto.admin.show.ShowDetailViewDTO;
@@ -22,12 +21,9 @@ import com.moaplace.dto.admin.show.ShowUpdateDTO;
 import com.moaplace.service.ShowService;
 import com.moaplace.util.PageUtil;
 
-import lombok.extern.log4j.Log4j;
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/admin/show")
-@Log4j
 public class AdminShowController {
 	
 	@Autowired 
@@ -46,7 +42,6 @@ public class AdminShowController {
 		//해시맵에 데이터 담아서 결과값을 클라이언트로 보냄
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
-		
 		//결과값에 따라 데이터 다르게 보내기 
 		if(result>4) { //데이터 등록하면 최소 5개 이상이 등록되므로(공연정보 1개, 좌석RSA 각각 3개, 상세정보이미지 1개)
 			map.put("result", true);
@@ -57,9 +52,8 @@ public class AdminShowController {
 		}else {
 			map.put("result", false);
 		}
-		
+	
 		return map;
-		
 	}
 	
 	// 게시판 목록, 검색 데이터 전부 클라이언트에 제이슨으로 전송
@@ -81,7 +75,6 @@ public class AdminShowController {
 		if(pageNum==null)pageNum=1;
 		if(status==null)status="all";
 		if(field==null)field="title";
-		
 		
 		// 페이징처리하는 클래스 유틸 받아서 페이징 데이터 생성
 		PageUtil pu = new PageUtil(pageNum,5,5,service.countRow());
@@ -156,13 +149,11 @@ public class AdminShowController {
 			value = "/update", 
 			consumes= {MediaType.APPLICATION_JSON_VALUE})
 	public HashMap<String, Object> showUpdate(@RequestBody ShowUpdateDTO dto) {
-		log.info("데이터 받았음");
 		
 		int result = service.showUpdate(dto);
 		
 		//해시맵에 데이터 담아서 결과값을 클라이언트로 보냄
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		
 		
 		//결과값에 따라 데이터 다르게 보내기 
 		if(result>1) {
@@ -172,6 +163,14 @@ public class AdminShowController {
 		}
 		
 		return map;
+	}
+	
+	@GetMapping
+	( value = "/delete/{showNum}" )
+	public int deleteShow(
+			@PathVariable Integer showNum) {		
+		
+		return service.deleteShow(showNum);
 	}
 	
 }
