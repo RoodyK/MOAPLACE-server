@@ -58,7 +58,27 @@
 		left join rental_answer ra on (r.rental_num = ra.rental_num)
 		where r.rental_num = #{rental_num}
 	</select>
-  
+	
+	<!-- rental_num으로 대관신청내역 업데이트 -->
+  	<update id="myUpdate" parameterType="com.moaplace.vo.RentalVO">
+		update rental
+		set hall_num = #{hall_num},
+		rental_name = #{rental_name},
+		rental_phone = #{rental_phone},
+		rental_email = #{rental_email},
+		rental_title = #{rental_title},
+		rental_genre = #{rental_genre},
+		rental_date = #{rental_date},
+		rental_time = #{rental_time},
+		rental_ownsname = #{rental_ownsname},
+		rental_ownsphone = #{rental_ownsphone},
+		rental_ownemail = #{rental_ownemail},
+		rental_content = #{rental_content},
+		rental_savefilename = #{rental_savefilename},
+		rental_originfilename = #{rental_originfilename},
+		rental_filesize = #{rental_filesize}
+		where rental_num = #{rental_num}
+  	</update>
 
   
   <!-- 혜인 -->

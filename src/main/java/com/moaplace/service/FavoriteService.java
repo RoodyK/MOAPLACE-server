@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.moaplace.dto.MyFavoriteDTO;
 import com.moaplace.mapper.FavoriteMapper;
+import com.moaplace.vo.FavoriteVO;
 
 @Service
 public class FavoriteService {
@@ -28,5 +29,10 @@ public class FavoriteService {
 	// 등록한 관심공연 삭제
 	public int delete(HashMap<String, Object> map) {
 		return mapper.delete(map);
+	}
+	
+	// 관심공연 등록
+	public int insert(FavoriteVO vo) {
+		return mapper.insert(vo);
 	}
 }

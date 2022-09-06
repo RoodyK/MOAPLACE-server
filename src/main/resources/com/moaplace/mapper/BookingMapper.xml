@@ -99,6 +99,16 @@
 	<select id="cancleInfoCheck" resultType="int" parameterType="int">
 		select member_num from booking where booking_num = #{booking_num}
 	</select>
+	
+	<!-- booking insert(예매페이지) -->
+	<insert id="payInfoInsert" >
+			<selectKey keyProperty="booking_num" order="BEFORE"
+			resultType="int">
+			select booking_seq.nextval from dual
+		</selectKey>
+	   INSERT INTO booking VALUES(#{booking_num}, #{member_num}, #{schedule_num},
+	     #{booking_count}, #{booking_price}, #{booking_seat}, #{use_point} , sysdate)
+	</insert>
 
 
 	<!-- 연희 시작 -->

@@ -11,6 +11,7 @@ import com.moaplace.dto.AdminBookingListDTO;
 import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
+import com.moaplace.dto.payment.BookingDTO;
 import com.moaplace.vo.BookingVO;
 
 @Mapper
@@ -40,7 +41,6 @@ public interface BookingMapper {
 	// booking_num으로 member_num 조회
 	int cancleInfoCheck(int booking_num);
 	
-	//------연희 시작----------
 	//관리자 예매리스트
 	List<AdminBookingListDTO> adminBookingList(HashMap<String, Object> map);
 	
@@ -52,6 +52,8 @@ public interface BookingMapper {
 	
 	//관리자 예매상세 조회
 	List<AdminBookingDetailDTO>  selectAdminBookingDetail(int bookingNum);
-	//------연희 끝----------
+
+	//예매페이지 결제 완료후 INSERT
+	int payInfoInsert(BookingVO vo);
 
 }

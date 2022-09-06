@@ -16,4 +16,7 @@ public interface HallMapper {
 	
 	//좌석 등급별 가격 조회
 	List<GradePriceDTO> getGradePrice(int show_num);
+	
+	//공연장명 조회
+	String getHallname(int hall_num);
 }
