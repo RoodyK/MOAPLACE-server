@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.moaplace.dto.AdminChartDTO;
 import com.moaplace.dto.MyBookingDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
+import com.moaplace.dto.payment.BookingDTO;
 import com.moaplace.vo.BookingVO;
 
 @Mapper
@@ -37,5 +38,15 @@ public interface BookingMapper {
 
 	// booking_num으로 member_num 조회
 	int cancleInfoCheck(int booking_num);
+	
+	//예매페이지 결제 완료후 INSERT
+	int payInfoInsert(BookingVO vo);
+
+
+	
+	
+
+
+	
 
 }

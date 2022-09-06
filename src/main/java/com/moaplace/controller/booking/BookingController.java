@@ -1,22 +1,34 @@
 package com.moaplace.controller.booking;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moaplace.dto.BookingShowDTO;
 import com.moaplace.dto.GradePriceDTO;
 import com.moaplace.dto.HallSeatDTO;
 import com.moaplace.dto.MyBookingDetailDTO;
 import com.moaplace.dto.TicketGradeDTO;
+import com.moaplace.dto.payment.AllSeatDTO;
+import com.moaplace.dto.payment.BookingDTO;
+import com.moaplace.dto.payment.PaymentDTO;
+import com.moaplace.dto.payment.TicketDTO;
 import com.moaplace.service.BookingService;
+import com.moaplace.service.MemberService;
+import com.moaplace.vo.AllSeatVO;
 import com.moaplace.service.ScheduleService;
 import com.moaplace.service.ShowService;
 
@@ -34,6 +46,9 @@ public class BookingController {
 	private ScheduleService schedule_service;
 	@Autowired
 	private ShowService show_service;
+	
+	@Autowired
+	private MemberService mservice;
 	
 	@GetMapping
 	(value = "/getBookingSeat/{schedule_num}",
@@ -78,6 +93,56 @@ public class BookingController {
 		return hallInfo;
 	}
 	
+	@PostMapping(value = "/payment",
+			consumes = {MediaType.APPLICATION_JSON_VALUE})
+	public HashMap<String,Object> payinsert(@RequestBody Map<String, Object> map		
+			){
+     	log.info("payment:" + map.get("payment"));	
+		log.info("=========================================================================");
+     	
+         
+		
+		ObjectMapper objmapper = new ObjectMapper();
+		PaymentDTO payment = null;
+		BookingDTO booking = null;
+		List<String> allseat = (List<String>) map.get("allseat");
+		List<TicketDTO> ticket = (List<TicketDTO>) map.get("ticket");
+		int show_num = (int) map.get("show_num");
+		int member_num = (int) map.get("member_num");
+
+		try {
+           payment = objmapper.convertValue(map.get("payment"), PaymentDTO.class);
+           booking = objmapper.convertValue(map.get("booking"), BookingDTO.class);
+           
+           for(int i = 0; i < ticket.size(); i++) {
+           TicketDTO tt = objmapper.convertValue(ticket.get(i), TicketDTO.class);
+           log.info("tt : " + tt.getCount());
+
+        }
+		}catch(Exception e) {
+			e.getMessage();
+		}
+		
+		HashMap<String,Object> resultmap = new HashMap<String,Object>();
+
+		try {
+			int result = service.insert(booking, payment, ticket, show_num, allseat);
+			if(result > 0 ) {
+				HashMap<String,Object> map1 = new HashMap<String,Object>();
+				map1.put("use_point",booking.getUse_point());
+				map1.put("member_num",member_num);
+				mservice.pointupdate(map1);
+			}
+			resultmap.put("booking_num",result);
+			resultmap.put("data", "success");	
+		}catch(Exception e) {
+			e.getMessage();
+			resultmap.put("data", "fail");
+		}
+		return resultmap;
+	
+	}
+	
 	@GetMapping
 	(value = "/done/{booking_num}",
 	produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -112,5 +177,5 @@ public class BookingController {
 		
 		return data;
 	}
-	
+
 }
