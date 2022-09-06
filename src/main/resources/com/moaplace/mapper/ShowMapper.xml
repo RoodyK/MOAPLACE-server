@@ -305,7 +305,7 @@ SELECT NVL(COUNT(*),0)
 	
 	<!-- 공연 상세페이지 -->
 	<select id="detail" resultType="com.moaplace.dto.ShowDetailDTO" parameterType="int">
-   		select show_num, show_thumbnail, show_name, show_start, show_end, hall_num, show_age, show_check
+   		select show_num, show_thumbnail, show_name, show_start, show_end, hall_num, show_age, show_check, running_time, intermission
         from show
         where show_num = #{show_num}
    </select>
