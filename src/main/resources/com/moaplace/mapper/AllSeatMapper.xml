@@ -13,6 +13,11 @@
 		order by booking_seat asc
 	</select>
 
+	<!-- 예매취소 좌석 삭제 -->
+	<delete id="cancleSeat" parameterType="int">
+		delete from all_seat where booking_num=#{booking_num}
+	</delete>
+  
 	<insert id="seatInsert" >
         INSERT INTO all_seat VALUES(all_seat_seq.nextval, #{schedule_num}, #{show_num},
           #{booking_seat}, #{booking_num} )

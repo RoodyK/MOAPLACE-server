@@ -17,7 +17,7 @@ public class MoaplaceService {
 	@Autowired
 	private MoaplaceMapper mapper;
 
-	public List<AdminNoticeDTO> listAll(HashMap<String, Object> map) {
+	public List<AdminListDTO> listAll(HashMap<String, Object> map) {
 		return mapper.listAll(map);
 	}
 

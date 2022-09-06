@@ -11,29 +11,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.moaplace.dto.admin.show.AdminScheduleDetailDTO;
 import com.moaplace.dto.admin.show.AdminScheduleDetailInfoDTO;
 import com.moaplace.dto.admin.show.AdminScheduleDetailTimeDTO;
-import com.moaplace.dto.admin.show.MapperDetailDTO;
 import com.moaplace.dto.admin.show.ScheduleInsertRequestDTO;
 import com.moaplace.dto.admin.show.ScheduleListDTO;
 import com.moaplace.dto.admin.show.ScheduleUpdateRequestDTO;
-import com.moaplace.dto.admin.show.ShowDetailViewDTO;
 import com.moaplace.dto.admin.show.ShowPartInfoDTO;
-import com.moaplace.dto.admin.show.ShowUpdateDTO;
 import com.moaplace.mapper.ScheduleMapper;
 import com.moaplace.mapper.ShowMapper;
-import com.moaplace.vo.GradeVO;
 import com.moaplace.vo.ScheduleVO;
-import com.moaplace.vo.ShowImgVO;
-import com.moaplace.vo.ShowVO;
 
-import lombok.extern.log4j.Log4j;
 
 @Service
-@Log4j
 public class AdminTicketService {
 	
 	@Autowired 
 	private ShowMapper showMapper;
-	
 	@Autowired
 	private ScheduleMapper scheduleMapper;
 	
@@ -79,7 +70,11 @@ public class AdminTicketService {
 	}
 	
 	//일정상세정보 조회하기
-	public HashMap<String, Object> showDetail(HashMap<String, Object> map) {
+	public HashMap<String, Object> showDetail(int showNum, String showDate) {
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("showNum",showNum);
+		map.put("showDate",showDate);
 		
 		List<AdminScheduleDetailDTO> list = scheduleMapper.scheduleDetail(map);
 
@@ -94,6 +89,7 @@ public class AdminTicketService {
 			AdminScheduleDetailDTO reqDto = list.get(i);
 			AdminScheduleDetailTimeDTO timeDto = new AdminScheduleDetailTimeDTO();
 			 timeDto.setTimeRow(reqDto.getTimeRow());
+			 timeDto.setScheduleNum(reqDto.getScheduleNum());
 			 timeDto.setDateTime(reqDto.getDateTime());
 			 timeDto.setDateStatus(reqDto.getDateStatus());
 			arrTime.add(timeDto);
@@ -104,49 +100,45 @@ public class AdminTicketService {
 
 		return listMap;
 	}
-	
+	// 업데이트하기 위해 조인된 정보 받아오기
 	public HashMap<String, Object> selectUpdate(int showNum, String showDate) {
 		
 		
 		ShowPartInfoDTO dto= showMapper.searchShowNumber(showNum);
-		log.info("-----------"+dto);
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("showNum",showNum);
 		map.put("showDate",showDate);
-
-		int bookingSeat = scheduleMapper.bookingSeatCheck(map);
-		
-		boolean using =false;
 		
 		List<AdminScheduleDetailDTO> list = scheduleMapper.scheduleDetail(map);
 		
 		ArrayList<AdminScheduleDetailTimeDTO> arrTime = new ArrayList<>();
+		
 		for(int i=0; i < list.size(); i++) {
+			
 			AdminScheduleDetailDTO reqDto = list.get(i);
 			AdminScheduleDetailTimeDTO timeDto = new AdminScheduleDetailTimeDTO();
+			
 			 timeDto.setTimeRow(reqDto.getTimeRow());
+			 timeDto.setScheduleNum(reqDto.getScheduleNum());
 			 timeDto.setDateTime(reqDto.getDateTime());
 			 timeDto.setDateStatus(reqDto.getDateStatus());
-			arrTime.add(timeDto);
-		}
-		
-		if(bookingSeat > 0) {
-			using = true;
+			 arrTime.add(timeDto);
 		}
 		
 		HashMap<String, Object> listMap = new HashMap<String, Object>();
-		map.put("showNum",showNum);
-		map.put("showtitle",dto.getTitle());
-		map.put("runningTime",dto.getRunningTime());
-		map.put("intermission",dto.getIntermission());
-		map.put("showDate",showDate);
-		map.put("showStatus",dto.getStatus());
-		map.put("arrTime",arrTime);
-		map.put("using",using);
+		listMap.put("showNum",showNum);
+		listMap.put("showtitle",dto.getTitle());
+		listMap.put("runningTime",dto.getRunningTime());
+		listMap.put("intermission",dto.getIntermission());
+		listMap.put("showDate",showDate);
+		listMap.put("showStatus",dto.getStatus());
+		listMap.put("arrTime",arrTime);
 
-			return map;
+			return listMap;
 	}
 	
+	// 일정 수정, 기존에 있는 건 수정하고 없는 건 인서트하기
 	@Transactional(rollbackFor = {Exception.class})
 	public int scheduleUpdate(ScheduleUpdateRequestDTO dto){
 		
@@ -154,36 +146,38 @@ public class AdminTicketService {
 		selMap.put("showNum",dto.getShowNum());
 		selMap.put("showDate",dto.getShowDate());
 		
-//		int bookingSeat = scheduleMapper.bookingSeatCheck(selMap);
 		int result = 0;
-		
+		//수정할건 수정
 		for(int i = 0; i < dto.getList().size(); i++) {
 			AdminScheduleDetailTimeDTO timeDto = dto.getList().get(i);
 			ScheduleVO vo = new ScheduleVO(
+					timeDto.getScheduleNum(),
+					dto.getShowNum(),
+					timeDto.getDateTime(),
+					dto.getShowDate(), 
+					timeDto.getDateStatus());
+			result += scheduleMapper.scheduleUpdate(vo);
+		}
+		//추가할건 추가
+		for(int i = 0; i < dto.getAddList().size(); i++) {
+			AdminScheduleDetailTimeDTO timeDto = dto.getAddList().get(i);
+			ScheduleVO vo = new ScheduleVO(
 					0,dto.getShowNum(),
 					timeDto.getDateTime(),dto.getShowDate(), timeDto.getDateStatus());
-			result += scheduleMapper.scheduleUpdate(vo);
-		
-//		if(bookingSeat>0) {
-//			
-//			scheduleMapper.deleteSchedule(selMap);
-//			
-//			for(int i = 0; i < dto.getList().size(); i++) {
-//				AdminScheduleDetailTimeDTO timeDto = dto.getList().get(i);
-//				ScheduleVO vo = new ScheduleVO(
-//						0,dto.getShowNum(),
-//						timeDto.getDateTime(),dto.getShowDate(), timeDto.getDateStatus());
-//				result += scheduleMapper.scheduleInsert(vo);
-//			}
-//			
-//		}else {
-			
-
-//			}
+			result += scheduleMapper.scheduleInsert(vo);
 		}
 		
-		
 		return result;
+	}
+	
+	//공연일정 공연번호와 날짜로 공연일정 삭제
+	public int deleteSchedule(int showNum, String scheduleDate) {
+		
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put( "showNum", showNum);
+		map.put( "showDate", scheduleDate);
+		
+		return scheduleMapper.deleteSchedule(map);
 	}
 }
 	

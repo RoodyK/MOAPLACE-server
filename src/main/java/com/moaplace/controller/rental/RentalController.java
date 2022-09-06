@@ -38,7 +38,6 @@ public class RentalController {
 	public HashMap<String, Object> detail(
 			@PathVariable Integer num)
 	{
-		log.info("num:"+num);
 		
 		RentalVO vo = service.detail(num);
 		

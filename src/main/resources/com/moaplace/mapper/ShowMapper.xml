@@ -221,6 +221,10 @@ SELECT NVL(COUNT(*),0)
 		WHERE show_num = #{show_num}
 </update>
 
+	<delete id="deleteShow" parameterType="int">
+		DELETE FROM show WHERE show_num = #{num}
+	</delete>
+
 <!-- 썸네일만 따로 가져오기 -->
 <select id="returnThumb" parameterType="int" resultType="String">
 	SELECT show_thumbnail thumbnail FROM show WHERE show_num=#{num}

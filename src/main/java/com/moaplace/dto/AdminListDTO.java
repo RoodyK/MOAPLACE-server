@@ -1,11 +1,10 @@
 package com.moaplace.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 //파일이 없는 경우, list 

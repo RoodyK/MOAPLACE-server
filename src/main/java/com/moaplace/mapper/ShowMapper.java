@@ -45,6 +45,9 @@ public interface ShowMapper {
 	List<BookingSelectViewDto> ShowbookingSelect(int num);
 	
 	ShowVO showSelect(int num);
+	
+	//공연 삭제
+	int deleteShow(int num);
 
 	String returnThumb(int num);
 
@@ -56,5 +59,5 @@ public interface ShowMapper {
 	
 	//예매페이지 공연장, 공연명 조회
 	BookingShowDTO getBookingShow(int show_num);
-	
+
 }

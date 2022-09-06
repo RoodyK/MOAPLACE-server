@@ -72,6 +72,12 @@ public class FileUtil {
 		return fileinfo;
 	}
 	
+	/**
+	 * @apiNote 저장된 파일 경로를 불러와 지정된 폴더에 파일을 다운로드합니다.
+	 * @param folder 파일이 저장된 폴더명(rental/notice/...)
+	 * @param saveFilename 저장된 파일명 
+	 * @return 파일
+	 */
 	public HashMap<String, Object> download(
 			String folder,
 			String saveFilename)
@@ -86,11 +92,13 @@ public class FileUtil {
 		return fileinfo;
 	}
 	
-	//폴더 안 파일 삭제
+	
 	/**
-	 * @param fileName(저장된 파일이름), folder명
+	 * @apiNote 저장된 파일 경로를 불러와 파일을 삭제합니다.
+	 * @param fileName 저장된 파일이름
+	 * @param folder 저장된 폴더이름
 	 * 폴더명은 해당 게시판명을 영어로 써야합니다. ex) 대관신청 - rental
-	 * @return boolean형 반환
+	 * @return 파일 삭제성공 여부boolean형 반환
 	 **/
 	public boolean delete(String fileName, String folder) {
 		String path = realPath;
