@@ -5,9 +5,7 @@ import java.util.List;
 
 import com.moaplace.dto.AdminDetailDTO;
 import com.moaplace.dto.AdminListDTO;
-import com.moaplace.dto.AdminNoticeDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;
-
 import com.moaplace.dto.MainNoticeDTO;
 import com.moaplace.vo.AdminNoticeVO;
 

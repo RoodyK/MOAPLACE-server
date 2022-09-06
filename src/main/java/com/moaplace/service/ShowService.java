@@ -22,8 +22,6 @@ import com.moaplace.vo.GradeVO;
 import com.moaplace.vo.ShowImgVO;
 import com.moaplace.vo.ShowVO;
 
-import lombok.extern.log4j.Log4j;
-
 @Service
 public class ShowService {
 	

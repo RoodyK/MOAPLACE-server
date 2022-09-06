@@ -1,6 +1,6 @@
 package com.moaplace.controller.board;
 
-import java.util.HashMap;  
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.moaplace.dto.AdminDetailDTO;
 import com.moaplace.dto.AdminListDTO;
 import com.moaplace.dto.AdminNoticeDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;

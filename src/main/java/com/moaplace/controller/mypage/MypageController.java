@@ -1,28 +1,24 @@
 package com.moaplace.controller.mypage;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moaplace.dto.MyBookingCancleRequestDTO;
 import com.moaplace.dto.MyBookingDTO;
@@ -39,7 +35,6 @@ import com.moaplace.service.MemberService;
 import com.moaplace.service.PaymentService;
 import com.moaplace.service.RentalService;
 import com.moaplace.service.ReviewService;
-import com.moaplace.util.FileUtil;
 import com.moaplace.util.PageUtil;
 import com.moaplace.vo.RentalVO;
 
@@ -65,9 +60,6 @@ public class MypageController {
 	private ReviewService reviewService;
 	@Autowired
 	private ImportService importService;
-  @Autowired
-	private FileUtil fileUtil;
-
 	
 	/* 로그인한 회원의 최근 예매내역 1건 + 최근 대관내역 1건 조회 */
 	@GetMapping(value = "/{member_num}", produces = MediaType.APPLICATION_JSON_VALUE)

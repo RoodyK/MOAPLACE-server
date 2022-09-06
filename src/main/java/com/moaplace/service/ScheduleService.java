@@ -10,8 +10,6 @@ import com.moaplace.dto.ResidualDTO;
 import com.moaplace.dto.ScheduleDTO;
 import com.moaplace.mapper.ScheduleMapper;
 
-import lombok.extern.log4j.Log4j;
-
 @Service
 public class ScheduleService {
 

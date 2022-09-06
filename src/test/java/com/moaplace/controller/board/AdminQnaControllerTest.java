@@ -2,19 +2,14 @@ package com.moaplace.controller.board;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.moaplace.dto.QnaAnswerDTO;
 import com.moaplace.service.AnswerService;
 import com.moaplace.service.QnaService;
-import com.moaplace.vo.AnswerVO;
-import com.moaplace.vo.QnaVO;
 
 import lombok.extern.log4j.Log4j;
 

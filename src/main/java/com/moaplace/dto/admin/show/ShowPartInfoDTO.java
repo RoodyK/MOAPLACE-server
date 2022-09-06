@@ -15,6 +15,5 @@ public class ShowPartInfoDTO {
 	private String endDate;
 	private String blockStartDate;
 	private String blockEndDate;
-	private String thumbnail;	
 	
 }

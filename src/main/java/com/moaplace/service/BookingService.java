@@ -1,6 +1,5 @@
 package com.moaplace.service;
 
-import java.sql.Array; 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

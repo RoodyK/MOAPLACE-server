@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.moaplace.mapper.PaymentMapper;
-import com.moaplace.vo.PaymentVO;
 
 @Service
 public class PaymentService {

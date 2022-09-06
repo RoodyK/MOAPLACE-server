@@ -18,7 +18,6 @@ import com.moaplace.dto.admin.show.ScheduleListDTO;
 import com.moaplace.dto.admin.show.ScheduleUpdateRequestDTO;
 import com.moaplace.service.AdminTicketService;
 import com.moaplace.util.PageUtil;
-import lombok.extern.log4j.Log4j;
 
 
 @CrossOrigin("*")

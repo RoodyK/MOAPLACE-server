@@ -1,6 +1,5 @@
 package com.moaplace.vo;
 
-import java.sql.Clob;
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;
