@@ -246,7 +246,7 @@ SELECT NVL(COUNT(*),0)
 	    FROM all_seat GROUP BY schedule_num)a
 	ON a.schedule_num = t.schedule_num
 	WHERE show_check = 'Y' AND schedule_YN = 'Y' AND s.show_num = #{showNum} AND schedule_date >= SYSDATE
-
+	ORDER BY scheduleDate, scheduleTime
 </select>
 
 <select id="monthSelect" parameterType="int" resultType="com.moaplace.dto.CalendarDateDTO">
