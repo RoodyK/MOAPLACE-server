@@ -68,34 +68,39 @@ public class MoaplaceController {
 	 
 	//공지사항 리스트 - 리스트 및 검색
 	@GetMapping(value= {
-			"/list/{pageNum}",
-			"/list/{sort_num}/{member_num}/{pageNum}",
-			"/list/{sort_num}/{field}/{keyword}/{member_num}/{pageNum}"}, produces = { MediaType.APPLICATION_JSON_VALUE })
+			"/list/{sort_num}",
+			"/list/{sort_num}/{pageNum}",
+			"/list/{sort_num}/{field}/{keyword}",
+			"/list/{sort_num}/{field}/{keyword}/{pageNum}"}, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HashMap<String, Object> list(
-			@PathVariable(required = false) String pageNum,
-			@PathVariable(required = false) String sort_num,
+			@PathVariable(required = false) Integer sort_num,
+			@PathVariable(required = false) Integer pageNum,
 			@PathVariable(required = false) String field,
-			@PathVariable(required = false) String keyword,
-			@PathVariable(required = false) String member_num) {
+			@PathVariable(required = false) String keyword) {
+		log.info(sort_num);
+		log.info("pageNum:" + pageNum);
+		log.info("field:" +field);
+		log.info("keyword:" + keyword);
 		
+		if(sort_num == null) {
+			sort_num = 0;
+		}
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("member_num", Integer.parseInt(member_num));
-		map.put("sort_num", Integer.parseInt(sort_num));
+		map.put("sort_num", sort_num);
 		map.put("field",field);
 		map.put("keyword",keyword);
-		
-		log.info(sort_num);
-		log.info(field);
-		log.info(keyword);
 	
+		if(pageNum == null) {
+			pageNum = 1;
+		}
 		int totalRowCount = service.getCount(map); //전체 글 개수
-		PageUtil pu = new PageUtil(Integer.parseInt(pageNum),5,5,totalRowCount);
+		PageUtil pageutil = new PageUtil(pageNum,5,5,totalRowCount);
 		
-		int startRow = pu.getStartRow(); //시작행 번호
-		int endRow = pu.getEndRow(); //끝행번호
-		int startPageNum = pu.getStartPageNum(); //시작 페이지 번호
-		int endPageNum = pu.getEndPageNum(); //끝 페이지 번호
-		int totalPageCount = pu.getTotalPageCount(); //전체 글 개수
+		int startRow = pageutil.getStartRow(); //시작행 번호
+		int endRow = pageutil.getEndRow(); //끝행번호
+		int startPageNum = pageutil.getStartPageNum(); //시작 페이지 번호
+		int endPageNum = pageutil.getEndPageNum(); //끝 페이지 번호
+		int totalPageCount = pageutil.getTotalPageCount(); //전체 글 개수
 	    
 		map.put("startPageNum" , startPageNum);
 		map.put("endPageNum" , endPageNum);
@@ -103,10 +108,11 @@ public class MoaplaceController {
 		map.put("totalRowCount" , totalRowCount);
 		map.put("startRow" , startRow);
 		map.put("endRow", endRow);
+		map.put("pageNum",pageNum);
 		List<AdminListDTO> list= service.listAll(map);
 		
         map.put("list",list);
-//        map.put("pu",pu);// resp.data.pu.startPageNum 
+        map.put("pageutil",pageutil);
         return map;
 
 	}

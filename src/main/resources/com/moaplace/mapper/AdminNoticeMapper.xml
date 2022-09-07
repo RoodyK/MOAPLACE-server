@@ -14,60 +14,40 @@
 		#{notice_title}, #{notice_content}, sysdate, 0)
 	</insert>
 
-
 	<sql id="search">
 	<!-- field O -> where field 
 	     field O , sort_num O -> where field and sort_num
 	     field X , sort_num O -> where sort_num // overrides 단어로만 시작된다면 그 단어를 지워줌
 	                                               and를 prefixOverrides가 지워줌 -->
-	 <where>
+	  <trim prefix="where" prefixOverrides="and">
 		<!-- field(column) 포함된 keyword의 값이 포함 된 데이터를 조회한다. --> 
-		<if test="sort_num!=0">	
-		 a.sort_num = #{sort_num} 
 		<if test="field!=null and field!=''"> 
 		  <choose>
 		     <when test="field=='total'">
-		      and (a.notice_title like '%'||#{keyword}||'%' OR
-		        a.notice_content like '%'||#{keyword}||'%')
+		        notice_title like '%'||#{keyword}||'%' OR
+		        notice_content like '%'||#{keyword}||'%'
 		     </when>
 		     <when test="field=='title'">
-		      and a.notice_title like '%'||#{keyword}||'%'
+		       notice_title like '%'||#{keyword}||'%'
 		     </when>
 		     <when test="field=='content'">
-		      and a.notice_content like '%'||#{keyword}||'%'
+		       notice_content like '%'||#{keyword}||'%'
 		     </when>
 		  </choose>
-		</if>
-		</if>
-	  
-	    <if test="sort_num == 0">	 
-	    <if test="field!=null and field!=''"> 
-		  <choose>
-		     <when test="field=='total'">
-		       a.notice_title like '%'||#{keyword}||'%' OR
-		        a.notice_content like '%'||#{keyword}||'%'
-		     </when>
-		     <when test="field=='title'">
-		      a.notice_title like '%'||#{keyword}||'%'
-		     </when>
-		     <when test="field=='content'">
-		       a.notice_content like '%'||#{keyword}||'%'
-		     </when>
-		  </choose>
-		</if>
-		</if>
-	  
-	  </where>
+		  </if>
+	      <if test="sort_num!=0">	  
+		   and sort_num = #{sort_num}
+		  </if>
+	  </trim>
 	</sql>
 
 	<select parameterType="hashmap" id="listAll" resultType="com.moaplace.dto.AdminListDTO">
        select * from (
           select b.*,rownum rnum from (
 		    select a.* from (
-		      select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_num, s.sort_name, m.member_num
-		          from notice n, sort s, member m
+		      select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_num, s.sort_name
+		          from notice n, sort s
 	              where n.sort_num = s.sort_num
-		          and n.member_num = m.member_num
 		          order by n.notice_num desc
 		          ) a <include refid="search" /> 
 		      ) b 
@@ -78,10 +58,9 @@
 	<select parameterType="hashmap" id="getCount" resultType="int">
 		select NVL(count(*),0) cnt from 
 		 (
-		  select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_name, s.sort_num ,m.member_num
-		    from notice n , sort s, member m
+		  select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_name, s.sort_num 
+		    from notice n , sort s
 		      where n.sort_num = s.sort_num
-		       and n.member_num = m.member_num
 		       order by n.notice_num desc
 		   ) a
 		    <include refid="search" />
@@ -90,9 +69,8 @@
 	<!-- 새 글 상세보기 리스트 -->
 	<select id="detail" resultType="com.moaplace.dto.AdminDetailDTO" parameterType="int" >
 	      select a.* from ( select n.notice_title, n.notice_content, s.sort_name, d.*
-		        from notice n, notice_detail d, sort s, member m
+		        from notice n, notice_detail d, sort s
 	                 where n.sort_num = s.sort_num
-		             and n.member_num = m.member_num 
 		             and n.notice_num = d.notice_num ) a
 		             where notice_num = #{notice_num}
 	</select>
@@ -102,9 +80,8 @@
 	<select id="detaillist" resultType="com.moaplace.dto.AdminListDTO" parameterType="int">
 		select a.* from ( 
 		   select n.notice_title, n.notice_content,n.notice_num,s.sort_name
-		     from notice n, sort s, member m
+		     from notice n, sort s
 		        where n.sort_num = s.sort_num
-		        and n.member_num = m.member_num
 		   ) a
 		where notice_num = #{notice_num}
 	</select>

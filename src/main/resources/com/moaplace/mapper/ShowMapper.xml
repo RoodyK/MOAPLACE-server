@@ -169,10 +169,13 @@ SELECT NVL(COUNT(*),0)
 				TO_CHAR(show_start, 'YYYY-MM-DD') startDate, 
 				TO_CHAR(show_end, 'YYYY-MM-DD') endDate, 
 				TO_CHAR(stop_start, 'YYYY-MM-DD') blockStartDate, 
-				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate, 
-				show_thumbnail thumbnail
-			FROM show	
-			WHERE show_name like '%'||#{title}||'%'
+				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate
+			FROM show
+			<where>
+				<if test="showTitle !=null">
+					show_name like '%'||#{showTitle}||'%'
+				</if>
+			</where>
 </select>
 
 <!-- 공연번호로 공연정보 가져오기 -->
@@ -234,7 +237,7 @@ SELECT NVL(COUNT(*),0)
 	SELECT 
 	    s.show_num showNum, show_name title, 
 	    TO_CHAR(show_start, 'YYYY-MM-DD') showStart, TO_CHAR(show_end, 'YYYY-MM-DD') showEnd,
-	    h.hall_num hallNum, (hall_cols*hall_rows) seatCnt, NVL(((hall_cols*hall_rows)-bookingCnt),0) extraCnt,
+	    h.hall_num hallNum, (hall_cols*hall_rows) seatCnt, NVL(((hall_cols*hall_rows)-bookingCnt),(hall_cols*hall_rows)) extraCnt,
 	    t.schedule_num scheduleNum, schedule_date scheduleDate, schedule_time scheduleTime
 	FROM show s INNER JOIN hall h 
 	ON s.hall_num = h.hall_num
@@ -257,7 +260,7 @@ SELECT NVL(COUNT(*),0)
 			schedule_date scheduleDate, schedule_YN scheduleYN
 		FROM show w RIGHT JOIN schedule d
 		ON w.show_num = d.show_num 
-		WHERE schedule_YN = 'Y' and TO_CHAR(TO_DATE(schedule_date), 'YYMM') = #{month}
+		WHERE TO_CHAR(TO_DATE(schedule_date), 'YYMM') = #{month}
 		GROUP BY w.show_num, hall_num,show_name,show_start,show_end,schedule_date,schedule_YN
 		ORDER BY showStart
 </select>
@@ -304,7 +307,7 @@ SELECT NVL(COUNT(*),0)
 	
 	<!-- 공연 상세페이지 -->
 	<select id="detail" resultType="com.moaplace.dto.ShowDetailDTO" parameterType="int">
-   		select show_num, show_thumbnail, show_name, show_start, show_end, hall_num, show_age, show_check
+   		select show_num, show_thumbnail, show_name, show_start, show_end, hall_num, show_age, show_check, running_time, intermission
         from show
         where show_num = #{show_num}
    </select>
