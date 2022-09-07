@@ -69,7 +69,7 @@ public class MoaplaceController {
 	//공지사항 리스트 - 리스트 및 검색
 	@GetMapping(value= {
 			"/list/{pageNum}",
-			"/list/{sort_num}/{member_num}/{pageNum}","/list/{sort_num}/{field}/{member_num}/{pageNum}",
+			"/list/{sort_num}/{member_num}/{pageNum}",
 			"/list/{sort_num}/{field}/{keyword}/{member_num}/{pageNum}"}, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HashMap<String, Object> list(
 			@PathVariable(required = false) String pageNum,
@@ -83,6 +83,10 @@ public class MoaplaceController {
 		map.put("sort_num", Integer.parseInt(sort_num));
 		map.put("field",field);
 		map.put("keyword",keyword);
+		
+		log.info(sort_num);
+		log.info(field);
+		log.info(keyword);
 	
 		int totalRowCount = service.getCount(map); //전체 글 개수
 		PageUtil pu = new PageUtil(Integer.parseInt(pageNum),5,5,totalRowCount);

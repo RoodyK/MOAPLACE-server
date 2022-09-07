@@ -1,6 +1,6 @@
 package com.moaplace.service;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue; 
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,17 +35,17 @@ public class ImportServiceTest {
 //		}
 //	}
 	
-	@Test
-	public void cancle() {
-		try {
-		
-			BookingCancleDTO dto = new BookingCancleDTO("imp_935850897886", "관리자 테스트 취소", 1000, 1);
-			Boolean response = importService.cancle(importService.getToken(), dto.getImp_uid(), dto.getReason(), dto.getAmount());
-			log.info("결제취소 테스트 결과: " + response);
-			assertTrue(response);
-			
-		} catch (Exception e) {
-			e.getMessage();
-		}
-	}
+//	@Test
+//	public void cancle() {
+//		try {
+//		
+//			BookingCancleDTO dto = new BookingCancleDTO("imp_935850897886", "관리자 테스트 취소", 1000, 1);
+//			Boolean response = importService.cancle(importService.getToken(), dto.getImp_uid(), dto.getReason(), dto.getAmount());
+//			log.info("결제취소 테스트 결과: " + response);
+//			assertTrue(response);
+//			
+//		} catch (Exception e) {
+//			e.getMessage();
+//		}
+//	}
 }

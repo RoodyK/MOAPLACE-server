@@ -190,7 +190,7 @@
 		    booking_count bookingCount, booking_seat bookingSeat,
 		    ticket_rating ticketAge, ticket_grade ticketGrade, ticket_count,
 		    TO_CHAR(payment_date, 'YYYY-MM-DD') paymentDate,
-		    ticket_price ticketPrice, use_point usePoint, 
+		    p.booking_price ticketPrice, use_point usePoint, 
 		    payment_method paymentMethod, b.booking_price bookingPrice, payment_status paymentStatus,
 		    merchant_uid merchantUid, imp_uid impUid
 		FROM booking b 
@@ -200,7 +200,7 @@
 		ON b.booking_num = p.booking_num 
 		INNER JOIN (
 		    SELECT 
-		        booking_num, ticket_rating, ticket_grade, ticket_count, ticket_price 
+		        booking_num, ticket_rating, ticket_grade, ticket_count
 		    FROM ticket ) t
 		ON b.booking_num = t.booking_num 
 		where b.booking_num = #{bookingNum}

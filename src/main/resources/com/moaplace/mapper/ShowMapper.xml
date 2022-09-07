@@ -188,8 +188,7 @@ SELECT NVL(COUNT(*),0)
 				TO_CHAR(show_start, 'YYYY-MM-DD') startDate, 
 				TO_CHAR(show_end, 'YYYY-MM-DD') endDate, 
 				TO_CHAR(stop_start, 'YYYY-MM-DD') blockStartDate, 
-				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate, 
-				show_thumbnail thumbnail
+				TO_CHAR(stop_end, 'YYYY-MM-DD') blockEndDate
 			FROM show	
 			WHERE show_num = #{num}
 </select>
