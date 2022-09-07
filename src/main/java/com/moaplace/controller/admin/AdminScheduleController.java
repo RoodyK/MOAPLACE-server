@@ -19,22 +19,24 @@ import com.moaplace.dto.admin.show.ScheduleUpdateRequestDTO;
 import com.moaplace.service.AdminTicketService;
 import com.moaplace.util.PageUtil;
 
+import lombok.extern.log4j.Log4j;
+
 
 @CrossOrigin("*")
 @RequestMapping("/admin/show/schedule")
 @RestController
-
+@Log4j
 public class AdminScheduleController {
 	@Autowired
 	private AdminTicketService service;
 	
 	//일정 등록할 때 일정을 등록할 공연을 검색해서 리스트 받아오기
 	@GetMapping( 
-			value = {"/viewshow", "/viewshow/{showTitle}"},
+			value = {"/viewshow/", "/viewshow/{showTitle}"},
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public HashMap<String, Object> viewShowData(@PathVariable String showTitle) {
+	public HashMap<String, Object> viewShowData(@PathVariable (required = false) String showTitle) {
 		
-		
+		log.info(showTitle);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("showList",service.searchShow(showTitle));
