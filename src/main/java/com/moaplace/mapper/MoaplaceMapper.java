@@ -9,7 +9,7 @@ import com.moaplace.dto.AdminNoticeDTO;
 import com.moaplace.dto.AdminNoticeDetailDTO;
 
 public interface MoaplaceMapper {
-	public List<AdminNoticeDTO> listAll(HashMap<String,Object> map);
+	public List<AdminListDTO> listAll(HashMap<String,Object> map);
 	public int getCount(HashMap<String,Object> map);
 	public List<AdminDetailDTO> detail(int notice_num);
 	public List<AdminNoticeDetailDTO> filelist(int notice_num);

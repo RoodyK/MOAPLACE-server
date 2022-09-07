@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.moaplace.service.ShowCalendarService;
-import com.moaplace.service.ShowService;
-
-import lombok.extern.log4j.Log4j;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/show")

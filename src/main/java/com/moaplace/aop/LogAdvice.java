@@ -15,13 +15,13 @@ public class LogAdvice {
 		Signature sig = joinPoint.getSignature();
 		Object[] args = joinPoint.getArgs();
 		
-		log.info("대상 객체: " + joinPoint.getTarget().getClass().getSimpleName());
-		log.info("메소드 이름: " + sig.getName());
-		log.info("리턴 값: " + result);
-		
-		for(Object o : args) {
-			log.info("파라미터 : " + o);
-		}
+//		log.info("대상 객체: " + joinPoint.getTarget().getClass().getSimpleName());
+//		log.info("메소드 이름: " + sig.getName());
+//		log.info("리턴 값: " + result);
+//		
+//		for(Object o : args) {
+//			log.info("파라미터 : " + o);
+//		}
 		
 		return result;
 	}

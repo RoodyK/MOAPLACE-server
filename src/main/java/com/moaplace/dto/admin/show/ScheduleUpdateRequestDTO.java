@@ -10,5 +10,6 @@ public class ScheduleUpdateRequestDTO {
 	private int showNum;
 	private String showDate;
 	private List<AdminScheduleDetailTimeDTO> list;
+	private List<AdminScheduleDetailTimeDTO> addList;
 
 }

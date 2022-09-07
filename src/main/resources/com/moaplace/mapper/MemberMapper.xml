@@ -134,14 +134,20 @@
 	<select id="apiCheck" resultType="com.moaplace.dto.member.ApiLoginDTO">
 		select m.member_id, m.authority, a.member_email 
 		FROM member m JOIN api_auth a
-		ON m.member_email = a.member_email 
+		ON m.member_email = a.member_email AND m.member_num = a.member_num
 		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND a.api_name = 'kakao'
 	</select>
 	
 	<select id="apiLogin" resultType="com.moaplace.dto.member.MemberLoginResponseDTO">
 		select m.member_id, m.authority
 		FROM member m JOIN api_auth a
-		ON m.member_email = a.member_email 
+		ON m.member_email = a.member_email AND m.member_num = a.member_num
 		WHERE a.member_email = #{member_email} AND m.enabled = 1 AND m.member_id = #{member_id} AND a.api_name = 'kakao'
 	</select>
+	
+	<!-- 예매페이지 회원 포인트 수정 -->
+	<update id="pointupdate">
+	  UPDATE member SET member_point  = member_point - #{use_point} 
+	  WHERE member_num = #{member_num}
+	</update>
 </mapper>

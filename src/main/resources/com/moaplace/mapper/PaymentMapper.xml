@@ -11,4 +11,9 @@
 		where booking_num = #{booking_num}
 	</update>
 	
+	<insert id="paymentInsert" >
+	    INSERT INTO payment VALUES(payment_seq.nextval, #{booking_num}, #{merchant_uid}, #{imp_uid},
+	    #{booking_price}, #{payment_method}, #{payment_status}, SYSDATE)
+	</insert>
+	
 </mapper>

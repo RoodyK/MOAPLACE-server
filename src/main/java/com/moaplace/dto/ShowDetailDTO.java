@@ -15,4 +15,6 @@ public class ShowDetailDTO {
 	private int hall_num;
 	private String show_age;
 	private String show_check;
+	private int running_time;
+	private int intermission;
 }

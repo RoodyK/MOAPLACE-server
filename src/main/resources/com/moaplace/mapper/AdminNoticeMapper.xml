@@ -45,10 +45,9 @@
        select * from (
           select b.*,rownum rnum from (
 		    select a.* from (
-		      select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_num, s.sort_name, m.member_num
-		          from notice n, sort s, member m
+		      select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_num, s.sort_name
+		          from notice n, sort s
 	              where n.sort_num = s.sort_num
-		          and n.member_num = m.member_num
 		          order by n.notice_num desc
 		          ) a <include refid="search" /> 
 		      ) b 
@@ -59,10 +58,9 @@
 	<select parameterType="hashmap" id="getCount" resultType="int">
 		select NVL(count(*),0) cnt from 
 		 (
-		  select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_name, s.sort_num ,m.member_num
-		    from notice n , sort s, member m
+		  select n.notice_num, n.notice_title, n.notice_content, n.notice_regdate, s.sort_name, s.sort_num 
+		    from notice n , sort s
 		      where n.sort_num = s.sort_num
-		       and n.member_num = m.member_num
 		       order by n.notice_num desc
 		   ) a
 		    <include refid="search" />
@@ -71,9 +69,8 @@
 	<!-- 새 글 상세보기 리스트 -->
 	<select id="detail" resultType="com.moaplace.dto.AdminDetailDTO" parameterType="int" >
 	      select a.* from ( select n.notice_title, n.notice_content, s.sort_name, d.*
-		        from notice n, notice_detail d, sort s, member m
+		        from notice n, notice_detail d, sort s
 	                 where n.sort_num = s.sort_num
-		             and n.member_num = m.member_num 
 		             and n.notice_num = d.notice_num ) a
 		             where notice_num = #{notice_num}
 	</select>
@@ -83,9 +80,8 @@
 	<select id="detaillist" resultType="com.moaplace.dto.AdminListDTO" parameterType="int">
 		select a.* from ( 
 		   select n.notice_title, n.notice_content,n.notice_num,s.sort_name
-		     from notice n, sort s, member m
+		     from notice n, sort s
 		        where n.sort_num = s.sort_num
-		        and n.member_num = m.member_num
 		   ) a
 		where notice_num = #{notice_num}
 	</select>
@@ -146,7 +142,7 @@
 	<!--  update,detail용 select, 나중에 파일 정리 -->
 	<select id="selectdetail" parameterType="int" resultType="com.moaplace.dto.AdminListDTO">
 	   select a.* from ( 
-		   select n.notice_title, n.notice_content,n.notice_num,s.sort_name
+		   select n.*,s.sort_name
 		     from notice n, sort s
 		        where n.sort_num = s.sort_num
 		   ) a

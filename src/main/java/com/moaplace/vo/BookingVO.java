@@ -13,6 +13,7 @@ public class BookingVO {
 	private int booking_num;
 	private int member_num;
 	private int schedule_num;
+	private int booking_count;
 	private int booking_price;
 	private String booking_seat;
 	private int use_point;

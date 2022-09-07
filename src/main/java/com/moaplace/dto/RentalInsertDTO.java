@@ -3,8 +3,6 @@ package com.moaplace.dto;
 
 import java.sql.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Data;
 
 @Data

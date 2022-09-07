@@ -1,14 +1,11 @@
 package com.moaplace.dto.admin.show;
 
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import com.moaplace.vo.GradeVO;
-import com.moaplace.vo.ShowVO;
 
 import lombok.Data;
-
+	
 @Data
 public class ShowDetailDTO {
 	private int num;					//공연번호

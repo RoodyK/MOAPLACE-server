@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MyBookingDetailDTO {
 	
+	private int member_num;
 	private int booking_num;
 	private Date regdate;
 	private String show_name;
@@ -24,4 +25,6 @@ public class MyBookingDetailDTO {
 	private String payment_method;
 	private String payment_status;
 	private int show_num;
+	private String imp_uid;
+	
 }
