@@ -64,7 +64,7 @@
 	
 	<!-- booking_num으로 예매상세내역 조회 -->
 	<select id="detail" resultType="com.moaplace.dto.MyBookingDetailDTO" parameterType="int">
-		select b.booking_num,b.regdate,sh.show_name,sc.schedule_date,sc.schedule_time,
+		select b.member_num,b.booking_num,b.regdate,sh.show_name,sc.schedule_date,sc.schedule_time,
 		b.booking_seat,h.hall_name,p.payment_date,b.booking_price,b.use_point,
 		p.payment_method,p.payment_status,sh.show_num,p.imp_uid
 		from booking b
