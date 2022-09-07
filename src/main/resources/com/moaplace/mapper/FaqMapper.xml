@@ -21,7 +21,7 @@
 			
 			<!-- 사용자 리스트 검색 -->
 			<if test='field == "all"'>
-				a.faq_title like '%'||#{keyword, jdbcType=VARCHAR}||'%' 
+				AND a.faq_title like '%'||#{keyword, jdbcType=VARCHAR}||'%' 
 				or a.faq_content like '%'||#{keyword, jdbcType=VARCHAR}||'%'
 			</if>		
 
