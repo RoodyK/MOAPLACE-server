@@ -172,7 +172,7 @@
   <select id="scheduleDetail" parameterType="hashmap" resultType="com.moaplace.dto.admin.show.AdminScheduleDetailDTO">
     SELECT a.*,ROWNUM timeRow
       FROM(
-          SELECT w.show_num num, show_name title, 
+          SELECT schedule_num scheduleNum, w.show_num num, show_name title, 
               schedule_date showDate, schedule_time dateTime, schedule_YN dateStatus
           FROM show w RIGHT JOIN schedule d
           ON w.show_num = d.show_num 
